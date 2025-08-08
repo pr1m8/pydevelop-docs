@@ -9,14 +9,16 @@ readme = "README.md"
 requires-python = ">=3.12,<4.0"
 dependencies = [
   "pydantic (>=2.11.7,<3.0.0)",
-  "typing-extensions (>=4.14.1,<5.0.0)",
+  "pydantic-settings (>=2.10.1,<3.0.0)",
 ]
 
 
 packages = [
   { include = "base", from = "src" },
-  { include = "copr", from = "src" },
+  { include = "core", from = "src" },
 ]
+
+[tool.poetry]
 
 [tool.poetry.group.docs.dependencies]
 sphinx = "8.2.3"
@@ -30,7 +32,7 @@ sphinx-copybutton = "^0.5.2"
 sphinx-togglebutton = "^0.3.2"
 sphinx-autodoc-typehints = "^3.1.0"
 sphinx-rtd-theme = "^3.0.2"
-sphinx-tabs = "^3.4.7"
+sphinx-tabs = "^3.4.5"
 sphinx-autodoc2 = "^0.5.0"
 sphinx-autobuild = "^2024.10.3"
 sphinx-inline-tabs = "^2023.4.21"
@@ -169,11 +171,25 @@ pytest-doctestplus = "^1.4.0"
 sphinx-testing = "^1.0.1"
 pydoctor = "^25.4.0"
 enum-tools = "^0.13.0"
+sphinx-toolbox = "^3.8.1"
+erdantic = "^1.0.6"
+sphinx-design = "^0.6.1"
+sphinxcontrib-programoutput = "^0.18"
+sphinxcontrib-jupyter = "^0.5.10"
+sphinxcontrib-video = "^0.4.1"
+seed-intersphinx-mapping = "^1.2.2"
+sphinx-apischema = "^0.1"
+sphinx-exec-code = "^0.16"
+sphinx-runpython = "^0.4.0"
 
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.2.0"
 pre-commit-hooks = "^5.0.0"
+
+
+[tool.poetry.group.web.dependencies]
+playwright = "^1.54.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

@@ -68,3 +68,4 @@ logs/
 *.tmp
 *.temp
 *.bak
+poetry.lock
