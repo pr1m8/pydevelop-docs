@@ -71,20 +71,28 @@ extensions = [
     "sphinxext.rediraffe",  # Broken link detection and redirect generation (INSTALLED)
     "sphinx_git",  # Git changelog integration (INSTALLED)
     "sphinx_comments",  # Comments and annotations (INSTALLED)
-    # "sphinx_lastupdate", # Last updated timestamps (MANUALLY LOADED IN SETUP)
+    # "sphinxcontrib.lastupdate", # Last updated timestamps - PACKAGE STRUCTURE ISSUE (using sphinx_last_updated_by_git instead)
     "sphinx_debuginfo",  # Development debug information (INSTALLED)
-    "sphinx_social",  # Open Graph metadata for social sharing (FIXING SETUP ISSUE)
+    "sphinxext.opengraph",  # OpenGraph metadata for social sharing (PROPER EXTENSION)
     "sphinx_tags",  # Content tagging system (INSTALLED)
     "sphinx_favicon",  # Favicon management (INSTALLED)
-    "sphinx_collections",  # Document collections (INSTALLED)
-    "sphinx_combine",  # Combine multiple documents (INSTALLED)
+    "sphinxcontrib.collections",  # Document collections (FIXED RECURSIVE LOOPS)
+    "sphinx_combine",  # Combine multiple documents (TESTING)
     # NOTE: Removing sphinx_reports - may have compatibility issues
 ]
 
 # General configuration
 templates_path = ["_templates", "_autoapi_templates"]
 html_static_path = ["_static"]
-exclude_patterns = []
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "**/CVS",
+    "**/.git",
+    "_collections/*/_collections",  # Prevent nested collection directories
+    "**/symlink_loops",  # Prevent symlink loop directories
+]
 add_module_names = False
 toc_object_entries_show_parents = "hide"
 
@@ -409,21 +417,22 @@ debuginfo_show_performance = True  # Show build performance metrics
 debuginfo_show_warnings = True  # Show warning counts
 debuginfo_show_extensions = True  # Show loaded extensions
 
-# Sphinx-social configuration - Open Graph metadata for social sharing
-social_cards = True  # Enable social media cards
-social_cards_layout = "default"  # Use default layout
-social_site_name = "PyAutoDoc"  # Site name for social cards
-social_site_description = (
-    "Hyper-organized documentation system with intense Furo theming"
-)
-social_site_logo = "_static/logo.png"  # Logo for social cards (if available)
-social_twitter_card = "summary_large_image"  # Twitter card type
-social_image = "_static/social-preview.png"  # Default social image (if available)
+# OpenGraph configuration - Social sharing metadata (PROPER EXTENSION)
+ogp_site_url = "https://pyautodoc.readthedocs.io/"
+ogp_site_name = "PyAutoDoc"
+ogp_site_description = "Hyper-organized documentation system with intense Furo theming"
+ogp_image = "_static/social-preview.png"  # Default social image (if available)
+ogp_image_alt = "PyAutoDoc Documentation"
+ogp_type = "website"
+ogp_locale = "en_US"
 
-# Open Graph metadata
-social_og_title_suffix = " - PyAutoDoc"  # Suffix for page titles
-social_og_type = "website"  # Open Graph type
-social_og_locale = "en_US"  # Locale for content
+# OpenGraph social card generation (if using social cards feature)
+ogp_social_cards = {
+    "enable": True,
+    "image": "_static/social-card-template.png",  # Template image for cards
+    "line_color": "#2563eb",  # Brand color for social cards
+    "text_color": "#ffffff",  # Text color for social cards
+}
 
 # Sphinx-tags configuration - Content tagging system
 tags_create_index = True  # Create a tags index page
@@ -470,28 +479,26 @@ favicons = [
     },
 ]
 
-# Sphinx-collections configuration - Document collections
+# Sphinx-collections configuration - FIXED to prevent recursive loops
 collections = {
     "api_docs": {
-        "driver": "symlink",
+        "driver": "copy_folder",  # Use copy_folder instead of symlink
         "source": "autoapi/",
-        "target": "collections/api",
-        "ignore": ["**/index.rst"],
-    },
-    "tutorials": {
-        "driver": "copy_folder",
-        "source": ".",
-        "target": "collections/tutorials",
-        "filter": "*.rst",
-        "filter_include": "*tutorial*,*guide*,*demo*",
+        "target": "_collections/api",
+        "active": True,
+        "clean": True,  # Clean before copying to prevent accumulation
     },
 }
 
-# Sphinx-combine configuration - Combine multiple documents
-combine_source_dir = "docs/source"
-combine_build_dir = "docs/build/combined"
-combine_formats = ["html", "pdf"]
-combine_master_doc = "combined_docs"
+# Global collection settings to prevent loops
+collections_clean = True  # Always clean before build
+collections_final_clean = False  # Keep collections after build for inspection
+
+# Sphinx-combine configuration - Combine multiple documents (FIXED PATHS)
+combine_source_dir = "."  # Relative to current source directory
+combine_build_dir = "../build/combined"  # Relative to current source directory
+combine_formats = ["html"]
+combine_master_doc = "index"
 
 # Removed reports configuration as extension was removed
 
@@ -583,38 +590,22 @@ def setup(app: Sphinx):
     app.add_css_file("toc-enhancements.css")
     app.add_js_file("toc-navigator.js")
 
-    # Try to manually import and setup sphinx-lastupdate to fix import issue
+    # Manually load sphinx-lastupdate to fix import issue with dashes
     try:
-        import importlib.util
-        import os
-        import sys
+        import importlib
 
-        # Find the package
-        lastupdate_path = None
-        for path in sys.path:
-            candidate = os.path.join(path, "sphinx-lastupdate", "lastupdate.py")
-            if os.path.exists(candidate):
-                lastupdate_path = candidate
-                break
-
-        if lastupdate_path:
-            spec = importlib.util.spec_from_file_location(
-                "sphinx_lastupdate", lastupdate_path
-            )
-            lastupdate_module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(lastupdate_module)
-
-            # Call setup if it exists
-            if hasattr(lastupdate_module, "setup"):
-                lastupdate_module.setup(app)
-                print("🔧 sphinx-lastupdate manually loaded!")
-            else:
-                print("⚠️  sphinx-lastupdate found but no setup function")
+        sphinx_lastupdate = importlib.import_module("sphinx-lastupdate")
+        if hasattr(sphinx_lastupdate, "setup"):
+            sphinx_lastupdate.setup(app)
+            print("🔧 sphinx-lastupdate loaded successfully with importlib!")
         else:
-            print("⚠️  sphinx-lastupdate not found in sys.path")
-
+            # Try to find and load the actual module
+            lastupdate_module = getattr(sphinx_lastupdate, "lastupdate", None)
+            if lastupdate_module and hasattr(lastupdate_module, "setup"):
+                lastupdate_module.setup(app)
+                print("🔧 sphinx-lastupdate.lastupdate loaded successfully!")
     except Exception as e:
-        print(f"⚠️  Failed to manually load sphinx-lastupdate: {e}")
+        print(f"⚠️  Could not load sphinx-lastupdate: {e}")
 
     print("✨ Intense Furo theme with sphinx-design enabled!")
     print("🎨 Custom Mermaid integration configured!")
