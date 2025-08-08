@@ -3,17 +3,19 @@ name = "pyautodoc"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "0rac130fD31phi",email = "william.astley@algebraicwealth.com"}
+  { name = "0rac130fD31phi", email = "william.astley@algebraicwealth.com" },
 ]
 readme = "README.md"
 requires-python = ">=3.12,<4.0"
 dependencies = [
+  "pydantic (>=2.11.7,<3.0.0)",
+  "typing-extensions (>=4.14.1,<5.0.0)",
 ]
 
 
 packages = [
   { include = "base", from = "src" },
-  { include = "copr", from = "src" }
+  { include = "copr", from = "src" },
 ]
 
 [tool.poetry.group.docs.dependencies]
@@ -167,6 +169,11 @@ pytest-doctestplus = "^1.4.0"
 sphinx-testing = "^1.0.1"
 pydoctor = "^25.4.0"
 enum-tools = "^0.13.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.2.0"
+pre-commit-hooks = "^5.0.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

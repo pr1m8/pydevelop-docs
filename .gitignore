@@ -1,0 +1,11 @@
+poetry.lock
+.venv
+.pytest_cache
+.DS_Store
+.vscode
+.idea
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
