@@ -2,7 +2,7 @@
 {% if not obj.display %}:orphan:{% endif %}
 
 :py:mod:`{{ obj.name }}`
-{{ "=" * (obj.name | length + 8) }}
+{{ "=" * (obj.name | length + 10) }}
 
 .. py:module:: {{ obj.name }}
 
@@ -57,4 +57,16 @@ Attributes
 {% for attribute in obj.attributes %}
 {{ attribute.render()|indent(0, true) }}
 {% endfor %}
+{% endif %}
+
+{# ---------------------------- #}
+{#    Autolink References       #}
+{# ---------------------------- #}
+{% if obj.classes or obj.functions or obj.attributes %}
+.. rubric:: Related Links
+
+.. autolink-examples:: {{ obj.name }}
+   :collapse:
+   
+.. autolink-skip:: next
 {% endif %}

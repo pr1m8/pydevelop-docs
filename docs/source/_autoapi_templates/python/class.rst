@@ -2,11 +2,12 @@
 :orphan:
 {% endif %}
 
-{# -------------------------------------------- #}
-{#  Detect Class Type: Pydantic, Enum, or Flag  #}
-{# -------------------------------------------- #}
+{# -------------------------------------------------------- #}
+{#  Detect Class Type: Pydantic, Dataclass, Enum, or Flag  #}
+{# -------------------------------------------------------- #}
 {% set bases_string = obj.bases | join(" ") %}
 {% set is_pydantic = "BaseModel" in bases_string or "BaseSettings" in bases_string %}
+{% set is_dataclass = "@dataclass" in (obj.docstring or "") or "dataclass" in (obj.docstring or "") %}
 {% set is_enum = "Enum" in bases_string %}
 {% set is_flag = "Flag" in bases_string %}
 
@@ -44,6 +45,19 @@
    :model-show-json:
    :field-list-validators:
    :field-show-constraints:
+
+{# ----------------------------- #}
+{#         Dataclass             #}
+{# ----------------------------- #}
+{% elif is_dataclass %}
+.. autoclass:: {{ obj.id }}
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+   .. note::
+
+      **{{ obj.name }}** is a dataclass. Enhanced schema documentation will be available soon.
 
 {# ----------------------------- #}
 {#         Enum Classes         #}

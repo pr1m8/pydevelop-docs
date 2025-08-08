@@ -43,7 +43,39 @@ extensions = [
     "sphinxcontrib.plantuml",
     # Utilities (Priority 51-60)
     "sphinx_sitemap",
-    "sphinx_codeautolink",
+    "sphinx_codeautolink",  # Re-enabled - issue was fulltoc conflict, not docutils
+    # TOC Enhancements (Priority 61-70)
+    # "sphinxcontrib.fulltoc",  # Disabled - conflicts with sphinx-codeautolink
+    # "sphinx_external_toc",  # Requires _toc.yml file
+    "sphinx_treeview",  # Dynamic collapsible tree view sidebar - EXPERIMENTING
+    # Enhanced Features (Priority 71-80)
+    # "sphinx_paramlinks",  # Removed - codeautolink handles this + config issues
+    "sphinx_toggleprompt",  # Toggle Python prompts in code blocks (INSTALLED)
+    "sphinx_prompt",  # Better CLI prompt documentation (INSTALLED)
+    "sphinx_last_updated_by_git",  # Last modification from git (INSTALLED)
+    "sphinx_inlinecode",  # Enhanced inline code styling (TESTING - may need HTML post-processing)
+    "sphinx_library",  # Better library documentation (INSTALLED)
+    "sphinx_icontract",  # Document contracts (INSTALLED)
+    "sphinx_tippy",  # Rich hover tooltips (INSTALLED)
+    # "sphinx_apischema",   # Enhanced dataclass documentation - INCOMPATIBLE WITH AUTOAPI
+    # Error: TypeError: None is not a module, class, method, or function
+    # Occurs when AutoAPI passes None objects to process_docstring handler
+    # Documentation Tools (Priority 81-90)
+    "sphinx_comments",  # Add comments and annotations (INSTALLED)
+    "sphinx_contributors",  # Contributors extension (INSTALLED)
+    "sphinx_issues",  # Link to GitHub issues (INSTALLED)
+    "sphinx_needs",  # Requirements tracking and traceability (INSTALLED)
+    "sphinxarg.ext",  # Automatic CLI documentation (INSTALLED)
+    "notfound.extension",  # Custom 404 page (INSTALLED)
+    "sphinx_reredirects",  # Redirect management for moved pages (INSTALLED)
+    "sphinxext.rediraffe",  # Broken link detection and redirect generation (INSTALLED)
+    "sphinx_git",  # Git changelog integration (INSTALLED)
+    "sphinx_comments",  # Comments and annotations (INSTALLED)
+    "sphinx_lastupdate",  # Last updated timestamps (INSTALLED)
+    "sphinx_debuginfo",  # Development debug information (INSTALLED)
+    "sphinx_social",  # Open Graph metadata for social sharing (INSTALLED)
+    "sphinx_tags",  # Content tagging system (INSTALLED)
+    # NOTE: Removing sphinx_reports - may have compatibility issues
 ]
 
 # General configuration
@@ -52,6 +84,28 @@ html_static_path = ["_static"]
 exclude_patterns = []
 add_module_names = False
 toc_object_entries_show_parents = "hide"
+
+# TOC Configuration - Enhanced nesting and presentation
+html_sidebars = {
+    "**": [
+        "sidebar/brand.html",
+        "sidebar/search.html",
+        "sidebar/scroll-start.html",
+        "sidebar/navigation.html",
+        "sidebar/ethical-ads.html",
+        "sidebar/scroll-end.html",
+    ]
+}
+
+# Furo-specific TOC options
+navigation_with_keys = True
+top_of_page_button = "edit"
+
+# Sphinx TOC settings
+toctree_maxdepth = 4  # Maximum depth for nested TOC
+toctree_collapse = False  # Don't collapse by default
+toctree_titles_only = False  # Show full titles
+toctree_includehidden = True  # Include hidden TOC entries
 
 # Jinja2 options
 jinja_env_options = {"extensions": ["jinja2.ext.do"]}
@@ -75,6 +129,11 @@ autoapi_options = [
 autoapi_python_class_content = "both"
 autoapi_add_class_diagram = True
 autoapi_class_diagram_depth = 2
+
+# AutoAPI TOC configuration
+autoapi_member_order = "groupwise"  # Group by type
+autoapi_root = "autoapi"  # Root directory for API docs
+autoapi_toctree_depth = 3  # Depth for API TOC entries
 
 # Napoleon configuration
 napoleon_google_docstring = True
@@ -159,15 +218,241 @@ plantuml = "plantuml"
 # Sitemap configuration
 html_baseurl = "https://pyautodoc.readthedocs.io/"
 
-# Code autolink configuration
-codeautolink_autodoc_inject = True
+# Code autolink configuration - RESTORED with v0.17.5
+codeautolink_autodoc_inject = True  # Re-enabled - fixed in newer version
 codeautolink_concat_default = True
+
+# Treeview configuration - Dynamic collapsible sidebar (EXPERIMENTING)
+treeview_expand_all = False
+treeview_collapse_inactive = True
+treeview_max_depth = 4
+
+# Toggle prompt configuration - Interactive code blocks
+toggleprompt_offset_right = 30
+toggleprompt_default_hidden = "true"
+
+# API Schema configuration - Better dataclass documentation
+apischema_show_json_schema = True
+apischema_show_examples = True
+apischema_group_by_type = True
+
+# Removed paramlinks configuration - using codeautolink instead
+
+# Type-safe configuration - Better type documentation
+typesafe_show_annotations = True
+typesafe_include_private = False
+
+# Git last updated configuration - Page timestamps from git
+git_last_updated_show_commit_hash = True
+git_last_updated_format = "%Y-%m-%d %H:%M"
+
+# Inline code configuration - Enhanced styling
+inlinecode_highlight_language = "python"
+
+# Library configuration - Better library docs
+library_show_summary = True
+library_group_by_type = True
+
+# iContract configuration - Document contracts
+icontract_include_repr = True
+icontract_include_snapshot = False
+
+# Comments configuration - Add annotations
+comments_config = {
+    "hypothesis": True,  # Enable hypothesis comments
+    "utterances": False,  # Disable utterances for now
+}
+
+# Contributors configuration
+contributors_show_contribution_counts = True
+contributors_sort_by_contribution = True
+
+# Issues configuration - Link to GitHub
+issues_github_path = "yourusername/pyautodoc"
+issues_uri = "https://github.com/yourusername/pyautodoc/issues/{issue}"
+
+# Sphinx Tippy configuration - Rich hover tooltips
+tippy_props = {
+    "placement": "auto",
+    "maxWidth": 600,
+    "theme": "light-border",
+    "delay": [200, 100],
+    "duration": [200, 100],
+    "interactive": True,
+}
+tippy_enable_mathjax = True
+tippy_enable_doitips = True  # Enable DOI tooltips
+tippy_rtd_urls = ["https://pyautodoc.readthedocs.io"]  # ReadTheDocs integration
+tippy_anchor_parent_selector = "article.bd-article"  # For better positioning
+
+# Sphinx APISchema configuration - Enhanced dataclass documentation
+apischema_show_json_schema = True
+apischema_show_examples = True
+apischema_group_by_type = True
+apischema_custom_css = True  # Use custom CSS styling
+
+# Sphinx-prompt configuration - CLI documentation
+prompt_modifiers = "auto"  # Auto-detect prompts
+prompt_default_prompts = ["$", ">>>", "..."]
+
+# Sphinx-needs configuration - Requirements tracking
+needs_types = [
+    {
+        "directive": "req",
+        "title": "Requirement",
+        "prefix": "R_",
+        "color": "#BFD8D2",
+        "style": "node",
+    },
+    {
+        "directive": "spec",
+        "title": "Specification",
+        "prefix": "S_",
+        "color": "#FEDCD2",
+        "style": "node",
+    },
+    {
+        "directive": "test",
+        "title": "Test Case",
+        "prefix": "T_",
+        "color": "#DF744A",
+        "style": "node",
+    },
+]
+
+needs_statuses = [
+    {"name": "open", "description": "New requirement"},
+    {"name": "in_progress", "description": "Being implemented"},
+    {"name": "implemented", "description": "Completed"},
+    {"name": "closed", "description": "Done and verified"},
+]
+
+needs_tags = [
+    {"name": "security", "description": "Security related"},
+    {"name": "performance", "description": "Performance critical"},
+    {"name": "ui", "description": "User interface"},
+]
+
+# Sphinx-notfound-page configuration - Custom 404 page
+notfound_context = {
+    "title": "Page Not Found",
+    "body": """
+<h1>🚀 Oops! Page Not Found</h1>
+<p>The page you're looking for seems to have wandered off into the documentation cosmos.</p>
+
+<div class="admonition tip">
+<p class="admonition-title">Try these options:</p>
+<ul>
+<li><strong>Search:</strong> Use the search box above to find what you need</li>
+<li><strong>API Reference:</strong> Check our <a href="/autoapi/">complete API documentation</a></li>
+<li><strong>CLI Guide:</strong> Looking for commands? See our <a href="/cli-guide/">CLI documentation</a></li>
+<li><strong>Home:</strong> Return to the <a href="/">main documentation</a></li>
+</ul>
+</div>
+
+<p>Still can't find what you're looking for? <a href="https://github.com/yourusername/pyautodoc/issues">Report an issue</a> and we'll help you out!</p>
+    """,
+}
+
+notfound_template = "page.html"  # Use Furo's standard template
+notfound_no_urls_prefix = True  # Don't add URL prefix to relative links
+
+# Sphinx-reredirects configuration - Redirect management
+redirects = {
+    # Example redirects for moved/renamed pages
+    # "old-page": "new-page.html",
+    # "old-api": "autoapi/index.html",
+    # "legacy/guide": "cli-guide.html",
+}
+
+# Rediraffe configuration - Broken link detection and redirect generation
+rediraffe_redirects = {
+    # Auto-generate redirects for common patterns
+    # These will be checked during build and suggest redirects
+}
+
+# Enable redirect checking during build
+rediraffe_branch = "main"  # Check redirects against this branch
+rediraffe_auto_redirect_perc = 50  # Auto-redirect if 50%+ similarity
+
+# Sphinx-git configuration - Git changelog integration
+sphinx_git_changelog = True  # Enable git changelog
+sphinx_git_changelog_title = "📝 Documentation Changes"
+sphinx_git_show_tags = True  # Show git tags in changelog
+sphinx_git_show_branch = True  # Show current branch
+
+# Git integration settings
+sphinx_git_tracked_files = ["docs/source/"]  # Track only docs files
+sphinx_git_untracked = False  # Don't show untracked files
+
+# Sphinx-apischema configuration - Enhanced dataclass documentation
+apischema_type_annotations = True  # Show type annotations
+apischema_class_summary = True  # Show class summaries
+apischema_methods_summary = True  # Show method summaries
+
+# Sphinx-inlinecode configuration - Enhanced inline code styling
+inlinecode_enable = True  # Enable inline code enhancement
+inlinecode_highlight_style = "default"  # Code highlighting style
+inlinecode_process_docstrings = True  # Process docstrings for inline code
+
+# Sphinx-lastupdate configuration - Page timestamps
+lastupdated_fmt = "%Y-%m-%d %H:%M:%S"  # Custom timestamp format
+lastupdated_timezone = "UTC"  # Use UTC timezone
+lastupdated_show_commit_hash = True  # Show git commit hash if available
+
+# Sphinx-debuginfo configuration - Development debug information
+debuginfo_enable = True  # Enable debug information
+debuginfo_show_performance = True  # Show build performance metrics
+debuginfo_show_warnings = True  # Show warning counts
+debuginfo_show_extensions = True  # Show loaded extensions
+
+# Sphinx-social configuration - Open Graph metadata for social sharing
+social_cards = True  # Enable social media cards
+social_cards_layout = "default"  # Use default layout
+social_site_name = "PyAutoDoc"  # Site name for social cards
+social_site_description = (
+    "Hyper-organized documentation system with intense Furo theming"
+)
+social_site_logo = "_static/logo.png"  # Logo for social cards (if available)
+social_twitter_card = "summary_large_image"  # Twitter card type
+social_image = "_static/social-preview.png"  # Default social image (if available)
+
+# Open Graph metadata
+social_og_title_suffix = " - PyAutoDoc"  # Suffix for page titles
+social_og_type = "website"  # Open Graph type
+social_og_locale = "en_US"  # Locale for content
+
+# Sphinx-tags configuration - Content tagging system
+tags_create_index = True  # Create a tags index page
+tags_create_badges = True  # Create tag badges on pages
+tags_page_title = "Documentation Tags"  # Title for tags index page
+tags_intro_text = "Browse documentation content by tags"  # Intro text for tags page
+tags_extension = "tags"  # File extension for tag files
+
+# Tag styling
+tags_badge_colors = {
+    "security": "#dc3545",  # Red for security tags
+    "performance": "#28a745",  # Green for performance tags
+    "ui": "#007bff",  # Blue for UI tags
+    "api": "#6f42c1",  # Purple for API tags
+    "config": "#fd7e14",  # Orange for configuration tags
+    "tutorial": "#20c997",  # Teal for tutorials
+    "reference": "#6c757d",  # Gray for reference docs
+}
+
+# Removed reports configuration as extension was removed
 
 # INTENSE FURO THEME CONFIGURATION
 html_theme = "furo"
 
 html_theme_options = {
     "sidebar_hide_name": False,
+    # Enhanced TOC configuration
+    "navigation_depth": 4,  # Show 4 levels of nesting
+    "collapse_navigation": False,  # Don't collapse by default
+    "sticky_navigation": True,  # Make TOC sticky
+    "includehidden": True,  # Include hidden entries
+    "titles_only": False,  # Show full document structure
     # Intense branding colors
     "light_css_variables": {
         "color-brand-primary": "#2563eb",  # Blue-600
@@ -219,11 +504,15 @@ html_css_files = [
     "furo-intense.css",
     "api-docs.css",
     "mermaid-custom.css",
+    "toc-enhancements.css",  # New TOC styling
+    "tippy-enhancements.css",  # Enhanced tooltips styling
 ]
 
 html_js_files = [
     "furo-enhancements.js",
     "mermaid-config.js",
+    "toc-navigator.js",  # New TOC navigation JS
+    "js/api-enhancements.js",  # API page visual fixes
 ]
 
 
@@ -237,6 +526,11 @@ def autoapi_skip_member(app, what, name, obj, skip, options):
 def setup(app: Sphinx):
     app.connect("autoapi-skip-member", autoapi_skip_member)
 
+    # Add custom CSS classes for TOC
+    app.add_css_file("toc-enhancements.css")
+    app.add_js_file("toc-navigator.js")
+
     print("✨ Intense Furo theme with sphinx-design enabled!")
     print("🎨 Custom Mermaid integration configured!")
     print("⚡ Hyper-organized extension system active!")
+    print("📚 Enhanced TOC navigation system loaded!")

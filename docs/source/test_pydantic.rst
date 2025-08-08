@@ -1,6 +1,8 @@
 Test Pydantic
 =============
 
+.. tags:: api, tutorial
+
 Direct test of Pydantic model:
 
 .. py:currentmodule:: base.models

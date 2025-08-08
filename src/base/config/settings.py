@@ -47,7 +47,7 @@ class AppSettings(BaseSettings):
 
     Loads configuration from environment variables and .env files.
     All settings can be overridden via environment variables with
-    the APP_ prefix.
+    the ``APP_`` prefix.
 
     Attributes:
         app_name: Application name
@@ -231,6 +231,12 @@ class Settings(BaseModel):
     Aggregates all setting groups into a single configuration object.
     This is the main settings class that should be used throughout
     the application.
+
+    Attributes:
+        app: Application-specific settings
+        database: Database configuration
+        cache: Cache configuration
+        logging: Logging configuration
     """
 
     app: AppSettings = Field(default_factory=AppSettings)

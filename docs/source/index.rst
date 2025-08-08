@@ -18,6 +18,10 @@ This project demonstrates a sophisticated documentation setup with:
    :caption: Getting Started
 
    examples
+   cli-guide
+   cli-reference
+   cli-auto
+   model-detection-demo
 
 .. toctree::
    :maxdepth: 2  
@@ -25,6 +29,13 @@ This project demonstrates a sophisticated documentation setup with:
 
    autoapi/index
    test_pydantic
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Documentation
+
+   changelog
+   tags
 
 Indices and tables
 ==================
