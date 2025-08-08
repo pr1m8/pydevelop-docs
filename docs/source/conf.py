@@ -71,10 +71,13 @@ extensions = [
     "sphinxext.rediraffe",  # Broken link detection and redirect generation (INSTALLED)
     "sphinx_git",  # Git changelog integration (INSTALLED)
     "sphinx_comments",  # Comments and annotations (INSTALLED)
-    "sphinx_lastupdate",  # Last updated timestamps (INSTALLED)
+    # "sphinx_lastupdate", # Last updated timestamps (MANUALLY LOADED IN SETUP)
     "sphinx_debuginfo",  # Development debug information (INSTALLED)
-    "sphinx_social",  # Open Graph metadata for social sharing (INSTALLED)
+    "sphinx_social",  # Open Graph metadata for social sharing (FIXING SETUP ISSUE)
     "sphinx_tags",  # Content tagging system (INSTALLED)
+    "sphinx_favicon",  # Favicon management (INSTALLED)
+    "sphinx_collections",  # Document collections (INSTALLED)
+    "sphinx_combine",  # Combine multiple documents (INSTALLED)
     # NOTE: Removing sphinx_reports - may have compatibility issues
 ]
 
@@ -427,7 +430,7 @@ tags_create_index = True  # Create a tags index page
 tags_create_badges = True  # Create tag badges on pages
 tags_page_title = "Documentation Tags"  # Title for tags index page
 tags_intro_text = "Browse documentation content by tags"  # Intro text for tags page
-tags_extension = "tags"  # File extension for tag files
+tags_extension = [".rst", ".md"]  # File extensions to scan for tags
 
 # Tag styling
 tags_badge_colors = {
@@ -439,6 +442,56 @@ tags_badge_colors = {
     "tutorial": "#20c997",  # Teal for tutorials
     "reference": "#6c757d",  # Gray for reference docs
 }
+
+# Sphinx-favicon configuration - Favicon management
+favicons = [
+    {
+        "rel": "icon",
+        "sizes": "32x32",
+        "href": "favicon-32x32.png",
+        "type": "image/png",
+    },
+    {
+        "rel": "icon",
+        "sizes": "16x16",
+        "href": "favicon-16x16.png",
+        "type": "image/png",
+    },
+    {
+        "rel": "apple-touch-icon",
+        "sizes": "180x180",
+        "href": "apple-touch-icon.png",
+        "type": "image/png",
+    },
+    {
+        "rel": "shortcut icon",
+        "href": "favicon.ico",
+        "type": "image/x-icon",
+    },
+]
+
+# Sphinx-collections configuration - Document collections
+collections = {
+    "api_docs": {
+        "driver": "symlink",
+        "source": "autoapi/",
+        "target": "collections/api",
+        "ignore": ["**/index.rst"],
+    },
+    "tutorials": {
+        "driver": "copy_folder",
+        "source": ".",
+        "target": "collections/tutorials",
+        "filter": "*.rst",
+        "filter_include": "*tutorial*,*guide*,*demo*",
+    },
+}
+
+# Sphinx-combine configuration - Combine multiple documents
+combine_source_dir = "docs/source"
+combine_build_dir = "docs/build/combined"
+combine_formats = ["html", "pdf"]
+combine_master_doc = "combined_docs"
 
 # Removed reports configuration as extension was removed
 
@@ -529,6 +582,39 @@ def setup(app: Sphinx):
     # Add custom CSS classes for TOC
     app.add_css_file("toc-enhancements.css")
     app.add_js_file("toc-navigator.js")
+
+    # Try to manually import and setup sphinx-lastupdate to fix import issue
+    try:
+        import importlib.util
+        import os
+        import sys
+
+        # Find the package
+        lastupdate_path = None
+        for path in sys.path:
+            candidate = os.path.join(path, "sphinx-lastupdate", "lastupdate.py")
+            if os.path.exists(candidate):
+                lastupdate_path = candidate
+                break
+
+        if lastupdate_path:
+            spec = importlib.util.spec_from_file_location(
+                "sphinx_lastupdate", lastupdate_path
+            )
+            lastupdate_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(lastupdate_module)
+
+            # Call setup if it exists
+            if hasattr(lastupdate_module, "setup"):
+                lastupdate_module.setup(app)
+                print("🔧 sphinx-lastupdate manually loaded!")
+            else:
+                print("⚠️  sphinx-lastupdate found but no setup function")
+        else:
+            print("⚠️  sphinx-lastupdate not found in sys.path")
+
+    except Exception as e:
+        print(f"⚠️  Failed to manually load sphinx-lastupdate: {e}")
 
     print("✨ Intense Furo theme with sphinx-design enabled!")
     print("🎨 Custom Mermaid integration configured!")
