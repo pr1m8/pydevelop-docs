@@ -29,6 +29,8 @@ docs/build/
 docs/_build/
 docs/source/autoapi/
 _autosummary/
+docs/source/_collections/
+docs/source/_tags/
 
 # IDE
 .vscode/

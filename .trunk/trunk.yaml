@@ -35,3 +35,18 @@ actions:
     - trunk-check-pre-push
     - trunk-fmt-pre-commit
     - trunk-upgrade-available
+    - clear-intersphinx-cache
+    - validate-intersphinx
+  definitions:
+    - id: clear-intersphinx-cache
+      display_name: Clear Intersphinx Cache
+      description: Clear seed-intersphinx-mapping cache when dependencies change
+      run: poetry run python -m seed_intersphinx_mapping
+      triggers:
+        - files: ["pyproject.toml"]
+    - id: validate-intersphinx
+      display_name: Validate Intersphinx Mappings
+      description: Check all intersphinx cross-references
+      run: poetry run python scripts/check-intersphinx.py
+      triggers:
+        - files: ["**/*.rst", "**/*.md", "pyproject.toml"]
