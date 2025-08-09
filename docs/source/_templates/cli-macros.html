@@ -1,18 +1,19 @@
 {# CLI Documentation Macros for Jinja Templates Provides reusable macros for CLI
-documentation #} {# Macro for a single CLI command with prompt #} {% macro
-cli_command(cmd, prompt="$") -%} .. prompt:: bash {{ prompt }} {{ cmd }} {%-
-endmacro %} {# Macro for multi-line CLI commands #} {% macro
-cli_multiline(commands, prompt="$") -%} .. prompt:: bash {% for cmd in commands
-%} {{ prompt }} {{ cmd }} {% endfor %} {%- endmacro %} {# Macro for CLI command
-with output #} {% macro cli_with_output(cmd, output, prompt="$") -%} .. prompt::
-bash {{ prompt }} {{ cmd }} .. code-block:: text {{ output }} {%- endmacro %} {#
-Macro for Python REPL session #} {% macro python_repl(commands) -%} .. prompt::
-python {% for cmd in commands %} >>> {{ cmd.input }} {% if cmd.output %}{{
-cmd.output }}{% endif %} {% endfor %} {%- endmacro %} {# Macro for installation
-instructions #} {% macro install_guide(package_name, methods) -%} Installation
------------- {% for method in methods %} **{{ method.name }}:** .. prompt:: bash
-$ {{ method.command }} {% if method.note %} .. note:: {{ method.note }} {% endif
-%} {% endfor %} {%- endmacro %} {# Macro for configuration examples #} {% macro
+documentation, model detection, and smart documentation generation. #} {# Macro
+for a single CLI command with prompt #} {% macro cli_command(cmd, prompt="$")
+-%} .. prompt:: bash {{ prompt }} {{ cmd }} {%- endmacro %} {# Macro for
+multi-line CLI commands #} {% macro cli_multiline(commands, prompt="$") -%} ..
+prompt:: bash {% for cmd in commands %} {{ prompt }} {{ cmd }} {% endfor %} {%-
+endmacro %} {# Macro for CLI command with output #} {% macro
+cli_with_output(cmd, output, prompt="$") -%} .. prompt:: bash {{ prompt }} {{
+cmd }} .. code-block:: text {{ output }} {%- endmacro %} {# Macro for Python
+REPL session #} {% macro python_repl(commands) -%} .. prompt:: python {% for cmd
+in commands %} >>> {{ cmd.input }} {% if cmd.output %}{{ cmd.output }}{% endif
+%} {% endfor %} {%- endmacro %} {# Macro for installation instructions #} {%
+macro install_guide(package_name, methods) -%} Installation ------------ {% for
+method in methods %} **{{ method.name }}:** .. prompt:: bash $ {{ method.command
+}} {% if method.note %} .. note:: {{ method.note }} {% endif %} {% endfor %} {%-
+endmacro %} {# Macro for configuration examples #} {% macro
 config_example(title, content, lang="yaml") -%} **{{ title }}:** .. code-block::
 {{ lang }} {{ content }} {%- endmacro %} {# Macro for troubleshooting section #}
 {% macro troubleshooting(issues) -%} Troubleshooting --------------- {% for
@@ -30,10 +31,11 @@ sphinx-prompt recognition in templates #} {% macro smart_prompt(content,
 detect_type=True) -%} {% if detect_type %} {% if content.startswith('$') %} ..
 prompt:: bash {{ content }} {% elif content.startswith('>>>') %} .. prompt::
 python {{ content }} {% elif content.startswith('#') %} .. prompt:: bash {{
-content }} {% else %} .. prompt:: text {{ content }} {% endif %} {% else %} ..
-prompt:: bash {{ content }} {% endif %} {%- endmacro %} {# Macro for detecting
-and documenting dataclasses and Pydantic models #} {% macro
-detect_model_type(obj_module, obj_name, obj_info) -%} {# Check if it's a
+content }} {% elif content.startswith('PS') or content.startswith('C:\\') %} ..
+prompt:: powershell {{ content }} {% else %} .. prompt:: text {{ content }} {%
+endif %} {% else %} .. prompt:: bash {{ content }} {% endif %} {%- endmacro %}
+{# Macro for detecting and documenting dataclasses and Pydantic models #} {%
+macro detect_model_type(obj_module, obj_name, obj_info) -%} {# Check if it's a
 Pydantic model based on module path or base classes #} {% if 'pydantic' in
 obj_module or 'BaseModel' in (obj_info.bases | default([])) or 'BaseSettings' in
 (obj_info.bases | default([])) %} .. autopydantic_model:: {{ obj_module }}.{{
@@ -90,4 +92,42 @@ Pydantic Model :class: tip This is a Pydantic model with built-in validation and
 serialization capabilities. {% elif is_dc %} .. admonition:: Dataclass :class:
 note This is a Python dataclass with automatic field generation and type hints.
 {% endif %} {{ detect_model_type(obj_module, obj_name, obj_info) }} {%- endmacro
-%}
+%} {# Macro for creating structured API documentation #} {% macro
+api_section(title, modules, show_toc=True) -%} {{ title }} {{ "=" * title|length
+}} {% if show_toc %} .. contents:: Module Contents :local: :depth: 2 {% endif %}
+{% for module in modules %} {{ module.name }} {{ "-" * module.name|length }} {{
+module.description }} {% if module.classes %} Classes ~~~~~~~ {% for class in
+module.classes %} {{ auto_document_object(module.path, class.name, class.info)
+}} {% endfor %} {% endif %} {% if module.functions %} Functions ~~~~~~~~~ {% for
+func in module.functions %} .. autofunction:: {{ module.path }}.{{ func.name }}
+{% endfor %} {% endif %} {% endfor %} {%- endmacro %} {# Macro for creating
+navigation breadcrumbs #} {% macro breadcrumbs(items) -%} .. raw:: html
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    {% for item in items %}
+    <li class="breadcrumb-item{% if loop.last %} active{% endif %}">
+      {% if not loop.last %}
+      <a href="{{ item.url }}">{{ item.title }}</a>
+      {% else %} {{ item.title }} {% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+</nav>
+{%- endmacro %} {# Macro for creating code tabs #} {% macro code_tabs(examples)
+-%} .. tabs:: {% for example in examples %} .. tab:: {{ example.title }} ..
+code-block:: {{ example.language }} {{ example.code }} {% endfor %} {%- endmacro
+%} {# Macro for creating warning boxes #} {% macro warning_box(title, content)
+-%} .. warning:: **{{ title }}** {{ content }} {%- endmacro %} {# Macro for
+creating info boxes #} {% macro info_box(title, content) -%} .. admonition:: {{
+title }} :class: note {{ content }} {%- endmacro %} {# Macro for creating tip
+boxes #} {% macro tip_box(title, content) -%} .. admonition:: {{ title }}
+:class: tip {{ content }} {%- endmacro %} {# Macro for version badges #} {%
+macro version_badge(version, color="blue") -%} .. raw:: html
+
+<span class="badge badge-{{ color }}">v{{ version }}</span>
+{%- endmacro %} {# Macro for creating a requirements table #} {% macro
+requirements_table(requirements) -%} .. list-table:: Requirements :header-rows:
+1 :widths: 30 20 50 * - Requirement - Version - Description {% for req in
+requirements %} * - {{ req.name }} - {{ req.version }} - {{ req.description }}
+{% endfor %} {%- endmacro %}

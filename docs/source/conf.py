@@ -24,6 +24,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
+    "seed_intersphinx_mapping",  # Auto-populate intersphinx from pyproject.toml
     # Enhanced API (Priority 11-20) - REMOVED enum_tools due to compatibility
     "sphinxcontrib.autodoc_pydantic",
     "sphinx_autodoc_typehints",
@@ -152,11 +153,17 @@ napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
 napoleon_include_private_with_doc = False
 
-# Intersphinx mappings
+# Intersphinx configuration
+# seed-intersphinx-mapping will auto-populate from pyproject.toml
+pkg_requirements_source = "pyproject"  # Read dependencies from pyproject.toml
+repository_root = "../.."  # Path to repo root from docs/source
+
+# Manual intersphinx mappings (for packages without metadata or overrides)
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "pydantic": ("https://docs.pydantic.dev/latest", None),
     "sphinx": ("https://www.sphinx-doc.org/en/master", None),
+    # seed-intersphinx-mapping will add more mappings automatically
 }
 
 # Pydantic configuration
@@ -435,6 +442,7 @@ ogp_social_cards = {
 }
 
 # Sphinx-tags configuration - Content tagging system
+tags_create_tags = True  # Enable tag creation
 tags_create_index = True  # Create a tags index page
 tags_create_badges = True  # Create tag badges on pages
 tags_page_title = "Documentation Tags"  # Title for tags index page
@@ -485,7 +493,7 @@ collections = {
         "driver": "copy_folder",  # Use copy_folder instead of symlink
         "source": "autoapi/",
         "target": "_collections/api",
-        "active": True,
+        "active": False,  # Disable until autoapi/ directory is created
         "clean": True,  # Clean before copying to prevent accumulation
     },
 }
