@@ -1,11 +1,11 @@
 # PyAutoDoc
 
-A powerful, extensible documentation system for Python projects and monorepos, built on Sphinx with advanced features for automatic API documentation, cross-package linking, and beautiful theming.
+A powerful, extensible documentation system for Python monorepos, built on Sphinx with advanced features for automatic API documentation, cross-package linking, and beautiful theming.
 
 ## Features
 
 - 🚀 **Automatic API Documentation** - Extracts docstrings and generates comprehensive API docs
-- 📦 **Monorepo Support** - Build documentation for multiple packages with cross-references  
+- 📦 **Monorepo Support** - Build documentation for multiple packages with cross-references
 - 🎨 **Beautiful Themes** - Customizable themes with package-specific branding
 - 🔗 **Cross-Package Linking** - Automatic intersphinx references between packages
 - ⚡ **Parallel Building** - Build multiple packages concurrently for speed
@@ -21,7 +21,10 @@ A powerful, extensible documentation system for Python projects and monorepos, b
 git clone https://github.com/yourusername/pyautodoc.git
 cd pyautodoc
 
-# Install dependencies
+# Install dependencies with Poetry
+poetry install --with docs
+
+# Or with pip
 pip install -r requirements.txt
 
 # Build all documentation
@@ -42,225 +45,139 @@ open _build/html/index.html
 
 ```
 pyautodoc/
-├── pyautodoc_simple.py     # ⭐ Main tool - drop in any project!
-├── install.py              # One-line installer
-├── docs/                   # Documentation
-├── standalone/             # Standalone versions
-├── scripts/               # Utility scripts
-└── shared-docs-config/    # Advanced configuration
+├── docs/                    # Documentation
+│   ├── source/             # Main Sphinx source files
+│   ├── config/             # YAML configuration system
+│   └── *.md               # User guides
+├── packages/               # Example packages
+│   ├── haive-core/        # Core package
+│   ├── haive-ml/          # ML package
+│   └── haive-api/         # API package
+├── shared-docs-config/     # Shared Sphinx configuration
+│   ├── shared_config.py   # Main config
+│   └── shared_config_simple.py # Simplified config
+├── scripts/               # Build scripts
+│   └── build-monorepo-docs.py # Main build script
+└── src/                   # Example source code
 ```
 
-See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for detailed structure.
+## How It Works
 
-## Installation
+PyAutoDoc provides a sophisticated documentation system for Python monorepos:
 
-### Prerequisites
+1. **Shared Configuration**: Common Sphinx settings across all packages
+2. **Package Discovery**: Automatically finds and documents all packages
+3. **Dependency Resolution**: Builds packages in the correct order
+4. **Cross-References**: Automatic linking between packages
+5. **Parallel Builds**: Fast documentation generation
 
-- Python 3.8 or higher
-- pip or poetry
-- Git
+## Configuration
 
-### From Source
+Each package needs a `docs/conf.py` file:
 
-```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+```python
+import sys
+from pathlib import Path
 
-# Install dependencies
-pip install -r requirements.txt
+# Add shared config to path
+sys.path.insert(0, str(Path(__file__).parents[2] / "shared-docs-config"))
+
+# Import shared configuration
+from shared_config_simple import get_base_config
+
+# Get base configuration
+config = get_base_config(
+    package_name="haive-core",
+    package_path=str(Path(__file__).parents[1] / "src"),
+    is_root=False
+)
+
+# Apply configuration
+globals().update(config)
+
+# Package-specific customizations
+extensions.append('autoapi.extension')
+autoapi_dirs = [str(Path(__file__).parents[1] / "src")]
 ```
 
-### With Poetry
+## Building Documentation
+
+### Build All Packages
 
 ```bash
-# Install poetry
-curl -sSL https://install.python-poetry.org | python3 -
-
-# Install dependencies
-poetry install
-```
-
-## Usage
-
-### Build All Documentation
-
-```bash
-# Parallel build (default)
 python scripts/build-monorepo-docs.py
-
-# Clean build
-python scripts/build-monorepo-docs.py --clean
-
-# Sequential build
-python scripts/build-monorepo-docs.py --no-parallel
 ```
 
 ### Build Specific Package
 
 ```bash
-# Build single package
 python scripts/build-monorepo-docs.py --package haive-core
-
-# Build multiple packages
-python scripts/build-monorepo-docs.py -p haive-core -p haive-ml
 ```
 
-### Advanced Options
+### Build Options
 
 ```bash
+# Clean build
+python scripts/build-monorepo-docs.py --clean
+
+# Sequential build (no parallelization)
+python scripts/build-monorepo-docs.py --no-parallel
+
 # Custom worker count
 python scripts/build-monorepo-docs.py -j 8
-
-# Skip root documentation
-python scripts/build-monorepo-docs.py --no-root
-
-# Help
-python scripts/build-monorepo-docs.py --help
 ```
 
 ## Adding New Packages
 
 1. Create package structure:
-```bash
-mkdir -p packages/my-package/{src,docs,tests}
+
+```
+packages/new-package/
+├── src/
+│   └── new_package/
+│       └── __init__.py
+├── docs/
+│   └── conf.py
+└── pyproject.toml
 ```
 
-2. Add documentation configuration:
-```python
-# packages/my-package/docs/conf.py
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).parents[2] / "shared-docs-config"))
-from shared_config_simple import get_base_config
-
-config = get_base_config(
-    package_name="my-package",
-    package_path=str(Path(__file__).parents[1] / "src"),
-    is_root=False
-)
-
-globals().update(config)
-```
+2. Configure documentation in `docs/conf.py` (see Configuration section)
 
 3. Build documentation:
+
 ```bash
-python scripts/build-monorepo-docs.py --package my-package
+python scripts/build-monorepo-docs.py --package new-package
 ```
 
-## Key Features Explained
+## Advanced Features
 
-### Automatic Dependency Documentation Links
+### Custom Themes
 
-Thanks to `seed-intersphinx-mapping`, PyAutoDoc automatically creates documentation links for all your dependencies:
+Each package can have its own color scheme:
 
-- No manual configuration needed
-- Reads from `pyproject.toml`
-- Works with Poetry, setuptools, and more
-- Supports 100+ popular packages
-
-Example:
 ```python
-# In your code
-import numpy as np
-import pandas as pd
-
-# In your docs, these links work automatically:
-# :py:func:`numpy.array`
-# :py:class:`pandas.DataFrame`
+# In shared_config.py
+PACKAGE_THEMES = {
+    'haive-core': PackageColors('#dc3545', '#c82333'),
+    'haive-ml': PackageColors('#28a745', '#218838'),
+    'haive-api': PackageColors('#007bff', '#0056b3'),
+}
 ```
 
-### Security Features
+### Extension Management
 
-#### API Endpoints
+Over 70 Sphinx extensions are pre-configured, including:
 
-- **Rate Limiting** - Configurable request limits per time window
-- **Input Validation** - Size limits and type checking  
-- **Thread Safety** - Lock-based protection for concurrent requests
-- **Error Sanitization** - Safe error messages for clients
+- AutoAPI for automatic API documentation
+- Pydantic for model documentation
+- MyST for Markdown support
+- And many more...
 
-#### Build System
+## Requirements
 
-- **Path Validation** - Secure file operations
-- **Context Managers** - Safe directory changes
-- **Error Recovery** - Graceful handling of build failures
-
-## Configuration
-
-### Shared Configuration
-
-The shared configuration system provides:
-- Consistent settings across packages
-- Theme customization
-- Extension management
-- Cross-package linking
-- Automatic dependency mapping
-
-### Package-Specific Settings
-
-Each package can override:
-- Theme colors
-- Additional extensions
-- Custom templates
-- Build options
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Development Setup
-
-```bash
-# Clone repository
-git clone https://github.com/yourusername/pyautodoc.git
-cd pyautodoc
-
-# Install in development mode
-pip install -e .
-
-# Run tests
-pytest tests/
-
-# Run linters
-flake8 src/
-mypy src/
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Module Import Errors**
-   ```python
-   # In conf.py, ensure src path is added
-   sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
-   ```
-
-2. **Missing Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Build Failures**
-   ```bash
-   # Clean and rebuild
-   python scripts/build-monorepo-docs.py --clean
-   ```
-
-4. **Missing Intersphinx Links**
-   ```bash
-   # Check if seed-intersphinx-mapping is working
-   python scripts/test-intersphinx-seed.py
-   ```
-
-### Debug Mode
-
-```bash
-# Enable debug output
-export PYAUTODOC_DEBUG=1
-python scripts/build-monorepo-docs.py
-```
+- Python 3.8+
+- Poetry or pip
+- Sphinx and extensions (installed automatically)
 
 ## License
 
@@ -269,14 +186,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 Built with:
+
 - [Sphinx](https://www.sphinx-doc.org/) - Documentation generator
 - [sphinx-autoapi](https://github.com/readthedocs/sphinx-autoapi) - Automatic API documentation
 - [seed-intersphinx-mapping](https://github.com/sphinx-contrib/seed-intersphinx-mapping) - Automatic dependency linking
 - [Furo](https://github.com/pradyunsg/furo) - Beautiful documentation theme
 - Many other amazing Sphinx extensions
-
-## Support
-
-- 📧 Email: support@pyautodoc.example.com
-- 💬 Discord: [Join our community](https://discord.gg/pyautodoc)
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/pyautodoc/issues)
