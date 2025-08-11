@@ -1,0 +1,82 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "haive-api"
+version = "0.1.0"
+description = "REST API framework and tools for the Haive ecosystem"
+authors = ["Haive Team <team@haive.ai>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://haive.ai"
+repository = "https://github.com/haive/haive-api"
+documentation = "https://docs.haive.ai/api"
+keywords = ["api", "rest", "web", "server", "endpoints"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+haive-core = {path = "../haive-core", develop = true}
+haive-ml = {path = "../haive-ml", develop = true}
+fastapi = "^0.104"
+uvicorn = "^0.24"
+pydantic = "^2.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0"
+pytest-cov = "^4.0"
+pytest-asyncio = "^0.21"
+black = "^23.0"
+isort = "^5.0"
+flake8 = "^6.0"
+mypy = "^1.0"
+httpx = "^0.25"
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^7.0"
+sphinx-autoapi = "^3.0"
+sphinx-rtd-theme = "^1.3"
+myst-parser = "^2.0"
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--cov=haive.api",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-fail-under=80"
+]
+
+[tool.coverage.run]
+source = ["src/haive/api"]
+omit = ["tests/*", "*/conftest.py"]
