@@ -5,6 +5,7 @@ This document outlines the comprehensive documentation architecture implemented 
 ## Overview
 
 The Haive ecosystem follows a **modular monorepo architecture** where:
+
 - Each package maintains its own independent documentation
 - Root-level documentation aggregates and cross-links all packages
 - Shared configuration ensures consistency across the ecosystem
@@ -54,6 +55,7 @@ haive/                                  # Monorepo root
 **File: `shared-docs-config/shared_config.py`**
 
 Provides centralized configuration management:
+
 - Base Sphinx extensions (70+ extensions)
 - Common theme and styling
 - Intersphinx mappings
@@ -68,12 +70,14 @@ def get_base_config(package_name: str, package_path: str, is_root: bool = False)
 ### 2. Package-Level Documentation
 
 Each package has its own `docs/conf.py` that:
+
 - Imports shared configuration
 - Adds package-specific customizations
 - Configures AutoAPI for the package
 - Sets up cross-package references
 
 **Example Package Config:**
+
 ```python
 from shared_config import get_base_config
 
@@ -94,6 +98,7 @@ html_title = "Haive Core Documentation"
 **File: `docs/conf.py`**
 
 The root configuration:
+
 - Aggregates all package documentation
 - Provides ecosystem overview
 - Sets up comprehensive intersphinx mappings
@@ -104,6 +109,7 @@ The root configuration:
 **File: `scripts/build-monorepo-docs.py`**
 
 Features include:
+
 - **Dependency-aware building**: Respects package dependencies
 - **Parallel processing**: Builds packages concurrently when possible
 - **Comprehensive error reporting**: Detailed error categorization
@@ -111,6 +117,7 @@ Features include:
 - **Cross-package linking**: Automatic intersphinx setup
 
 **Usage Examples:**
+
 ```bash
 # Build all packages
 python scripts/build-monorepo-docs.py
@@ -143,7 +150,7 @@ Quick Start
 - Installation
 - Basic Usage
 
-Core Components  
+Core Components
 ---------------
 - Main classes with autoclass directives
 - Cross-references to other packages
@@ -201,13 +208,14 @@ Packages can reference each other using standard Sphinx syntax:
 
 ```rst
 :class:`haive.core.BaseModel`          # Reference to core package
-:doc:`haive-ml:tutorials/training`     # Reference to ML tutorials  
+:doc:`haive-ml:tutorials/training`     # Reference to ML tutorials
 :meth:`haive.api.APIServer.add_endpoint`  # Reference to API method
 ```
 
 ### 2. Shared Extensions
 
 All packages benefit from shared extensions:
+
 - `sphinx-autoapi` for automatic API documentation
 - `sphinx-copybutton` for code copying
 - `myst-parser` for Markdown support
@@ -227,17 +235,20 @@ All packages benefit from shared extensions:
 ### Adding a New Package
 
 1. **Create package structure:**
+
    ```bash
    mkdir -p packages/haive-new/{src/haive/new,docs}
    ```
 
 2. **Create pyproject.toml with dependencies:**
+
    ```toml
    [tool.poetry.dependencies]
    haive-core = {path = "../haive-core", develop = true}
    ```
 
 3. **Create docs/conf.py:**
+
    ```python
    from shared_config import get_base_config
    config = get_base_config("haive-new", str(PACKAGE_PATH))
@@ -279,26 +290,26 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    
-    - name: Install dependencies
-      run: |
-        pip install poetry
-        poetry install --with docs
-    
-    - name: Build documentation
-      run: |
-        python scripts/build-monorepo-docs.py --clean
-    
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./_build/html
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install --with docs
+
+      - name: Build documentation
+        run: |
+          python scripts/build-monorepo-docs.py --clean
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_build/html
 ```
 
 ### Hosting Strategy
@@ -306,7 +317,7 @@ jobs:
 - **Root docs** at `https://docs.haive.ai/`
 - **Package docs** at subdirectories:
   - `https://docs.haive.ai/core/`
-  - `https://docs.haive.ai/ml/`  
+  - `https://docs.haive.ai/ml/`
   - `https://docs.haive.ai/api/`
 - **Cross-linking** works seamlessly between all levels
 
@@ -315,6 +326,7 @@ jobs:
 ### 1. Automatic CLI Documentation
 
 The system detects CLI entry points and generates documentation:
+
 - Uses `sphinx-argparse` for argument parsing
 - Integrates with `sphinx-prompt` for command examples
 - Automatically discovers CLI tools in packages
@@ -322,8 +334,9 @@ The system detects CLI entry points and generates documentation:
 ### 2. Enhanced Error Reporting
 
 Build system provides comprehensive error reporting:
+
 - Categorizes warnings vs errors
-- Shows context for build failures  
+- Shows context for build failures
 - Suggests fixes for common issues
 - Tracks build performance metrics
 
@@ -337,6 +350,7 @@ Build system provides comprehensive error reporting:
 ### 4. Custom Extensions
 
 Includes custom extensions for:
+
 - **Model detection** (Pydantic, dataclasses)
 - **CLI documentation** generation
 - **Cross-package** reference validation
@@ -345,18 +359,21 @@ Includes custom extensions for:
 ## Benefits
 
 ### For Developers
+
 - **Single command** builds entire ecosystem docs
 - **Consistent** documentation patterns
 - **Automatic** cross-package linking
 - **Fast** incremental builds
 
-### For Users  
+### For Users
+
 - **Unified** documentation experience
 - **Easy** navigation between packages
 - **Complete** API reference in one place
 - **Rich** examples and tutorials
 
 ### For Maintainers
+
 - **Modular** architecture allows independent updates
 - **Shared** configuration reduces duplication
 - **Automated** build system prevents errors
@@ -365,12 +382,14 @@ Includes custom extensions for:
 ## Future Enhancements
 
 ### Short Term (v0.2.0)
+
 - Interactive API explorer
 - Live code examples
 - Version-specific documentation
 - Search improvements
 
 ### Long Term (v0.3.0+)
+
 - Multi-language support
 - Automated screenshot generation
 - Performance benchmarking docs
@@ -381,7 +400,7 @@ Includes custom extensions for:
 This monorepo documentation strategy provides:
 
 1. **Scalability**: Easy to add new packages
-2. **Consistency**: Shared configuration and patterns  
+2. **Consistency**: Shared configuration and patterns
 3. **Maintainability**: Centralized tooling and automation
 4. **User Experience**: Unified, cross-linked documentation
 5. **Developer Experience**: Simple workflow and comprehensive tooling

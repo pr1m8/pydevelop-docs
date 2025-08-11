@@ -11,12 +11,14 @@
 We now have **TWO different documentation systems**:
 
 ### 1. Original PyAutoDoc Documentation (in `docs/source/`)
+
 - Auto-generated from YAML config files
 - Has all the Sphinx extensions (70+)
 - Used by `build-docs.sh` and `Makefile`
 - This is what builds the actual project documentation
 
 ### 2. New Documentation Guides (in `docs/`)
+
 - The markdown guides we created:
   - `user-guide.md`
   - `developer-guide.md`
@@ -41,15 +43,18 @@ We now have **TWO different documentation systems**:
 ## What Should We Do?
 
 ### Option 1: Keep Both Systems
+
 - `docs/source/` - For building PyAutoDoc's own documentation
 - `docs/guides/` - Move the guides to a separate folder
 
 ### Option 2: Merge Everything
+
 - Move all guides into `docs/source/`
 - Update `docs/source/index.rst` to include them
 - Delete duplicate files in `docs/`
 
 ### Option 3: Separate Projects
+
 - Keep PyAutoDoc documentation as is
 - Move the "portable PyAutoDoc tool" to a separate repository
 
@@ -60,6 +65,7 @@ We now have **TWO different documentation systems**:
 - ⚠️ The shared config files were part of a different system (monorepo docs)
 
 The original documentation should now build with:
+
 ```bash
 cd docs
 make html

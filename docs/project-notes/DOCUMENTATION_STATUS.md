@@ -7,13 +7,16 @@ The PyAutoDoc documentation system has been successfully recovered and is workin
 ## Current Structure
 
 ### Working Documentation System (PyAutoDoc)
+
 Located in `docs/source/`:
+
 - **Configuration**: Auto-generated from YAML files in `docs/config/`
 - **Extensions**: 70+ Sphinx extensions configured
 - **Build Script**: `./build-docs.sh` in docs directory
 - **Output**: HTML documentation in `docs/build/html/`
 
 ### Documentation Files
+
 1. **Source Files** (`docs/source/`):
    - `conf.py` - Auto-generated Sphinx configuration
    - `index.rst` - Main documentation index
@@ -47,8 +50,9 @@ open build/html/index.html
 ## What Was Cleaned Up
 
 During the cleanup, we removed:
+
 - Duplicate configuration files from the monorepo system
-- The conflicting `docs/conf.py` and `docs/index.rst` 
+- The conflicting `docs/conf.py` and `docs/index.rst`
 - Shared configuration files that were part of a different project
 
 ## Current Features
