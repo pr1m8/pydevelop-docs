@@ -93,7 +93,7 @@ def _get_base_extensions(
         "sphinx.ext.viewcode",
         "sphinx.ext.intersphinx",
         # Haive essentials
-        "seed_intersphinx_mapping",
+        # "seed_intersphinx_mapping",  # Disabled for now - requires requirements.txt
         "myst_parser",
         "sphinx_copybutton",
         "sphinx_design",
