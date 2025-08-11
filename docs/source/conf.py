@@ -11,20 +11,21 @@ from sphinx.application import Sphinx
 sys.path.insert(0, os.path.abspath("../../src"))
 
 # Project information
-project = "pyautodoc"
-author = "William R. Astley"
-copyright = "2025, William R. Astley"
+project = "Haive AI Agent Framework Documentation"
+author = "Haive Team"
+copyright = "2025, Haive Team"
 release = "0.1.0"
 
 # Extensions - HYPER-ORGANIZED with proper loading order (compatibility filtered)
 extensions = [
-    # Core (Priority 1-10) - AutoAPI FIRST as requested
+    # Core (Priority 1-10) - AutoAPI DISABLED for central hub
     "sphinx.ext.autodoc",
-    "autoapi.extension",
+    # "autoapi.extension",  # DISABLED: Central hub doesn't generate APIs, packages do
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
     "seed_intersphinx_mapping",  # Auto-populate intersphinx from pyproject.toml
+    "sphinxcontrib.collections",  # Central hub coordination
     # Enhanced API (Priority 11-20) - REMOVED enum_tools due to compatibility
     "sphinxcontrib.autodoc_pydantic",
     "sphinx_autodoc_typehints",
@@ -123,11 +124,21 @@ toctree_includehidden = True  # Include hidden TOC entries
 jinja_env_options = {"extensions": ["jinja2.ext.do"]}
 
 # AutoAPI configuration - PRIORITY FIRST
+# Collections configuration - Central Hub for Haive Packages
+collections = {
+    "haive_packages": {
+        "driver": "copy_folder",
+        "source_folder": "../../../packages/*/docs/build/html/",  # Collect from packages/ (tools/haive-docs -> packages/)
+        "target_folder": "_collections/",
+        "active": True,
+    }
+}
+
 autoapi_type = "python"
-autoapi_dirs = ["../../src"]
+# autoapi_dirs = ["../../src"]  # DISABLED: Let individual packages handle their own APIs
 autoapi_template_dir = "_autoapi_templates"
 autoapi_add_toctree_entry = True
-autoapi_generate_api_docs = True
+autoapi_generate_api_docs = False  # DISABLED: Central hub doesn't generate APIs
 autoapi_keep_files = True
 autoapi_options = [
     "members",
@@ -592,7 +603,7 @@ def autoapi_skip_member(app, what, name, obj, skip, options):
 
 
 def setup(app: Sphinx):
-    app.connect("autoapi-skip-member", autoapi_skip_member)
+    # app.connect("autoapi-skip-member", autoapi_skip_member)  # DISABLED: No AutoAPI in central hub
 
     # Add custom CSS classes for TOC
     app.add_css_file("toc-enhancements.css")
