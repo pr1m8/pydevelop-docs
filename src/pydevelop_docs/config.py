@@ -678,10 +678,57 @@ def autodoc_skip_member(app, what, name, obj, skip, options):
     return skip
 
 
+def process_docstring(app, what, name, obj, options, lines):
+    """Process docstrings to fix common RST formatting issues."""
+    if not lines:
+        return
+
+    # Fix improper indentation in docstrings
+    # This handles cases where code examples are indented without proper RST formatting
+    in_example_block = False
+    fixed_lines = []
+
+    for i, line in enumerate(lines):
+        # Check if we're starting an example block
+        if line.strip().lower() in ["example:", "examples:", "usage:"]:
+            in_example_block = True
+            fixed_lines.append(line)
+            # Add :: to create a proper code block
+            if i + 1 < len(lines) and lines[i + 1].strip():
+                fixed_lines.append("")
+                fixed_lines.append("    ::")
+                fixed_lines.append("")
+            continue
+
+        # If we're in an example block and hit a non-indented line, we're done
+        if in_example_block and line and not line[0].isspace():
+            in_example_block = False
+
+        # If we're in an example block, ensure proper indentation
+        if in_example_block and line.strip():
+            # Ensure at least 4 spaces of indentation
+            stripped = line.lstrip()
+            current_indent = len(line) - len(stripped)
+            if current_indent < 4:
+                line = "    " + stripped
+            else:
+                # Add 4 more spaces to existing indentation
+                line = "    " + line
+
+        fixed_lines.append(line)
+
+    # Replace the original lines
+    lines.clear()
+    lines.extend(fixed_lines)
+
+
 def setup(app):
     """Setup Sphinx application with custom handlers."""
     # Add autodoc skip handler to prevent processing metaclasses
     app.connect("autodoc-skip-member", autodoc_skip_member)
+
+    # Add docstring processor to fix RST formatting issues
+    app.connect("autodoc-process-docstring", process_docstring)
 
     # Add custom CSS for better styling
     app.add_css_file("custom.css", priority=600)
