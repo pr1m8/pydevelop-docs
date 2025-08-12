@@ -268,6 +268,9 @@ def get_haive_config(
         "sphinx_git_show_branch": True,
         "sphinx_git_tracked_files": ["docs/source/"],
         "sphinx_git_untracked": False,
+        # Sphinx-changelog configuration
+        "changelog_sections_past": 10,  # How many past releases to show
+        "changelog_inner_tag_sort": ["breaking", "feature", "bugfix", "improvement"],
         # Debug info configuration
         "debuginfo_enable": True,
         "debuginfo_show_performance": True,
@@ -420,6 +423,7 @@ def _get_complete_extensions(
         "sphinx_reredirects",
         "sphinxext.rediraffe",
         "sphinx_git",
+        "sphinx_changelog",
         "sphinx_debuginfo",
         "sphinxext.opengraph",
         "sphinx_tags",
@@ -536,7 +540,7 @@ def _get_complete_theme_options(
         "source_directory": (
             f"packages/{package_name}/docs/"
             if not is_central_hub
-            else "tools/haive-docs/docs/"
+            else "tools/pydevelop-docs/docs/"
         ),
         # Announcements
         "announcement": (

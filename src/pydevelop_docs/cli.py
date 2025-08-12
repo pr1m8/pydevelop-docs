@@ -14,8 +14,10 @@ import click
 import tomlkit
 import yaml
 
+from .autofix import AutoFixer
 from .builders import MonorepoBuilder, get_builder
 from .config import get_haive_config
+from .display import EnhancedDisplay
 from .interactive import interactive_cli as run_interactive
 
 
@@ -26,15 +28,18 @@ class ProjectAnalyzer:
         self.path = path
 
     def analyze(self) -> Dict[str, Any]:
-        """Analyze project and return configuration details."""
+        """Analyze project and return detailed configuration and package status."""
         info = {
             "type": "unknown",
             "name": self.path.name,
             "package_manager": None,
             "packages": [],
+            "package_details": {},
             "has_docs": (self.path / "docs").exists(),
+            "central_hub": self._analyze_central_hub(),
             "structure": None,
             "python_files": [],
+            "dependencies": self._analyze_dependencies(),
         }
 
         # Detect package manager
@@ -49,13 +54,19 @@ class ProjectAnalyzer:
         # Detect project type and structure
         if (self.path / "packages").exists():
             info["type"] = "monorepo"
-            info["packages"] = [
+            package_names = [
                 p.name
                 for p in (self.path / "packages").iterdir()
                 if p.is_dir() and not p.name.startswith(".")
             ]
+            info["packages"] = package_names
+            info["package_details"] = {
+                name: self._analyze_package(self.path / "packages" / name)
+                for name in package_names
+            }
         else:
             info["type"] = "single"
+            info["package_details"] = {"single": self._analyze_package(self.path)}
 
         # Detect source structure
         if (self.path / "src").exists():
@@ -66,6 +77,97 @@ class ProjectAnalyzer:
             info["python_files"] = list(self.path.glob("**/*.py"))
 
         return info
+
+    def _analyze_package(self, package_path: Path) -> Dict[str, Any]:
+        """Analyze individual package structure and status."""
+        return {
+            "src_exists": (package_path / "src").exists(),
+            "docs_exists": (package_path / "docs").exists(),
+            "docs_source_exists": (package_path / "docs" / "source").exists(),
+            "pyproject_exists": (package_path / "pyproject.toml").exists(),
+            "conf_py_exists": (package_path / "docs" / "source" / "conf.py").exists(),
+            "changelog_exists": (
+                package_path / "docs" / "source" / "changelog.rst"
+            ).exists(),
+            "index_rst_exists": (
+                package_path / "docs" / "source" / "index.rst"
+            ).exists(),
+            "uses_shared_config": self._uses_shared_config(package_path),
+            "python_files_count": (
+                len(list(package_path.rglob("*.py"))) if package_path.exists() else 0
+            ),
+        }
+
+    def _analyze_central_hub(self) -> Dict[str, Any]:
+        """Analyze central documentation hub status."""
+        docs_path = self.path / "docs"
+        return {
+            "exists": docs_path.exists(),
+            "source_exists": (docs_path / "source").exists(),
+            "conf_py_exists": (docs_path / "source" / "conf.py").exists(),
+            "index_rst_exists": (docs_path / "source" / "index.rst").exists(),
+            "collections_configured": self._check_collections_config(docs_path),
+            "build_exists": (docs_path / "build").exists(),
+        }
+
+    def _analyze_dependencies(self) -> Dict[str, Any]:
+        """Analyze dependency status and conflicts."""
+        pyproject_path = self.path / "pyproject.toml"
+        issues = []
+
+        if not pyproject_path.exists():
+            return {"valid": False, "issues": ["No pyproject.toml found"]}
+
+        try:
+            with open(pyproject_path, "r") as f:
+                content = f.read()
+
+            # Check for duplicate entries
+            lines = content.split("\n")
+            seen_deps = {}
+            for i, line in enumerate(lines, 1):
+                if "=" in line and not line.strip().startswith("#"):
+                    dep_name = line.split("=")[0].strip()
+                    if dep_name in seen_deps and dep_name:
+                        issues.append(
+                            f"Duplicate dependency '{dep_name}' (lines {seen_deps[dep_name]}, {i})"
+                        )
+                    else:
+                        seen_deps[dep_name] = i
+
+            # Try to parse TOML
+            import tomlkit
+
+            tomlkit.parse(content)
+
+        except Exception as e:
+            issues.append(f"TOML parse error: {str(e)}")
+
+        return {"valid": len(issues) == 0, "issues": issues}
+
+    def _uses_shared_config(self, package_path: Path) -> bool:
+        """Check if package uses shared pydevelop_docs config."""
+        conf_py = package_path / "docs" / "source" / "conf.py"
+        if not conf_py.exists():
+            return False
+
+        try:
+            content = conf_py.read_text()
+            return "pydevelop_docs.config" in content
+        except:
+            return False
+
+    def _check_collections_config(self, docs_path: Path) -> bool:
+        """Check if sphinx-collections is configured."""
+        conf_py = docs_path / "source" / "conf.py"
+        if not conf_py.exists():
+            return False
+
+        try:
+            content = conf_py.read_text()
+            return "sphinxcontrib.collections" in content
+        except:
+            return False
 
     def _detect_pyproject_manager(self) -> str:
         """Detect which tool manages the pyproject.toml."""
@@ -619,7 +721,21 @@ def cli(ctx):
     "--dry-run", "-n", is_flag=True, help="Show what would be done without doing it"
 )
 @click.option("--force", "-f", is_flag=True, help="Overwrite existing documentation")
-def init(packages_dir, include_root, packages, dry_run, force):
+@click.option("--quiet", "-q", is_flag=True, help="Minimal output")
+@click.option("--debug", is_flag=True, help="Show debug information")
+@click.option("--fix-dependencies", is_flag=True, help="Auto-fix dependency conflicts")
+@click.option("--yes", "-y", is_flag=True, help="Skip confirmation prompts")
+def init(
+    packages_dir,
+    include_root,
+    packages,
+    dry_run,
+    force,
+    quiet,
+    debug,
+    fix_dependencies,
+    yes,
+):
     """Initialize documentation for any Python project.
 
     This command creates a complete Sphinx documentation setup with all
@@ -627,40 +743,166 @@ def init(packages_dir, include_root, packages, dry_run, force):
     """
     project_path = Path.cwd()
 
-    # Analyze project
-    click.echo(f"🔍 Analyzing project at {project_path}...")
+    # Initialize enhanced display
+    display = EnhancedDisplay(quiet=quiet, debug=debug)
+
+    # Analyze project with enhanced detection
     analyzer = ProjectAnalyzer(project_path)
-    project_info = analyzer.analyze()
+    analysis = analyzer.analyze()
+    analysis["path"] = str(project_path)
 
-    click.echo(f"📦 Project: {project_info['name']}")
-    click.echo(f"📁 Type: {project_info['type']}")
-    click.echo(f"🔧 Package Manager: {project_info['package_manager']}")
+    # Show detailed analysis
+    display.show_analysis(analysis)
 
-    if project_info["has_docs"] and not force:
-        click.echo("⚠️  Documentation already exists! Use --force to overwrite.")
+    # Check for dependency issues and auto-fix if requested
+    autofix = AutoFixer(project_path, display)
+
+    if not analysis["dependencies"]["valid"]:
+        if fix_dependencies or yes:
+            display.debug("Auto-fixing dependency issues...")
+            autofix.analyze_and_fix(analysis, apply_fixes=True)
+        else:
+            available_fixes = autofix.analyze_and_fix(analysis, apply_fixes=False)
+            if available_fixes and not quiet:
+                if display.show_fixes_prompt(
+                    [f["description"] for f in available_fixes]
+                ):
+                    autofix.analyze_and_fix(analysis, apply_fixes=True)
+                else:
+                    display.warning("Dependency issues not fixed. Build may fail.")
+
+    # Check if documentation exists
+    has_existing_docs = (
+        any(
+            details.get("docs_exists", False)
+            for details in analysis["package_details"].values()
+        )
+        or analysis["central_hub"]["exists"]
+    )
+
+    if has_existing_docs and not force:
+        display.error("Documentation already exists! Use --force to overwrite.")
         return
 
+    if dry_run:
+        display.show_processing(analysis["packages"])
+        click.echo("\n🔍 DRY RUN - No changes would be made")
+        return
+
+    # Process packages
+    summary = {
+        "packages_configured": 0,
+        "packages_created": 0,
+        "packages_updated": 0,
+        "central_hub_status": "configured",
+        "conflicts_resolved": len(autofix.get_applied_fixes()),
+    }
+
+    # Initialize each package
+    for pkg_name in analysis["packages"]:
+        pkg_path = project_path / "packages" / pkg_name
+        pkg_details = analysis["package_details"][pkg_name]
+
+        display.debug(f"Processing package: {pkg_name}")
+
+        # Ensure docs structure exists
+        if not pkg_details["docs_exists"]:
+            display.debug(f"Creating docs structure for {pkg_name}")
+            (pkg_path / "docs" / "source").mkdir(parents=True, exist_ok=True)
+            summary["packages_created"] += 1
+        else:
+            summary["packages_updated"] += 1
+
+        # Update to use shared config
+        if autofix.ensure_shared_config(pkg_path, pkg_name):
+            display.debug(f"Updated {pkg_name} to use shared config")
+
+        # Create changelog
+        if autofix.create_changelog(pkg_path, pkg_name):
+            display.debug(f"Created changelog for {pkg_name}")
+
+        # Update index.rst
+        if autofix.update_index_rst(pkg_path, pkg_name):
+            display.debug(f"Updated index.rst for {pkg_name}")
+
+        summary["packages_configured"] += 1
+
     # Initialize documentation
-    initializer = DocsInitializer(project_path, project_info)
+    initializer = DocsInitializer(project_path, analysis)
 
     try:
         initializer.initialize(force=force)
+        display.success("All packages configured with enhanced documentation system!")
 
-        click.echo("\n✅ Documentation initialized successfully!")
-        click.echo("\n📚 Next steps:")
-
-        if project_info["package_manager"] == "poetry":
-            click.echo("   1. Run: poetry install --with docs")
-            click.echo("   2. Run: cd docs && poetry run make html")
-        else:
-            click.echo("   1. Install dependencies from requirements.txt")
-            click.echo("   2. Run: cd docs && make html")
-
-        click.echo("   3. Open: docs/build/html/index.html")
+        # Show summary
+        display.show_summary(summary)
 
     except Exception as e:
-        click.echo(f"\n❌ Error: {e}")
+        display.error(f"Initialization failed: {e}")
+        if debug:
+            import traceback
+
+            click.echo(traceback.format_exc(), err=True)
         raise click.Abort()
+
+
+@cli.command()
+@click.option("--fix", is_flag=True, help="Automatically fix detected issues")
+@click.option("--quiet", "-q", is_flag=True, help="Minimal output")
+def doctor(fix, quiet):
+    """Check for common issues and suggest fixes."""
+    project_path = Path.cwd()
+    display = EnhancedDisplay(quiet=quiet)
+
+    # Analyze project
+    analyzer = ProjectAnalyzer(project_path)
+    analysis = analyzer.analyze()
+    analysis["path"] = str(project_path)
+
+    # Show analysis
+    display.show_analysis(analysis)
+
+    # Check for issues and apply fixes if requested
+    autofix = AutoFixer(project_path, display)
+
+    issues_found = False
+
+    if not analysis["dependencies"]["valid"]:
+        issues_found = True
+        if fix:
+            autofix.analyze_and_fix(analysis, apply_fixes=True)
+        else:
+            available_fixes = autofix.analyze_and_fix(analysis, apply_fixes=False)
+            if available_fixes:
+                click.echo("\n🔧 Available fixes:")
+                for fix_desc in [f["description"] for f in available_fixes]:
+                    click.echo(f"   - {fix_desc}")
+                click.echo("\nRun with --fix to apply these fixes automatically.")
+
+    # Check package configurations
+    for pkg_name, details in analysis["package_details"].items():
+        if not details.get("uses_shared_config", False) and details.get(
+            "conf_py_exists", False
+        ):
+            issues_found = True
+            display.warning(
+                f"{pkg_name} is using embedded config instead of shared config"
+            )
+            if fix:
+                autofix.ensure_shared_config(
+                    project_path / "packages" / pkg_name, pkg_name
+                )
+
+    if not issues_found:
+        display.success("No issues detected! Project is healthy.")
+    elif fix:
+        applied_fixes = autofix.get_applied_fixes()
+        if applied_fixes:
+            display.success(f"Applied {len(applied_fixes)} fixes:")
+            for fix in applied_fixes:
+                click.echo(f"   ✅ {fix}")
+        else:
+            display.warning("No fixes could be applied automatically.")
 
 
 @cli.command()

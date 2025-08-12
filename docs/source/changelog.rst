@@ -1,14 +1,21 @@
 Changelog
 =========
 
-This page automatically tracks documentation changes using Git history.
+This page tracks changes to the PyDevelop Documentation Tools using both manual entries and Git history.
+
+Release Notes
+-------------
+
+.. changelog::
+   :towncrier: ../../
+   :towncrier-skip-if-empty:
+
+Recent Documentation Updates
+----------------------------
 
 .. git_changelog::
    :revisions: 10
    :rev-list-extra: --first-parent
-
-Recent Documentation Updates
-----------------------------
 
 The changelog above shows the most recent documentation commits. This page is automatically updated with each build based on Git history.
 
