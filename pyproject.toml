@@ -1,12 +1,24 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
 name = "pydevelop-docs"
 version = "0.1.0"
 description = "Universal Python documentation generator with 40+ Sphinx extensions pre-configured. Zero-configuration setup for beautiful, professional documentation."
-authors = ["Haive Team <team@haive.ai>"]
-homepage = "https://github.com/haive-ai/pydevelop-docs"
-repository = "https://github.com/haive-ai/pydevelop-docs"
-documentation = "https://pydevelop-docs.readthedocs.io"
-keywords = ["documentation", "sphinx", "python", "docs", "api", "autodoc"]
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "PyDevelop Team", email = "team@haive.ai" }]
+maintainers = [{ name = "PyDevelop Team", email = "team@haive.ai" }]
+keywords = [
+  "documentation",
+  "sphinx",
+  "python",
+  "docs",
+  "api",
+  "autodoc",
+  "namespace-package",
+]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
@@ -15,208 +27,85 @@ classifiers = [
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
 ]
-readme = "README.md"
-packages = [{ include = "pydevelop_docs", from = "src" }]
+requires-python = ">=3.12"
+dependencies = [
+  "click>=8.1.7",
+  "tomlkit>=0.13.2",
+  "pyyaml>=6.0.1",
+  "questionary>=2.1.0",
+  "rich>=14.1.0",
+  "sphinx>=8.2.3",
+  # TODO: Add sphinx-collections (see todo #sphinx-collections-uv-issue)
+  "seed-intersphinx-mapping>=1.2.2",
+  "sphinx-toolbox>=3.8.1",
+  "furo>=2024.8.6",
+  "myst-parser>=4.0.1",
+]
 
-[tool.poetry.scripts]
-pydevelop-docs = "pydevelop_docs.cli:cli"
+[project.urls]
+Homepage = "https://github.com/pydevelop/pydevelop-docs"
+Repository = "https://github.com/pydevelop/pydevelop-docs"
+Documentation = "https://pydevelop-docs.readthedocs.io"
+Issues = "https://github.com/pydevelop/pydevelop-docs/issues"
 
-[tool.poetry.dependencies]
-python = ">=3.12,<3.13"
-click = "^8.1.7"
-tomlkit = "^0.13.2"
-pyyaml = "^6.0.1"
-questionary = "^2.1.0"
-rich = "^14.1.0"
-sphinx = "8.2.3"
-sphinx-collections = "^0.2.0"
-seed-intersphinx-mapping = "^1.2.2"
-sphinx-toolbox = "^3.8.1"
-furo = "^2024.8.6"
-myst-parser = "^4.0.1"
+[project.scripts]
+pydevelop-docs = "pydevelop.docs.cli:cli"
 
-[tool.poetry.group.docs.dependencies]
-sphinxcontrib-jquery = "^4.1"
-sphinx-sitemap = "^2.6.0"
-sphinxcontrib-mermaid = "^1.0.0"
-sphinxcontrib-youtube = "^1.4.1"
-sphinx-autoapi = "^3.6.0"
-sphinx-copybutton = "^0.5.2"
-sphinx-togglebutton = "^0.3.2"
-sphinx-autodoc-typehints = "^3.1.0"
-sphinx-rtd-theme = "^3.0.2"
-sphinx-tabs = "^3.4.5"
-sphinx-autodoc2 = "^0.5.0"
-sphinx-autobuild = "^2024.10.3"
-sphinx-inline-tabs = "^2023.4.21"
-doc8 = "^1.1.2"
-codespell = "^2.4.1"
-sphinxcontrib-spelling = "^8.0.1"
-pyenchant = "^3.2.2"
-sphinxcontrib-openapi = "^0.8.4"
-sphinxcontrib-httpdomain = "^1.8.1"
-sphinx-pdf-generate = "^0.0.4"
-sphinx-simplepdf = "^1.6.0"
-readthedocs-sphinx-search = "^0.3.2"
-sphinx-multiversion = "^0.2.4"
-sphinxcontrib-versioning = "^2.2.1"
-sphinxext-opengraph = "^0.10.0"
-sphinx-needs = "^5.1.0"
-sphinx-gallery = "^0.19.0"
-sphinx-exec-directive = "^0.6"
-jupyter-cache = "^1.0.1"
-pydata-sphinx-theme = "^0.16.1"
-sphinx-prompt = "^1.10.0"
-sphinx-codeautolink = "^0.17.0"
-sphinx-jinja2 = "^0.0.1"
-sphinx-argparse = "^0.5.2"
-sphinx-click = "^6.0.0"
-sphinx-issues = "^5.0.1"
-sphinx-jsonschema = "^1.19.1"
-sphinx-tippy = "^0.4.3"
-sphinx-hoverxref = "^1.4.2"
-sphinxemoji = "^0.3.1"
-sphinx-last-updated-by-git = "^0.3.8"
-sphinxext-rediraffe = "^0.2.7"
-sphinx-math-dollar = "^1.2.1"
-sphinx-lint = "^1.0.0"
-autodoc-pydantic = "^2.2.0"
-sphinxcontrib-plantuml = "^0.30"
-sphinxcontrib-drawio = "^0.0.17"
-sphinxcontrib-images = "^1.0.1"
-sphinxcontrib-seqdiag = "^3.0.0"
-sphinxcontrib-blockdiag = "^3.0.0"
-sphinx-autodocgen = "^1.4"
-sphinxcontrib-fulltoc = "^1.2.0"
-sphinx-external-toc = "^1.0.1"
-sphinx-thebe = "^0.3.1"
-sphinx-autosummary-accessors = "^2025.3.1"
-sphinx-pyproject = "^0.3.0"
-sphinx-modern-theme = "^1.0.5"
-sphinx-basic-ng = "^1.0.0b2"
-myst-nb = "^1.3.0"
-sphinx-typlog-theme = "^0.8.0"
-autodocsumm = "^0.2.14"
-sphinx-favicon = "^1.0.1"
-sphinx-notfound-page = "^1.1.0"
-sphinx-intl = "^2.3.1"
-sphinx-git = "^11.0.0"
-sphinx-version-warning = "^1.1.2"
-sphinx-contributors = "^0.2.7"
-sphinx-substitution-extensions = "^2025.6.6"
-sphinx-selective-exclude = "^1.0.3"
-sphinx-revealjs = "^3.2.0"
-sphinx-proof = "^0.2.1"
-sphinx-exercise = "^1.0.1"
-sphinx-jinja = "^2.0.2"
-sphinx-removed-in = "^0.2.3"
-sphinx-pyscript = "^0.1.0"
-sphinx-autofixture = "^0.4.1"
-sphinx-automagicdoc = "^0.0.2"
-sphinx-me = "^0.3"
-sphinx-autoissues = "^0.0.1"
-sphinx-autoindex = "^0.1.5"
-sphinx-autopackagesummary = "^1.3"
-sphinx-autopages = "^0.0.3"
-sphinx-automodapi = "^0.20.0"
-sphinx-autorun = "^2.0.0"
-sphinx-cache = "^0.0.1"
-sphinx-btn = "^0.1.2"
-sphinx-changelog = "^1.6.0"
-sphinx-carousel = "^1.2.0"
-sphinx-charts = "^0.2.1"
-sphinx-cmd = "^0.5.0"
-sphinx-codefence = "^0.1.0"
-sphinx-codelinks = "^0.1.2"
-sphinx-collapse = "^0.1.3"
-sphinx-combine = "^2024.12.30.1"
-sphinx-comments = "^0.0.3"
-sphinx-debuginfo = "^0.2.2.post1"
-sphinx-desktop = "^20240301"
-sphinx-diagrams = "^0.4.0"
-sphinx-dust = "^1.2.4"
-sphinx-fasvg = "^2.0.2"
-sphinx-feedback = "^0.1.0"
-sphinx-galleria = "^2.1.0"
-sphinx-mindmap = "^0.5.2"
-sphinx-multiproject = "^1.0.0"
-sphinx-openapi = "^1.0.10"
-sphinx-polyversion = "^1.1.0"
-sphinx-refdoc = "^0.3.1"
-sphinx-reports = "^0.9.7"
-sphinx-reredirects = "^1.0.0"
-sphinx-sql = "^1.3.5"
-sphinx-social = "^0.0.0"
-sphinx-tags = "^0.4"
-sphinx-tagtoctree = "^1.0.0"
-sphinx-thebelab = "^0.0.6"
-sphinx-timeline = "^0.2.1"
-sphinx-toggleprompt = "^0.6.0"
-sphinx-toml = "^0.0.4"
-sphinx-treeview = "^1.1.1"
-sphinx-uml = "^0.3.2"
-sphinx-typesafe = "^0.3"
-sphinx-tsegsearch = "^1.2"
-sphinx-variations = "^1.0.5"
-sphinx-versions = "^1.1.3"
-sphinx-versioning = "^0.1.5"
-sphinx-visualized = "^0.4.0"
-sphinx-watch = "^0.1.2"
-sphinx-icontract = "^2.0.3"
-sphinx-inlinecode = "^2.0.1"
-sphinx-inplace = "^0.0.7"
-sphinx-interrogatedb = "^1.3.1"
-sphinx-lastupdate = "^1.0.0"
-sphinx-mcp = "^0.1.1"
-sphinx-markdown = "^1.0.2"
-darglint2 = "^1.8.2"
-pytest-doctestplus = "^1.4.0"
-sphinx-testing = "^1.0.1"
-pydoctor = "^25.4.0"
-enum-tools = "^0.13.0"
-erdantic = "^1.0.6"
-sphinx-design = "^0.6.1"
-sphinxcontrib-programoutput = "^0.18"
-sphinxcontrib-jupyter = "^0.5.10"
-sphinxcontrib-video = "^0.4.1"
-sphinx-apischema = "^0.1"
-sphinx-exec-code = "^0.16"
-sphinx-runpython = "^0.4.0"
+[project.optional-dependencies]
+docs = [
+  "sphinxcontrib-jquery>=4.1",
+  "sphinx-sitemap>=2.6.0",
+  "sphinxcontrib-mermaid>=1.0.0",
+  "sphinx-autoapi>=3.6.0",
+  "sphinx-copybutton>=0.5.2",
+  "sphinx-togglebutton>=0.3.2",
+  "sphinx-autodoc-typehints>=3.1.0",
+  "sphinx-tabs>=3.4.5",
+  "sphinx-autobuild>=2024.10.3",
+  "sphinx-codeautolink>=0.17.0",
+  "sphinx-tippy>=0.4.3",
+  "sphinx-last-updated-by-git>=0.3.8",
+  "sphinxext-rediraffe>=0.2.7",
+  "autodoc-pydantic>=2.2.0",
+  "sphinxcontrib-plantuml>=0.30",
+  "sphinxcontrib-mermaid>=1.0.0",
+  "enum-tools>=0.13.0",
+  "erdantic>=1.0.6",
+  "sphinx-design>=0.6.1",
+  "sphinxcontrib-programoutput>=0.18",
+  "sphinx-apischema>=0.1",
+  "sphinx-exec-code>=0.16",
+  "sphinx-runpython>=0.4.0",
+]
+dev = ["pre-commit>=4.2.0", "pre-commit-hooks>=5.0.0", "towncrier>=24.8.0"]
 
-[tool.poetry.group.dev.dependencies]
-pre-commit = "^4.2.0"
-pre-commit-hooks = "^5.0.0"
-towncrier = "^24.8.0"
+# PEP 420 namespace package configuration
+[tool.hatch.build.targets.wheel]
+packages = ["src/pydevelop"]
 
-[tool.poetry.group.web.dependencies]
-playwright = "^1.54.0"
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src",
+  "/README.md",
+  "/QUICKSTART.md",
+  "/EXTENSIONS.md",
+  "/LICENSE",
+  "/CHANGELOG.md",
+]
 
+# Towncrier configuration for changelog
 [tool.towncrier]
 package_dir = "."
 filename = "CHANGELOG.md"
 directory = "changes"
 title_format = "# PyDevelop-Docs Changelog\n\nAll notable changes to the PyDevelop Documentation Tools will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n<!-- towncrier release notes start -->"
-issue_format = "[#{issue}](https://github.com/prim8/haive/issues/{issue})"
+issue_format = "[#{issue}](https://github.com/pydevelop/pydevelop-docs/issues/{issue})"
 template = "changes/.template.md"
 start_string = "<!-- towncrier release notes start -->"
 underlines = ["", "", ""]
 all_bullets = false
-ignore = [
-  "README.md",
-  ".template.md",
-  ".gitkeep",
-  "feature",
-  "bugfix",
-  "improvement",
-  "deprecation",
-  "breaking",
-  "security",
-  "performance",
-  "docs",
-  "dev",
-  "misc",
-]
 
 [[tool.towncrier.type]]
 directory = "feature"
@@ -267,7 +156,3 @@ showcontent = true
 directory = "misc"
 name = "🔀 Miscellaneous"
 showcontent = true
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
