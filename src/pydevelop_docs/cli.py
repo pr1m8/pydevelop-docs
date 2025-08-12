@@ -7,6 +7,7 @@ for any Python project, whether it's a single package or monorepo.
 import json
 import shutil
 import subprocess
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -16,9 +17,10 @@ import yaml
 
 from .autofix import AutoFixer
 from .builders import MonorepoBuilder, get_builder
-from .config import get_haive_config
+from .config import get_central_hub_config, get_haive_config
 from .display import EnhancedDisplay
 from .interactive import interactive_cli as run_interactive
+from .mock_operations import MockOperationPlan, create_documentation_plan
 
 
 class ProjectAnalyzer:
@@ -111,7 +113,29 @@ class ProjectAnalyzer:
         }
 
     def _analyze_dependencies(self) -> Dict[str, Any]:
-        """Analyze dependency status and conflicts."""
+        """Skip dependency analysis for existing projects - focus on documentation only."""
+        pyproject_path = self.path / "pyproject.toml"
+
+        if not pyproject_path.exists():
+            return {"valid": False, "issues": ["No pyproject.toml found"]}
+
+        try:
+            # Just validate that the TOML file is readable
+            with open(pyproject_path, "r") as f:
+                content = f.read()
+
+            # Ensure it's valid TOML
+            tomlkit.parse(content)
+
+            # For existing projects, assume dependencies are correctly managed
+            # pydevelop-docs is a documentation tool, not a dependency manager
+            return {"valid": True, "issues": []}
+
+        except Exception as e:
+            return {"valid": False, "issues": [f"TOML parse error: {e}"]}
+
+    def _analyze_dependencies_old(self) -> Dict[str, Any]:
+        """Original naive dependency analysis - now deprecated."""
         pyproject_path = self.path / "pyproject.toml"
         issues = []
 
@@ -122,7 +146,7 @@ class ProjectAnalyzer:
             with open(pyproject_path, "r") as f:
                 content = f.read()
 
-            # Check for duplicate entries
+            # Check for duplicate entries (DEPRECATED - too broad)
             lines = content.split("\n")
             seen_deps = {}
             for i, line in enumerate(lines, 1):
@@ -743,22 +767,60 @@ def init(
     """
     project_path = Path.cwd()
 
-    # Initialize enhanced display
-    display = EnhancedDisplay(quiet=quiet, debug=debug)
+    # Initialize enhanced display with dry-run awareness
+    display = EnhancedDisplay(quiet=quiet, debug=debug, dry_run=dry_run)
+
+    # Log operation start
+    display.log_operation(
+        "init_start", f"Initializing documentation for {project_path}"
+    )
 
     # Analyze project with enhanced detection
     analyzer = ProjectAnalyzer(project_path)
+    start_time = datetime.now()
     analysis = analyzer.analyze()
+    analysis_duration = (datetime.now() - start_time).total_seconds() * 1000
+    display.log_timing("project_analysis", analysis_duration)
+
     analysis["path"] = str(project_path)
 
     # Show detailed analysis
-    display.show_analysis(analysis)
+    if debug:
+        display.show_detailed_analysis(analysis)
+    else:
+        display.show_analysis(analysis)
+
+    # Create operation plan
+    operation_plan = create_documentation_plan(project_path, analysis, force)
+
+    if dry_run:
+        # Show what would be done
+        display.show_mock_operations([op.to_dict() for op in operation_plan.operations])
+        simulation_results = operation_plan.simulate_execution()
+
+        if debug:
+            click.echo("\n📊 Execution Simulation Results:")
+            for key, value in simulation_results.items():
+                click.echo(f"  {key}: {value}")
+
+        display.log_operation(
+            "dry_run_complete", f"Simulated {len(operation_plan.operations)} operations"
+        )
+        display.show_operations_summary()
+        return
 
     # Check for dependency issues and auto-fix if requested
     autofix = AutoFixer(project_path, display)
 
     if not analysis["dependencies"]["valid"]:
-        if fix_dependencies or yes:
+        if dry_run:
+            # In dry-run mode, only show what fixes would be applied
+            available_fixes = autofix.analyze_and_fix(analysis, apply_fixes=False)
+            if available_fixes and not quiet:
+                click.echo(
+                    f"ℹ️  Would apply {len(available_fixes)} fixes (dry-run mode)"
+                )
+        elif fix_dependencies or yes:
             display.debug("Auto-fixing dependency issues...")
             autofix.analyze_and_fix(analysis, apply_fixes=True)
         else:
@@ -831,18 +893,37 @@ def init(
     initializer = DocsInitializer(project_path, analysis)
 
     try:
+        init_start = datetime.now()
         initializer.initialize(force=force)
+        init_duration = (datetime.now() - init_start).total_seconds() * 1000
+        display.log_timing("documentation_initialization", init_duration)
+
+        display.log_operation(
+            "init_success",
+            "Documentation system initialized successfully",
+            success=True,
+        )
         display.success("All packages configured with enhanced documentation system!")
 
         # Show summary
         display.show_summary(summary)
 
+        # Show comprehensive operations summary
+        display.show_operations_summary()
+
     except Exception as e:
+        display.log_operation(
+            "init_failed", f"Initialization failed: {e}", success=False
+        )
         display.error(f"Initialization failed: {e}")
         if debug:
             import traceback
 
             click.echo(traceback.format_exc(), err=True)
+
+        # Still show operations summary for debugging
+        if debug:
+            display.show_operations_summary()
         raise click.Abort()
 
 

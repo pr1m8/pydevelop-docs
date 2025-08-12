@@ -1,16 +1,79 @@
 """Enhanced CLI display utilities for pydevelop-docs."""
 
+import logging
+import sys
+from datetime import datetime
 from typing import Any, Dict, List
 
 import click
+from rich.console import Console
+from rich.logging import RichHandler
+from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.table import Table
 
 
 class EnhancedDisplay:
-    """Enhanced display manager for CLI output."""
+    """Enhanced display manager for CLI output with comprehensive logging."""
 
-    def __init__(self, quiet: bool = False, debug: bool = False):
+    def __init__(self, quiet: bool = False, debug: bool = False, dry_run: bool = False):
         self.quiet = quiet
-        self.debug = debug
+        self.debug_enabled = debug
+        self.dry_run = dry_run
+        self.console = Console()
+        self.operations_log = []
+        self.timing_log = []
+
+        # Set up logging
+        self._setup_logging()
+
+        # Track performance
+        self.start_time = datetime.now()
+
+    def _setup_logging(self):
+        """Set up rich logging with appropriate levels."""
+        logging.basicConfig(
+            level=logging.DEBUG if self.debug_enabled else logging.INFO,
+            format="%(message)s",
+            datefmt="[%X]",
+            handlers=[RichHandler(console=self.console, show_path=self.debug_enabled)],
+        )
+        self.logger = logging.getLogger("pydevelop_docs")
+
+        if self.debug_enabled:
+            self.logger.debug("🐛 Debug mode enabled")
+        if self.dry_run:
+            self.logger.info("🧪 Dry-run mode enabled - no changes will be made")
+
+    def log_operation(self, operation: str, details: str = "", success: bool = True):
+        """Log an operation for later review."""
+        timestamp = datetime.now()
+        self.operations_log.append(
+            {
+                "timestamp": timestamp,
+                "operation": operation,
+                "details": details,
+                "success": success,
+                "dry_run": self.dry_run,
+            }
+        )
+
+        if self.debug_enabled:
+            status = "✅" if success else "❌"
+            prefix = "[DRY-RUN] " if self.dry_run else ""
+            self.logger.debug(f"{status} {prefix}{operation}: {details}")
+
+    def log_timing(self, operation: str, duration_ms: float):
+        """Log timing information for performance analysis."""
+        self.timing_log.append(
+            {
+                "operation": operation,
+                "duration_ms": duration_ms,
+                "timestamp": datetime.now(),
+            }
+        )
+
+        if self.debug_enabled:
+            self.logger.debug(f"⏱️  {operation}: {duration_ms:.2f}ms")
 
     def show_analysis(self, analysis: Dict[str, Any]) -> None:
         """Display detailed project analysis."""
@@ -184,7 +247,7 @@ class EnhancedDisplay:
 
     def debug(self, message: str) -> None:
         """Show debug message if debug mode is enabled."""
-        if self.debug:
+        if self.debug_enabled:
             click.echo(f"🐛 DEBUG: {message}", err=True)
 
     def error(self, message: str) -> None:
@@ -200,3 +263,109 @@ class EnhancedDisplay:
         """Show warning message."""
         if not self.quiet:
             click.echo(f"⚠️  {message}")
+
+    def show_operations_summary(self) -> None:
+        """Show summary of all operations performed."""
+        if self.quiet or not self.operations_log:
+            return
+
+        total_time = (datetime.now() - self.start_time).total_seconds()
+        successful_ops = len([op for op in self.operations_log if op["success"]])
+        failed_ops = len([op for op in self.operations_log if not op["success"]])
+        dry_run_ops = len([op for op in self.operations_log if op["dry_run"]])
+
+        table = Table(
+            title="📊 Operations Summary", show_header=True, header_style="bold magenta"
+        )
+        table.add_column("Metric", style="cyan")
+        table.add_column("Value", style="green")
+
+        table.add_row("Total Duration", f"{total_time:.2f}s")
+        table.add_row("Total Operations", str(len(self.operations_log)))
+        table.add_row("Successful", str(successful_ops))
+        table.add_row("Failed", str(failed_ops))
+        if dry_run_ops > 0:
+            table.add_row("Dry-Run Operations", str(dry_run_ops))
+
+        self.console.print(table)
+
+        if self.debug_enabled and self.timing_log:
+            self._show_performance_breakdown()
+
+    def _show_performance_breakdown(self) -> None:
+        """Show detailed performance breakdown."""
+        if not self.timing_log:
+            return
+
+        timing_table = Table(title="⏱️  Performance Breakdown", show_header=True)
+        timing_table.add_column("Operation", style="cyan")
+        timing_table.add_column("Duration", style="green")
+        timing_table.add_column("% of Total", style="yellow")
+
+        total_time = sum(log["duration_ms"] for log in self.timing_log)
+
+        for log in sorted(
+            self.timing_log, key=lambda x: x["duration_ms"], reverse=True
+        ):
+            percentage = (
+                (log["duration_ms"] / total_time * 100) if total_time > 0 else 0
+            )
+            timing_table.add_row(
+                log["operation"], f"{log['duration_ms']:.2f}ms", f"{percentage:.1f}%"
+            )
+
+        self.console.print(timing_table)
+
+    def show_detailed_analysis(self, analysis: Dict[str, Any]) -> None:
+        """Show comprehensive project analysis with debugging info."""
+        self.show_analysis(analysis)
+
+        if self.debug_enabled:
+            self.logger.debug("🔍 Detailed Analysis:")
+
+            # Show package structure details
+            for pkg_name, details in analysis.get("package_details", {}).items():
+                self.logger.debug(f"📦 {pkg_name}:")
+                for key, value in details.items():
+                    status = "✅" if value else "❌"
+                    self.logger.debug(f"   {key}: {status}")
+
+            # Show configuration details
+            config_info = analysis.get("central_hub", {})
+            self.logger.debug(f"🏗️  Central Hub Config: {config_info}")
+
+            # Show dependency analysis
+            deps_info = analysis.get("dependencies", {})
+            self.logger.debug(f"📋 Dependencies: {deps_info}")
+
+    def show_mock_operations(self, operations: List[Dict[str, Any]]) -> None:
+        """Show what operations would be performed in dry-run mode."""
+        if self.quiet:
+            return
+
+        click.echo("\n🧪 Dry-Run Mode - Operations that would be performed:\n")
+
+        for i, op in enumerate(operations, 1):
+            operation_type = op.get("type", "unknown")
+            description = op.get("description", "No description")
+            target = op.get("target", "")
+
+            click.echo(f"  [{i}] {operation_type.upper()}: {description}")
+            if target:
+                click.echo(f"      Target: {target}")
+
+            if "details" in op:
+                for detail in op["details"]:
+                    click.echo(f"      - {detail}")
+
+        click.echo(f"\nTotal operations: {len(operations)}")
+        click.echo("Note: No actual changes will be made in dry-run mode.\n")
+
+    def prompt_for_continuation(self, message: str, default: bool = True) -> bool:
+        """Prompt user for continuation with dry-run awareness."""
+        if self.dry_run:
+            click.echo(f"🧪 DRY-RUN: Would prompt: {message}")
+            return True
+        if self.quiet:
+            return default
+        return click.confirm(message, default=default)

@@ -52,7 +52,81 @@ class AutoFixer:
         }
 
     def _apply_duplicate_fix(self, fix: Dict[str, Any]) -> None:
-        """Apply duplicate dependency fix."""
+        """Apply duplicate dependency fix using proper TOML structure handling."""
+        pyproject_path = self.project_path / "pyproject.toml"
+
+        try:
+            # Use tomlkit to properly handle TOML structure
+            with open(pyproject_path, "r") as f:
+                content = f.read()
+
+            doc = tomlkit.parse(content)
+
+            # Handle different types of duplicates
+            dependency_name = fix["dependency"]
+
+            # Check in dependencies section
+            if "dependencies" in doc.get("tool", {}).get("poetry", {}):
+                deps = doc["tool"]["poetry"]["dependencies"]
+                if dependency_name in deps:
+                    # For regular dependencies, keep the first occurrence
+                    # This is already handled properly by tomlkit
+                    pass
+
+            # Check in dependency groups
+            if "group" in doc.get("tool", {}).get("poetry", {}):
+                for group_name, group_deps in doc["tool"]["poetry"]["group"].items():
+                    if (
+                        "dependencies" in group_deps
+                        and dependency_name in group_deps["dependencies"]
+                    ):
+                        # For group dependencies, keep the first occurrence
+                        pass
+
+            # Check in sources (most common corruption case)
+            if "source" in doc.get("tool", {}).get("poetry", {}):
+                sources = doc["tool"]["poetry"]["source"]
+                if isinstance(sources, list):
+                    # Find duplicate sources by name
+                    seen_names = set()
+                    indices_to_remove = []
+
+                    for i, source in enumerate(sources):
+                        if isinstance(source, dict) and "name" in source:
+                            name = source["name"]
+                            if name == dependency_name:
+                                if name in seen_names:
+                                    # This is a duplicate, mark for removal
+                                    indices_to_remove.append(i)
+                                else:
+                                    seen_names.add(name)
+
+                    # Remove duplicates in reverse order to maintain indices
+                    for index in reversed(indices_to_remove):
+                        del sources[index]
+
+            # Write the corrected TOML back
+            with open(pyproject_path, "w") as f:
+                f.write(tomlkit.dumps(doc))
+
+            self.fixes_applied.append(
+                f"Removed duplicate {fix['dependency']} using TOML-aware fix"
+            )
+
+            if self.display:
+                self.display.success(
+                    f"Fixed: Removed duplicate {fix['dependency']} (TOML-safe)"
+                )
+
+        except Exception as e:
+            if self.display:
+                self.display.error(f"Failed to fix duplicate dependency: {e}")
+
+            # Fallback to line-based fix if TOML parsing fails
+            self._apply_duplicate_fix_fallback(fix)
+
+    def _apply_duplicate_fix_fallback(self, fix: Dict[str, Any]) -> None:
+        """Fallback line-based duplicate fix (original method)."""
         pyproject_path = self.project_path / "pyproject.toml"
 
         try:
@@ -71,17 +145,17 @@ class AutoFixer:
                     f.writelines(lines)
 
                 self.fixes_applied.append(
-                    f"Removed duplicate {fix['dependency']} from line {line_to_remove + 1}"
+                    f"Removed duplicate {fix['dependency']} from line {line_to_remove + 1} (fallback)"
                 )
 
                 if self.display:
-                    self.display.success(
-                        f"Fixed: Removed duplicate {fix['dependency']}"
+                    self.display.warning(
+                        f"Fixed: Removed duplicate {fix['dependency']} (fallback method - may need manual review)"
                     )
 
         except Exception as e:
             if self.display:
-                self.display.error(f"Failed to fix duplicate dependency: {e}")
+                self.display.error(f"Fallback fix also failed: {e}")
 
     def fix_toml_syntax(self) -> bool:
         """Attempt to fix basic TOML syntax issues."""

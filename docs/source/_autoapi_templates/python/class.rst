@@ -6,7 +6,8 @@
 {#  Detect Class Type: Pydantic, Dataclass, Enum, or Flag  #}
 {# -------------------------------------------------------- #}
 {% set bases_string = obj.bases | join(" ") %}
-{% set is_pydantic = "BaseModel" in bases_string or "BaseSettings" in bases_string %}
+{% set is_metaclass = "type(" in bases_string or "Metaclass" in obj.name %}
+{% set is_pydantic = ("BaseModel" in bases_string or "BaseSettings" in bases_string) and not is_metaclass %}
 {% set is_dataclass = "@dataclass" in (obj.docstring or "") or "dataclass" in (obj.docstring or "") %}
 {% set is_enum = "Enum" in bases_string %}
 {% set is_flag = "Flag" in bases_string %}
@@ -77,6 +78,19 @@
 
       **{{ obj.name }}** is an Enum defined in ``{{ obj.module or obj.id.split('.')[:-1] | join('.') }}``.
    {% endif %}
+
+{# ----------------------------- #}
+{#         Metaclasses          #}
+{# ----------------------------- #}
+{% elif is_metaclass %}
+.. autoclass:: {{ obj.id }}
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+   .. note::
+
+      **{{ obj.name }}** is a metaclass that customizes class creation.
 
 {# ----------------------------- #}
 {#        Fallback Default      #}

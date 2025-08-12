@@ -412,8 +412,11 @@ def get_haive_config(
     return config
 
 
-def get_central_hub_config() -> Dict[str, Any]:
+def get_central_hub_config(package_names: List[str] = None) -> Dict[str, Any]:
     """Get configuration specific to the central documentation hub.
+
+    Args:
+        package_names: List of package names to include in hub (optional).
 
     This includes sphinx-collections configuration for aggregating
     all package documentation.
@@ -421,6 +424,9 @@ def get_central_hub_config() -> Dict[str, Any]:
     Returns:
         Dictionary with complete central hub configuration
     """
+    if package_names is None:
+        package_names = []
+
     return get_haive_config(
         package_name="haive-docs", package_path="", is_central_hub=True
     )
@@ -447,7 +453,7 @@ def _get_complete_extensions(
         "sphinx.ext.napoleon",
         "sphinx.ext.viewcode",
         "sphinx.ext.intersphinx",
-        # "seed_intersphinx_mapping",  # Disabled - requires requirements.txt
+        "seed_intersphinx_mapping",  # Auto-populate intersphinx from pyproject.toml
         # Enhanced API (Priority 11-20)
         "sphinxcontrib.autodoc_pydantic",
         "sphinx_autodoc_typehints",
@@ -459,10 +465,16 @@ def _get_complete_extensions(
         "sphinx_tabs.tabs",
         # Execution (Priority 31-40) - TESTING FOCUS
         "sphinxcontrib.programoutput",
+        "sphinx_runpython",
+        "sphinx_exec_code",
         # Diagrams (Priority 41-50) - MERMAID FOCUS
         "sphinx.ext.graphviz",
         "sphinxcontrib.mermaid",
         "sphinxcontrib.plantuml",
+        "sphinxcontrib.blockdiag",
+        "sphinxcontrib.seqdiag",
+        "sphinxcontrib.nwdiag",
+        "sphinxcontrib.actdiag",
         # Utilities (Priority 51-60)
         "sphinx_sitemap",
         "sphinx_codeautolink",
@@ -472,7 +484,8 @@ def _get_complete_extensions(
         "sphinx_toggleprompt",
         "sphinx_prompt",
         "sphinx_last_updated_by_git",
-        "sphinx_inlinecode",
+        # "sphinx_inlinecode",  # Temporarily disabled - causes issues with metaclasses
+        "sphinx_library",
         "sphinx_icontract",
         "sphinx_tippy",
         # Documentation Tools (Priority 81-90)
@@ -485,7 +498,6 @@ def _get_complete_extensions(
         "sphinx_reredirects",
         "sphinxext.rediraffe",
         "sphinx_git",
-        "sphinx_changelog",
         "sphinx_debuginfo",
         "sphinxext.opengraph",
         "sphinx_tags",
@@ -532,6 +544,14 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
         "autoapi_member_order": "groupwise",
         "autoapi_root": "autoapi",
         "autoapi_toctree_depth": 3,
+        # Skip problematic patterns
+        "autoapi_ignore": [
+            "**/test_*.py",
+            "**/tests/*",
+            "**/*_test.py",
+            # Skip metaclass files that cause issues
+            "**/graph/state_graph/base.py",  # Contains SerializableModelMetaclass
+        ],
     }
 
 
@@ -634,4 +654,38 @@ def _get_complete_intersphinx_mapping() -> Dict[str, tuple]:
         # Add other Haive packages as they become available
         # "haive-core": ("https://docs.haive.ai/packages/haive-core/", None),
         # "haive-agents": ("https://docs.haive.ai/packages/haive-agents/", None),
+    }
+
+
+def autodoc_skip_member(app, what, name, obj, skip, options):
+    """Skip members that shouldn't be documented."""
+    # Skip metaclasses to avoid autodoc_pydantic errors
+    if what == "class" and isinstance(obj, type) and issubclass(obj.__class__, type):
+        # Check if this is a metaclass (its class is a subclass of type)
+        if "metaclass" in obj.__name__.lower() or obj.__class__.__name__ != "type":
+            app.debug(f"Skipping metaclass: {name}")
+            return True
+
+    # Skip objects that have __pydantic_decorators__ missing but are expected to have it
+    if hasattr(obj, "__class__") and "Metaclass" in getattr(
+        obj.__class__, "__name__", ""
+    ):
+        app.debug(f"Skipping object with metaclass: {name}")
+        return True
+
+    return skip
+
+
+def setup(app):
+    """Setup Sphinx application with custom handlers."""
+    # Add autodoc skip handler to prevent processing metaclasses
+    app.connect("autodoc-skip-member", autodoc_skip_member)
+
+    # Add custom CSS for better styling
+    app.add_css_file("custom.css", priority=600)
+
+    return {
+        "version": "1.0.0",
+        "parallel_read_safe": True,
+        "parallel_write_safe": True,
     }
