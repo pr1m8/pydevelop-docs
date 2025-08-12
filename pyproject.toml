@@ -181,7 +181,7 @@ towncrier = "^24.8.0"
 playwright = "^1.54.0"
 
 [tool.towncrier]
-package = "pydevelop_docs"
+package_dir = "."
 filename = "CHANGELOG.md"
 directory = "changes"
 title_format = "# PyDevelop-Docs Changelog\n\nAll notable changes to the PyDevelop Documentation Tools will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n<!-- towncrier release notes start -->"
