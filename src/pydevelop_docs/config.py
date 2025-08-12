@@ -548,7 +548,12 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
         "autoapi_ignore": [
             "**/test_*.py",
             "**/tests/*",
+            "**/test/**",
             "**/*_test.py",
+            "**/*_tests.py",
+            "**/conftest.py",
+            "**/engine_node_test/**",  # Test directory in wrong location
+            "**/engine_node_test/*",  # All files in engine_node_test
             # Skip metaclass files that cause issues
             "**/graph/state_graph/base.py",  # Contains SerializableModelMetaclass
             # Skip test files in wrong location
@@ -727,8 +732,8 @@ def setup(app):
     # Add autodoc skip handler to prevent processing metaclasses
     app.connect("autodoc-skip-member", autodoc_skip_member)
 
-    # Add docstring processor to fix RST formatting issues
-    app.connect("autodoc-process-docstring", process_docstring)
+    # DISABLED: Let Napoleon handle Google-style docstrings properly
+    # app.connect("autodoc-process-docstring", process_docstring)
 
     # Add custom CSS for better styling
     app.add_css_file("custom.css", priority=600)
