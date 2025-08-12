@@ -551,6 +551,8 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
             "**/*_test.py",
             # Skip metaclass files that cause issues
             "**/graph/state_graph/base.py",  # Contains SerializableModelMetaclass
+            # Skip test files in wrong location
+            "**/engine_node_test.py",  # Test file in src directory
         ],
     }
 
