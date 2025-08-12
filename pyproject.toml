@@ -1,19 +1,21 @@
 [tool.poetry]
-name = "haive-docs"
+name = "pydevelop-docs"
 version = "0.1.0"
-description = "Haive AI Agent Framework - Centralized Documentation System"
-authors = ["Haive Team <team@haive.ai>"]
+description = "PyDevelop Documentation Tools - Universal Python documentation generator with 43+ Sphinx extensions"
+authors = ["PyDevelop Team"]
 readme = "README.md"
-packages = [{ include = "haive_docs", from = "src" }]
+packages = [{ include = "pydevelop_docs", from = "src" }]
 
 [tool.poetry.scripts]
-haive-docs = "haive_docs.cli:cli"
+pydevelop-docs = "pydevelop_docs.cli:cli"
 
 [tool.poetry.dependencies]
 python = ">=3.12,<3.13"
 click = "^8.1.7"
 tomlkit = "^0.13.2"
 pyyaml = "^6.0.1"
+questionary = "^2.1.0"
+rich = "^14.1.0"
 sphinx = "8.2.3"
 sphinx-collections = "^0.2.0"
 seed-intersphinx-mapping = "^1.2.2"

@@ -1,0 +1,17 @@
+include README.md
+include LICENSE
+include HAIVE_DOCS_README.md
+
+# Include all template files
+recursive-include src/haive_docs/templates *
+
+# Include scripts
+recursive-include scripts *.py *.sh
+
+# Exclude build artifacts
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * .DS_Store
+recursive-exclude * .git*
+recursive-exclude docs/build *
+recursive-exclude docs/source/autoapi *
