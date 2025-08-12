@@ -175,9 +175,86 @@ sphinx-runpython = "^0.4.0"
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.2.0"
 pre-commit-hooks = "^5.0.0"
+towncrier = "^24.8.0"
 
 [tool.poetry.group.web.dependencies]
 playwright = "^1.54.0"
+
+[tool.towncrier]
+package = "pydevelop_docs"
+filename = "CHANGELOG.md"
+directory = "changes"
+title_format = "# PyDevelop-Docs Changelog\n\nAll notable changes to the PyDevelop Documentation Tools will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n<!-- towncrier release notes start -->"
+issue_format = "[#{issue}](https://github.com/prim8/haive/issues/{issue})"
+template = "changes/.template.md"
+start_string = "<!-- towncrier release notes start -->"
+underlines = ["", "", ""]
+all_bullets = false
+ignore = [
+  "README.md",
+  ".template.md",
+  ".gitkeep",
+  "feature",
+  "bugfix",
+  "improvement",
+  "deprecation",
+  "breaking",
+  "security",
+  "performance",
+  "docs",
+  "dev",
+  "misc",
+]
+
+[[tool.towncrier.type]]
+directory = "feature"
+name = "🚀 Features"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "bugfix"
+name = "🐛 Bug Fixes"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "improvement"
+name = "✨ Improvements"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "deprecation"
+name = "⚠️ Deprecations"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "breaking"
+name = "💥 Breaking Changes"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "security"
+name = "🔒 Security"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "performance"
+name = "⚡ Performance"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "docs"
+name = "📚 Documentation"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "dev"
+name = "🔧 Development"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "misc"
+name = "🔀 Miscellaneous"
+showcontent = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
