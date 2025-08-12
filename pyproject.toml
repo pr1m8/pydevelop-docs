@@ -1,8 +1,21 @@
 [tool.poetry]
 name = "pydevelop-docs"
 version = "0.1.0"
-description = "PyDevelop Documentation Tools - Universal Python documentation generator with 43+ Sphinx extensions"
-authors = ["PyDevelop Team"]
+description = "Universal Python documentation generator with 40+ Sphinx extensions pre-configured. Zero-configuration setup for beautiful, professional documentation."
+authors = ["Haive Team <team@haive.ai>"]
+homepage = "https://github.com/haive-ai/pydevelop-docs"
+repository = "https://github.com/haive-ai/pydevelop-docs"
+documentation = "https://pydevelop-docs.readthedocs.io"
+keywords = ["documentation", "sphinx", "python", "docs", "api", "autodoc"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Topic :: Documentation",
+  "Topic :: Software Development :: Documentation",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+]
 readme = "README.md"
 packages = [{ include = "pydevelop_docs", from = "src" }]
 
@@ -155,7 +168,6 @@ sphinx-inlinecode = "^2.0.1"
 sphinx-inplace = "^0.0.7"
 sphinx-interrogatedb = "^1.3.1"
 sphinx-lastupdate = "^1.0.0"
-sphinx-library = "^1.1.3"
 sphinx-mcp = "^0.1.1"
 sphinx-markdown = "^1.0.2"
 darglint2 = "^1.8.2"

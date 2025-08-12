@@ -1,7 +1,33 @@
-"""Shared Sphinx configuration for Haive packages.
+"""PyDevelop Documentation Configuration.
 
-This module provides the complete 43+ extension configuration system
-migrated from PyAutoDoc's proven 635-line configuration.
+This module provides a complete Sphinx configuration system with 40+ pre-configured
+extensions for beautiful, feature-rich Python documentation.
+
+Features:
+    - Zero-configuration setup for any Python project
+    - Professional Furo theme with dark mode
+    - 40+ Sphinx extensions pre-configured
+    - Automatic API documentation with AutoAPI
+    - Pydantic model documentation
+    - Mermaid diagrams, copy buttons, and more
+    - SEO optimization and social media previews
+    - Git-based change tracking
+
+Example:
+    Basic usage for a single package:
+
+    >>> from pydevelop_docs.config import get_haive_config
+    >>> config = get_haive_config(
+    ...     package_name="my-package",
+    ...     package_path="../src"
+    ... )
+    >>> # Use config in your conf.py:
+    >>> globals().update(config)
+
+    For a monorepo central hub:
+
+    >>> config = get_central_hub_config()
+    >>> globals().update(config)
 """
 
 import os
@@ -15,19 +41,45 @@ def get_haive_config(
     is_central_hub: bool = False,
     extra_extensions: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
-    """Get complete Haive Sphinx configuration for a package.
+    """Get complete PyDevelop Sphinx configuration for a package.
 
-    Provides the full 43+ extension configuration system with all
-    advanced theming, validation, and documentation features.
+    This function returns a comprehensive Sphinx configuration with 40+ extensions
+    pre-configured for professional Python documentation. Works with any project
+    structure and provides zero-configuration setup.
 
     Args:
-        package_name: Name of the package (e.g., "haive-core")
-        package_path: Path to the package source code
-        is_central_hub: Whether this is the central documentation hub
-        extra_extensions: Additional extensions to include
+        package_name: Name of the package (e.g., "my-package", "haive-core")
+            Used for project titles, URLs, and branding.
+        package_path: Relative path to the package source code from docs/source/
+            (e.g., "../../src", "../my_package")
+        is_central_hub: Whether this is a central documentation hub for monorepos.
+            Enables sphinx-collections for aggregating multiple package docs.
+        extra_extensions: Additional Sphinx extensions to include beyond the 40+
+            that are already configured.
 
     Returns:
-        Dictionary of complete Sphinx configuration settings
+        Dictionary containing complete Sphinx configuration settings including:
+        - Project metadata (name, author, version)
+        - All 40+ extensions with optimal configurations
+        - Furo theme with professional styling
+        - AutoAPI configuration for automatic API docs
+        - Intersphinx mappings for cross-references
+        - SEO and social media optimization
+        - Git integration for change tracking
+
+    Example:
+        In your package's docs/source/conf.py:
+
+        >>> from pydevelop_docs.config import get_haive_config
+        >>>
+        >>> # Configure for this package
+        >>> config = get_haive_config(
+        ...     package_name="my-awesome-package",
+        ...     package_path="../../src"
+        ... )
+        >>>
+        >>> # Apply all settings to this Sphinx configuration
+        >>> globals().update(config)
     """
 
     # Base project info
@@ -43,7 +95,7 @@ def get_haive_config(
         "author": "Haive Team",
         "copyright": "2025, Haive Team",
         "release": "0.1.0",
-        # Extensions - COMPLETE 43+ extension system from PyAutoDoc
+        # Extensions - Complete 40+ extension system with optimal configurations
         "extensions": _get_complete_extensions(is_central_hub, extra_extensions),
         # General configuration
         "templates_path": ["_templates", "_autoapi_templates"],
@@ -377,7 +429,18 @@ def get_central_hub_config() -> Dict[str, Any]:
 def _get_complete_extensions(
     is_central_hub: bool, extra_extensions: Optional[List[str]] = None
 ) -> List[str]:
-    """Get complete 43+ extension system from PyAutoDoc."""
+    """Get the complete 40+ Sphinx extension system.
+
+    This function returns a carefully curated list of Sphinx extensions that work
+    well together and provide comprehensive documentation features.
+
+    Args:
+        is_central_hub: If True, includes sphinx-collections for monorepo docs
+        extra_extensions: Additional extensions to append to the list
+
+    Returns:
+        List of extension names, optimized for compatibility and functionality
+    """
     extensions = [
         # Core (Priority 1-10) - AutoAPI FIRST as requested
         "sphinx.ext.autodoc",
@@ -410,7 +473,6 @@ def _get_complete_extensions(
         "sphinx_prompt",
         "sphinx_last_updated_by_git",
         "sphinx_inlinecode",
-        "sphinx_library",
         "sphinx_icontract",
         "sphinx_tippy",
         # Documentation Tools (Priority 81-90)
