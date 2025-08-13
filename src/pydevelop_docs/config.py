@@ -572,10 +572,10 @@ def _get_collections_config() -> Dict[str, Any]:
     """Get sphinx-collections configuration for central hub."""
     return {
         "collections": {
-            "haive_packages": {
+            "packages": {
                 "driver": "copy_folder",
                 "source_folder": "../../../packages/*/docs/build/html/",
-                "target_folder": "_collections/",
+                "target_folder": "_collections/packages/",
                 "active": True,
                 "clean": True,
             },

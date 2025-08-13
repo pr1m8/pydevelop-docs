@@ -23,6 +23,7 @@ class TemplateManager:
         self.project_path = project_path
         self.project_info = project_info
         self.template_dir = Path(__file__).parent / "templates" / "doc_templates"
+        self.all_templates_dir = Path(__file__).parent / "templates"
 
         # Set up Jinja2 environment
         self.env = Environment(
@@ -173,3 +174,141 @@ class TemplateManager:
 
         if doc_config.get("with_tutorials", False):
             self.create_section_index("tutorials", "docs/source/tutorials")
+
+    def create_central_hub_config(
+        self,
+        output_path: str = "docs/source/conf.py",
+        collections_config: Optional[Dict[str, Any]] = None,
+        custom_extensions: Optional[list] = None,
+    ) -> None:
+        """Create central hub configuration file.
+
+        Args:
+            output_path: Path for the conf.py file
+            collections_config: Custom collections configuration
+            custom_extensions: Additional Sphinx extensions
+        """
+        # Use all templates directory for this
+        env = Environment(
+            loader=FileSystemLoader(self.all_templates_dir),
+            trim_blocks=True,
+            lstrip_blocks=True,
+        )
+
+        template = env.get_template("central_hub_conf.py.jinja2")
+
+        context = {
+            **self.base_context,
+            "collections_paths": collections_config,
+            "custom_extensions": custom_extensions or [],
+            "source_path": "..",  # Default relative path
+        }
+
+        self._write_file(output_path, template.render(context))
+
+    def create_central_hub_index(
+        self,
+        output_path: str = "docs/source/index.rst",
+        package_info: Optional[Dict[str, Dict[str, Any]]] = None,
+        include_tools: bool = False,
+    ) -> None:
+        """Create central hub index.rst with package navigation.
+
+        Args:
+            output_path: Path for the index.rst file
+            package_info: Package metadata for organized display
+            include_tools: Whether to include tools section
+        """
+        # Use all templates directory for this
+        env = Environment(
+            loader=FileSystemLoader(self.all_templates_dir),
+            trim_blocks=True,
+            lstrip_blocks=True,
+        )
+
+        template = env.get_template("central_hub_index.rst.jinja2")
+
+        context = {
+            **self.base_context,
+            "package_info": package_info,
+            "include_tools": include_tools,
+        }
+
+        self._write_file(output_path, template.render(context))
+
+    def auto_detect_packages(
+        self, packages_dir: str = "packages"
+    ) -> Dict[str, Dict[str, Any]]:
+        """Auto-detect packages for collections configuration.
+
+        Args:
+            packages_dir: Directory containing packages
+
+        Returns:
+            Dictionary with collections configuration
+        """
+        packages_path = self.project_path / packages_dir
+        collections = {}
+
+        if packages_path.exists():
+            for package_dir in packages_path.iterdir():
+                if package_dir.is_dir() and not package_dir.name.startswith("."):
+                    docs_path = package_dir / "docs" / "build" / "html"
+                    relative_source = (
+                        f"../{packages_dir}/{package_dir.name}/docs/build/html"
+                    )
+
+                    collections[package_dir.name] = {
+                        "driver": "copy_folder",
+                        "source": relative_source,
+                        "target": f"_collections/packages/{package_dir.name}",
+                        "active": True,
+                    }
+
+        return collections
+
+    def create_unified_documentation_setup(
+        self,
+        packages_dir: str = "packages",
+        hub_dir: str = "docs",
+        include_tools: bool = False,
+    ) -> None:
+        """Create complete unified documentation setup.
+
+        Args:
+            packages_dir: Directory containing packages
+            hub_dir: Directory for central hub documentation
+            include_tools: Whether to include tools in navigation
+        """
+        # Auto-detect packages
+        collections_config = self.auto_detect_packages(packages_dir)
+
+        # Create hub directory structure
+        hub_path = self.project_path / hub_dir
+        source_path = hub_path / "source"
+        source_path.mkdir(parents=True, exist_ok=True)
+
+        # Create conf.py
+        self.create_central_hub_config(
+            output_path=str(source_path / "conf.py"),
+            collections_config=collections_config,
+        )
+
+        # Create index.rst
+        self.create_central_hub_index(
+            output_path=str(source_path / "index.rst"), include_tools=include_tools
+        )
+
+        # Create basic structure
+        for subdir in ["_static", "_templates"]:
+            (source_path / subdir).mkdir(exist_ok=True)
+
+        print(f"✅ Created unified documentation setup in {hub_dir}/")
+        print(f"📦 Detected {len(collections_config)} packages")
+        print("🔨 Next steps:")
+        print(
+            f"   1. Build individual package docs: cd {packages_dir}/package-name/docs && sphinx-build -b html source build/html"
+        )
+        print(
+            f"   2. Build central hub: cd {hub_dir} && sphinx-build -b html source build"
+        )
