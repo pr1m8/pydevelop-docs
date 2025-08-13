@@ -53,22 +53,56 @@ pydevelop-docs/
 
 ### ✅ Completed
 
-1. **AutoAPI Hierarchical Fix** - Implemented in config.py but NOT in CLI template
-2. **CSS White-on-White Fix** - Implemented in furo-intense.css
-3. **Extension Order Fix** - Fixed sphinx_toolbox loading order
-4. **Test Environment** - test-haive-template for validation
+1. **CLI Configuration Consolidation** - CLI now uses shared config module
+2. **AutoAPI Hierarchical Fix** - Recursive nested structure working perfectly
+3. **CSS White-on-White Fix** - Dark mode visibility fixes implemented
+4. **Extension Order Fix** - sphinx_toolbox must load before sphinx_autodoc_typehints
+5. **Test Environment** - test-haive-template validates all fixes
 
 ### 🔄 In Progress
 
-1. **CLI Template Update** - Add `autoapi_own_page_level = "module"` to generated conf.py
-2. **Visual Testing** - Verify CSS fixes work in browser
-3. **Documentation Generation** - Complete test project build
+1. **Issue #6**: Custom Jinja2 templates for AutoAPI - Assigned to other agent
+2. **Template Infrastructure** - Setting up \_autoapi_templates/ directory
 
 ### 📅 Pending
 
-1. **Issue #1**: Fix broken TOC references
+1. **Issue #1**: Fix broken TOC references - Create missing index.rst files
 2. **Issue #3**: Add minimal getting started content
-3. **Issue #5-#12**: Various UI/UX improvements
+3. **Issue #5**: Fix annoying UI elements (back-to-top button)
+4. **Issue #7**: Consolidate CSS conflicts (17+ → 6 files)
+5. **Issue #8**: Fix Pydantic information overload
+6. **Issue #9-#12**: Various UI/UX improvements
+
+## 🚨 CRITICAL DIRECTIVES FOR AGENTS
+
+### 1. Configuration is Centralized
+
+- **ALWAYS** make changes in `/src/pydevelop_docs/config.py`
+- **NEVER** modify the hardcoded config in cli.py (lines 375-683)
+- The CLI now imports from config.py - maintaining single source of truth
+
+### 2. Testing Must Use Shared Config
+
+```bash
+# Always test with shared config (default)
+poetry run pydevelop-docs init --use-shared-config
+
+# Never use inline config unless specifically debugging
+poetry run pydevelop-docs init --use-inline-config  # AVOID
+```
+
+### 3. Documentation Organization
+
+- **Issues**: `/project_docs/issues/` - All issue tracking
+- **Architecture**: `/project_docs/architecture/` - Design decisions
+- **Testing**: `/project_docs/testing/` - Test results
+- **See**: `/project_docs/README.md` for navigation
+
+### 4. Template Locations
+
+- **AutoAPI Templates**: `/src/pydevelop_docs/templates/_autoapi_templates/` (TODO)
+- **Static Assets**: `/docs/source/_static/`
+- **Sphinx Templates**: `/docs/source/_templates/`
 
 ## 🔑 Key Components
 
@@ -147,36 +181,71 @@ globals().update(config)
 poetry install --with dev
 poetry run pydevelop-docs --help
 
-# Testing
+# Testing with Shared Config (ALWAYS USE THIS)
+cd test-projects/test-haive-template
+poetry run pydevelop-docs init --force
+poetry run sphinx-build -b html docs/source docs/build
+
+# Quick Test Commands
 poetry run pytest
 poetry run pydevelop-docs init --dry-run
 
-# Build own docs
+# Build PyDevelop-Docs own docs
 cd docs && make html
 
-# Test on example project
+# Full test cycle
 cd test-projects/test-haive-template
+poetry run pydevelop-docs init --force
 poetry run pydevelop-docs build
+python -m http.server 8003 --directory docs/build
+# Open http://localhost:8003
 ```
+
+## 🚀 Quick Reference
+
+### Key Settings That Make It Work
+
+```python
+# In config.py - The magic setting for hierarchical docs
+"autoapi_own_page_level": "module",  # Keep classes with modules
+
+# Extension order (CRITICAL)
+extensions = [
+    "autoapi.extension",  # MUST be first
+    # ... other extensions ...
+    "sphinx_toolbox",  # MUST be before sphinx_autodoc_typehints
+    "sphinx_autodoc_typehints",  # MUST be after sphinx_toolbox
+]
+```
+
+### File Locations
+
+- **Master Config**: `/src/pydevelop_docs/config.py`
+- **Issue List**: `/project_docs/issues/COMPREHENSIVE_DOCUMENTATION_ISSUES_20250813.md`
+- **Test Project**: `/test-projects/test-haive-template/`
+- **CSS Files**: `/docs/source/_static/css/`
 
 ## 📝 Important Files
 
 ### Configuration
 
-- `/src/pydevelop_docs/config.py` - Main configuration generator
-- `/src/pydevelop_docs/cli.py` - CLI and template generation
+- `/src/pydevelop_docs/config.py` - Main configuration generator (SINGLE SOURCE OF TRUTH)
+- `/src/pydevelop_docs/cli.py` - CLI interface (now uses config.py via consolidation)
 - `/docs/source/conf.py` - PyDevelop-Docs own Sphinx config
 
-### Documentation
+### Documentation Hub
 
-- `/project_docs/` - All project analysis and findings
-- `/docs/project-notes/` - Development notes
+- `/project_docs/README.md` - Central documentation index
+- `/project_docs/issues/` - Issue tracking and analysis
+- `/project_docs/architecture/` - Architecture decisions
+- `/project_docs/testing/` - Test results and progress
 - `/EXTENSIONS.md` - List of all 40+ extensions
 
 ### Templates
 
 - `/src/pydevelop_docs/templates/` - Configuration templates
-- `/docs/source/_templates/` - Jinja2 templates
+- `/src/pydevelop_docs/templates/_autoapi_templates/` - Custom AutoAPI Jinja2 templates (TODO)
+- `/docs/source/_templates/` - Sphinx Jinja2 templates
 - `/docs/source/_static/` - CSS/JS assets
 
 ## 🎨 CSS Organization
