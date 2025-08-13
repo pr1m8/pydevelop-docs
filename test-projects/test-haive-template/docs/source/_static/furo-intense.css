@@ -28,6 +28,68 @@
   margin: 0;
 }
 
+/* SUPER SPECIFIC DARK MODE FIXES - Added 2025-08-13 */
+/* These have higher specificity to override Furo's defaults */
+html body[data-theme="dark"] .highlight,
+html body[data-theme="dark"] .highlight pre,
+html body[data-theme="dark"] .highlight code,
+html body[data-theme="dark"] .py-method .highlight,
+html body[data-theme="dark"] .py-class .highlight,
+html body[data-theme="dark"] .py-function .highlight,
+html body[data-theme="dark"] .py-attribute .highlight {
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+/* Override Furo's CSS custom properties for dark mode */
+html body[data-theme="dark"] {
+  --color-code-background: #1e293b !important;
+  --color-code-foreground: #e2e8f0 !important;
+  --color-highlight-background: #1e293b !important;
+}
+
+/* Target API documentation code blocks specifically */
+html body[data-theme="dark"] .api-object code,
+html body[data-theme="dark"] .autoapi code,
+html body[data-theme="dark"] .py code {
+  background-color: #334155 !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #475569 !important;
+}
+
+/* LIGHT MODE FIXES - Fix barely visible text in light mode */
+html body[data-theme="light"] .highlight .o,
+html body[data-theme="light"] .highlight .nb,
+html body[data-theme="light"] .highlight .nf,
+html body[data-theme="light"] .highlight .k,
+html body[data-theme="light"] .highlight .kn,
+html body .highlight .o,
+html body .highlight .nb,
+html body .highlight .nf,
+html body .highlight .k,
+html body .highlight .kn {
+  color: #1f2937 !important; /* Dark gray for good contrast */
+}
+
+/* Fix light gray text that's hard to see */
+html body[data-theme="light"] .highlight .p,
+html body .highlight .p {
+  color: #374151 !important; /* Darker punctuation */
+}
+
+/* Ensure inline code is always visible */
+html body code.literal {
+  color: #1f2937 !important;
+  background-color: #f3f4f6 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+html body[data-theme="dark"] code.literal {
+  color: #e2e8f0 !important;
+  background-color: #334155 !important;
+  border: 1px solid #475569 !important;
+}
+
 /* DARK MODE CODE VISIBILITY FIX */
 /* Ensure code is visible in dark mode */
 body[data-theme="dark"] .highlight,
@@ -487,6 +549,53 @@ body[data-pagename="autoapi/index"] .section > ul > li a:hover {
 .search-input:focus {
   border-color: var(--color-brand-primary) !important;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+}
+
+/* COMPREHENSIVE LIGHT MODE FIXES - Fix all barely visible light gray text */
+html body[data-theme="light"] .highlight .n,    /* Names */
+html body[data-theme="light"] .highlight .na,   /* Name.Attribute */
+html body[data-theme="light"] .highlight .nc,   /* Name.Class */
+html body[data-theme="light"] .highlight .nd,   /* Name.Decorator */
+html body[data-theme="light"] .highlight .ne,   /* Name.Exception */
+html body[data-theme="light"] .highlight .nf,   /* Name.Function */
+html body[data-theme="light"] .highlight .ni,   /* Name.Entity */
+html body[data-theme="light"] .highlight .nl,   /* Name.Label */
+html body[data-theme="light"] .highlight .nn,   /* Name.Namespace */
+html body[data-theme="light"] .highlight .no,   /* Name.Constant */
+html body[data-theme="light"] .highlight .nt,   /* Name.Tag */
+html body[data-theme="light"] .highlight .nv,   /* Name.Variable */
+html body[data-theme="light"] .highlight .nx {
+  /* Name.Other */
+  color: #1f2937 !important; /* Dark gray for all name/token types */
+}
+
+/* Fix specific syntax elements that were too light */
+html body[data-theme="light"] .highlight .p,      /* Punctuation including ** */
+html body[data-theme="light"] .highlight .o,      /* Operators */
+html body[data-theme="light"] .sig-paren,         /* Signature parentheses */
+html body[data-theme="light"] .sig .o,            /* Signature operators */
+html body[data-theme="light"] .sig-name descname em, /* Parameter names */
+html body[data-theme="light"] .sig .n,            /* Names in signatures */
+html body[data-theme="light"] .sig .pre,          /* Preformatted signature text */
+html body[data-theme="light"] .sig .p {
+  /* Punctuation in signatures */
+  color: #1f2937 !important; /* Make everything clearly visible */
+}
+
+/* Fix Dict, str, Any type annotations - make them blue for distinction */
+html body[data-theme="light"] .highlight .nb,     /* Built-ins like Dict, str */
+html body[data-theme="light"] .sig .nb,           /* Built-ins in signatures */
+html body[data-theme="light"] .highlight .k,      /* Keywords */
+html body[data-theme="light"] .sig .k {
+  /* Keywords in signatures */
+  color: #1565c0 !important; /* Blue for keywords/built-ins */
+}
+
+/* Force minimum contrast for any remaining light elements */
+html body[data-theme="light"] .highlight *[style*="color:#999"],
+html body[data-theme="light"] .highlight *[style*="color:#aaa"],
+html body[data-theme="light"] .highlight *[style*="color:#ccc"] {
+  color: #1f2937 !important; /* Override any light inline styles */
 }
 
 /* Responsive Design */
