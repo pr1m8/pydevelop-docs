@@ -183,6 +183,7 @@ sphinxcontrib-video = "^0.4.1"
 sphinx-apischema = "^0.1"
 sphinx-exec-code = "^0.16"
 sphinx-runpython = "^0.4.0"
+sphinxcontrib-lunrsearch = "^0.4"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.2.0"
