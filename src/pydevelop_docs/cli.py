@@ -301,24 +301,11 @@ class DocsInitializer:
         for dir_path in essential_dirs:
             (self.project_path / dir_path).mkdir(parents=True, exist_ok=True)
 
-        # Optional directories - only create if enabled in configuration
-        if self.doc_config.get("with_guides", False):
-            (self.project_path / "docs/source/guides").mkdir(
-                parents=True, exist_ok=True
-            )
+        # Create optional documentation sections using template manager
+        from .template_manager import TemplateManager
 
-        if self.doc_config.get("with_examples", False):
-            (self.project_path / "docs/source/examples").mkdir(
-                parents=True, exist_ok=True
-            )
-
-        if self.doc_config.get("with_cli", False):
-            (self.project_path / "docs/source/cli").mkdir(parents=True, exist_ok=True)
-
-        if self.doc_config.get("with_tutorials", False):
-            (self.project_path / "docs/source/tutorials").mkdir(
-                parents=True, exist_ok=True
-            )
+        template_manager = TemplateManager(self.project_path, self.project_info)
+        template_manager.create_all_sections(self.doc_config)
 
     def _copy_static_files(self):
         """Copy static assets from templates."""

@@ -7,6 +7,7 @@ Welcome to test-haive-template Documentation
    :caption: Contents:
 
    autoapi/index
+   guides/index
 
 Indices and tables
 ==================
