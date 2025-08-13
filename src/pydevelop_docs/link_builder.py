@@ -143,20 +143,6 @@ Documentation Navigation
    tutorials/index
 
 .. toctree::
-   :maxdepth: 1 
-   :caption: 📦 Package Documentation
-   
-"""
-
-        # Add each package to the TOC
-        for name, info in sorted(packages.items()):
-            display_name = self._get_display_name(name)
-            # Calculate correct relative path from hub docs/source to package docs
-            relative_path = f"../../../packages/{name}/docs/build/html/index"
-            content += f"   {display_name} <{relative_path}>\n"
-
-        content += """
-.. toctree::
    :maxdepth: 1
    :caption: 🔍 Reference
    
