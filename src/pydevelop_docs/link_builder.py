@@ -68,8 +68,43 @@ Welcome to the Haive AI Agent Framework documentation!
 
 This hub provides centralized access to all package documentation with cross-referencing capabilities.
 
-Package Documentation
---------------------
+Start Your Journey
+==================
+
+.. grid:: 1 2 2 3
+   :gutter: 3
+
+   .. grid-item-card:: 🚀 Build Your First Agent
+      :link: tutorials/research-assistant
+      :shadow: md
+      :class-card: start-card
+      
+      **Quick Start Tutorial** - Create a research assistant in 15 minutes
+      
+      *Build → Test → Deploy*
+
+   .. grid-item-card:: 📚 Browse All Tutorials  
+      :link: tutorials/index
+      :shadow: md
+      :class-card: tutorials-card
+      
+      **Step-by-step guides** - From basics to advanced patterns
+      
+      *Learn by doing*
+
+   .. grid-item-card:: 🔍 Explore Packages
+      :link: #framework-packages
+      :shadow: md
+      :class-card: explore-card
+      
+      **Framework components** - Find the right tools for your project
+      
+      *Mix and match*
+
+Framework Packages
+==================
+
+Click any package to explore its documentation:
 
 .. grid:: 2 2 3 3
    :gutter: 3
@@ -81,7 +116,9 @@ Package Documentation
             # Count HTML files for stats
             html_files = list(info["html_dir"].glob("**/*.html"))
 
-            content += f"""   .. grid-item-card:: {name}
+            # Create better display name
+            display_name = self._get_display_name(name)
+            content += f"""   .. grid-item-card:: {display_name}
       :link: ../../packages/{name}/docs/build/html/index.html
       :shadow: md
       
@@ -91,52 +128,75 @@ Package Documentation
       
 """
 
-        # Add search and indices
+        # Add comprehensive navigation
         content += """
 
-Quick Links
------------
+Documentation Navigation
+=======================
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Navigation
+   :maxdepth: 2
+   :caption: 📚 Learning
    
-   packages/index
-   api_reference
-   cross_references
+   tutorials/index
 
-Search and Indices
-------------------
+.. toctree::
+   :maxdepth: 1 
+   :caption: 📦 Package Documentation
+   
+"""
 
-* :ref:`genindex` - General Index
-* :ref:`modindex` - Module Index  
-* :ref:`search` - Search Page
+        # Add each package to the TOC
+        for name, info in sorted(packages.items()):
+            display_name = self._get_display_name(name)
+            content += (
+                f"   {display_name} <../../packages/{name}/docs/build/html/index>\n"
+            )
 
-Cross-Package Search
--------------------
+        content += """
+.. toctree::
+   :maxdepth: 1
+   :caption: 🔍 Reference
+   
+   search
+   genindex
 
-Use the search functionality to find items across all packages. The intersphinx 
-mappings enable cross-referencing between packages.
+Quick Links
+===========
 
-Examples:
+* 🔍 :ref:`search` - Search across all packages
+* 📖 :ref:`genindex` - Complete API index  
+* 🔗 Cross-package references work automatically
 
-- :py:class:`haive.core.Agent` - Reference core Agent class
-- :py:func:`haive.tools.create_tool` - Reference tools function
-- :py:mod:`haive.agents` - Reference agents module
+**Need help?** Use the search box above or browse the tutorials to get started.
 """
         return content
 
+    def _get_display_name(self, name: str) -> str:
+        """Get user-friendly display name for packages."""
+        display_names = {
+            "haive-core": "Core Framework (haive-core)",
+            "haive-agents": "Agents (haive-agents)",
+            "haive-tools": "Tools (haive-tools)",
+            "haive-games": "Games (haive-games)",
+            "haive-mcp": "MCP Integration (haive-mcp)",
+            "haive-dataflow": "Data Flow (haive-dataflow)",
+            "haive-prebuilt": "Prebuilt (haive-prebuilt)",
+            "haive-models": "Models (haive-models)",
+        }
+        return display_names.get(name, name)
+
     def _get_package_description(self, name: str) -> str:
-        """Get package description based on name."""
+        """Get package description with use cases and key features."""
         descriptions = {
-            "haive-core": "Core framework with agent engine and infrastructure",
-            "haive-agents": "Pre-built agent implementations and patterns",
-            "haive-tools": "Tool integrations and utility functions",
-            "haive-games": "Game environments and AI strategies",
-            "haive-mcp": "Model Context Protocol integration",
-            "haive-dataflow": "Streaming and data processing capabilities",
-            "haive-prebuilt": "Ready-to-use agent configurations",
-            "haive-models": "Model integrations and configurations",
+            "haive-core": "⚙️ **Foundation** - Agent engine, state management, and core infrastructure",
+            "haive-agents": "🤖 **Ready-to-Use Agents** - ReactAgent, SimpleAgent, and specialized implementations",
+            "haive-tools": "🛠️ **Tool Integration** - Web search, APIs, file operations, and utilities",
+            "haive-games": "🎮 **Game Environments** - Chess, strategy games, and multi-agent competitions",
+            "haive-mcp": "🔗 **External Connections** - Model Context Protocol for tool integration",
+            "haive-dataflow": "📊 **Data Processing** - Streaming, pipelines, and data transformation",
+            "haive-prebuilt": "🚀 **Quick Deploy** - Pre-configured agents ready for production",
+            "haive-models": "🧠 **Model Hub** - LLM integrations and model configurations",
         }
         return descriptions.get(name, f"Documentation for {name}")
 
@@ -327,17 +387,141 @@ toctree_titles_only = base_config.get("toctree_titles_only", False)
         # Create CSS
         css_content = """
 /* Hub documentation styles */
-.grid-item-card {
-    height: 100%;
+
+/* Hide the ugly back-to-top button completely */
+.back-to-top {
+    display: none !important;
 }
 
-.grid-item-card .sd-card-body {
+/* Clean up TOC tree - hide empty sections */
+.sidebar-tree .toctree-l1:has(ul:empty) {
+    display: none;
+}
+
+/* Better card styling */
+.sd-card {
+    height: 100%;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.sd-card-body {
     display: flex;
     flex-direction: column;
+    padding: 1.5rem;
 }
 
-.grid-item-card .sd-card-body > :last-child {
+.sd-card-body > :last-child {
     margin-top: auto;
+}
+
+/* Enhanced hover effects for all cards */
+.sd-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Journey cards with distinct styling */
+.start-card {
+    border-left: 4px solid #10b981 !important; /* Green */
+    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+}
+
+.tutorials-card {
+    border-left: 4px solid #3b82f6 !important; /* Blue */
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+}
+
+.explore-card {
+    border-left: 4px solid #f59e0b !important; /* Orange */
+    background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+}
+
+/* Package cards with category styling */
+.sd-card[class*="haive-core"] {
+    border-left: 4px solid #6366f1; /* Indigo - Foundation */
+}
+
+.sd-card[class*="haive-agents"] {
+    border-left: 4px solid #10b981; /* Green - Ready to use */
+}
+
+.sd-card[class*="haive-tools"] {
+    border-left: 4px solid #f59e0b; /* Orange - Tools */
+}
+
+.sd-card[class*="haive-games"] {
+    border-left: 4px solid #ec4899; /* Pink - Games */
+}
+
+.sd-card[class*="haive-mcp"] {
+    border-left: 4px solid #8b5cf6; /* Purple - Connections */
+}
+
+.sd-card[class*="haive-dataflow"] {
+    border-left: 4px solid #06b6d4; /* Cyan - Data */
+}
+
+.sd-card[class*="haive-prebuilt"] {
+    border-left: 4px solid #84cc16; /* Lime - Quick deploy */
+}
+
+.sd-card[class*="haive-models"] {
+    border-left: 4px solid #f97316; /* Orange-red - Models */
+}
+
+/* Dark mode adjustments */
+body[data-theme="dark"] .start-card {
+    background: linear-gradient(135deg, #064e3b 0%, #1f2937 100%);
+}
+
+body[data-theme="dark"] .tutorials-card {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1f2937 100%);
+}
+
+body[data-theme="dark"] .explore-card {
+    background: linear-gradient(135deg, #92400e 0%, #1f2937 100%);
+}
+
+/* Better typography for cards */
+.sd-card-title {
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.sd-card-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* Icon spacing */
+.sd-card-title::before {
+    margin-right: 0.5rem;
+}
+
+/* Remove redundant sections from sidebar */
+.sidebar-tree p.caption:has(+ ul:empty) {
+    display: none;
+}
+
+.sidebar-tree ul:empty {
+    display: none;
+}
+
+/* Cleaner search box */
+.sidebar-search {
+    margin-bottom: 1rem;
+}
+
+/* Better section headers */
+section h1, section h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+section h1:first-child, section h2:first-child {
+    margin-top: 0;
 }
 """
         css_path = css_dir / "hub.css"
