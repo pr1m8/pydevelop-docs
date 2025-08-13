@@ -404,7 +404,6 @@ def get_haive_config(
         "html_js_files": [
             "furo-enhancements.js",
             "mermaid-config.js",
-            "toc-navigator.js",
             "js/api-enhancements.js",
         ],
     }

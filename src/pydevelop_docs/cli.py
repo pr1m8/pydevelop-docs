@@ -310,11 +310,26 @@ class DocsInitializer:
     def _copy_static_files(self):
         """Copy static assets from templates."""
         static_files = [
+            # CSS files
             ("static/css/custom.css", "docs/source/_static/css/custom.css"),
+            ("static/css/furo-intense.css", "docs/source/_static/furo-intense.css"),
+            ("static/api-docs.css", "docs/source/_static/api-docs.css"),
+            ("static/mermaid-custom.css", "docs/source/_static/mermaid-custom.css"),
+            ("static/toc-enhancements.css", "docs/source/_static/toc-enhancements.css"),
+            (
+                "static/tippy-enhancements.css",
+                "docs/source/_static/tippy-enhancements.css",
+            ),
+            # JS files
             (
                 "static/js/api-enhancements.js",
                 "docs/source/_static/js/api-enhancements.js",
             ),
+            (
+                "static/js/furo-enhancements.js",
+                "docs/source/_static/furo-enhancements.js",
+            ),
+            ("static/js/mermaid-config.js", "docs/source/_static/mermaid-config.js"),
         ]
 
         for src, dest in static_files:
