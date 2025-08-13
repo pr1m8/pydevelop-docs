@@ -1121,6 +1121,69 @@ def sync(source, target):
 
 
 @cli.command()
+@click.option("--clean", "-c", is_flag=True, help="Clean build directory first")
+@click.option(
+    "--open", "-o", is_flag=True, help="Open documentation in browser after building"
+)
+@click.option(
+    "--update-only", "-u", is_flag=True, help="Update hub index only (faster)"
+)
+def link_docs(clean, open, update_only):
+    """Link existing built documentation into a central hub.
+
+    This command creates a documentation hub that links to all existing
+    built documentation in the packages/ directory with intersphinx mappings
+    for cross-referencing. Uses the complete pydevelop-docs configuration
+    with 40+ extensions to match individual package styling.
+    """
+    from .link_builder import DocumentationLinker
+
+    project_path = Path.cwd()
+    linker = DocumentationLinker(project_path)
+
+    if clean and (project_path / "docs" / "build").exists():
+        shutil.rmtree(project_path / "docs" / "build")
+        click.echo("✅ Cleaned docs/build directory")
+
+    if update_only:
+        success = linker.update_hub()
+    else:
+        success = linker.build_hub(open_browser=open)
+
+    if not success:
+        raise click.Abort()
+
+
+@cli.command()
+@click.option(
+    "--open", "-o", is_flag=True, help="Open documentation in browser after updating"
+)
+def update_hub(open):
+    """Update the documentation hub index (faster than full rebuild).
+
+    This command updates the hub index with any new packages that have
+    built documentation without doing a full rebuild.
+    """
+    from .link_builder import DocumentationLinker
+
+    project_path = Path.cwd()
+    linker = DocumentationLinker(project_path)
+
+    success = linker.update_hub()
+
+    if success and open:
+        import webbrowser
+
+        html_path = project_path / "docs" / "build" / "html" / "index.html"
+        if html_path.exists():
+            webbrowser.open(f"file://{html_path}")
+            click.echo("🌐 Opened documentation in browser")
+
+    if not success:
+        raise click.Abort()
+
+
+@cli.command()
 def list_extensions():
     """List all available Sphinx extensions."""
     extensions = [
