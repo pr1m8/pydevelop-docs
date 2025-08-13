@@ -66,6 +66,7 @@ class MockFileOperation(MockOperation):
         self.target_path = Path(target_path) if target_path else None
         self.content = content
         self.backup = backup
+        self.operation_type = operation_type  # Store operation_type before using it
 
         # Generate description
         if operation_type == "create_file":

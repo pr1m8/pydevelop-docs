@@ -8,8 +8,8 @@ from sphinx.application import Sphinx
 # Path setup
 sys.path.insert(0, os.path.abspath("../../src"))
 
-# Import shared Haive configuration
-from haive_docs import get_central_hub_config
+# Import shared configuration
+from pydevelop_docs.config import get_central_hub_config
 
 # Get central hub configuration
 config = get_central_hub_config()

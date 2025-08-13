@@ -373,6 +373,9 @@ release = "0.1.0"
 # -- General configuration ---------------------------------------------------
 
 extensions = [
+    # API Documentation - MUST BE FIRST
+    "autoapi.extension",
+    
     # Core Sphinx Extensions
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
@@ -387,8 +390,14 @@ extensions = [
     "sphinx.ext.inheritance_diagram",
     "sphinx.ext.graphviz",
     
-    # API Documentation
-    "autoapi.extension",
+    # Special Features - MUST BE BEFORE sphinx_autodoc_typehints
+    "enum_tools.autoenum",
+    "sphinx_toolbox",
+    "sphinx_toolbox.more_autodoc.overloads",
+    "sphinx_toolbox.more_autodoc.typehints",
+    "sphinx_toolbox.more_autodoc.sourcelink",
+    
+    # Typehints - MUST BE AFTER sphinx_toolbox
     "sphinx_autodoc_typehints",
     "sphinx.ext.autosectionlabel",
     
@@ -425,13 +434,6 @@ extensions = [
     # Search and Navigation
     "sphinx_treeview",
     
-    # Special Features
-    "enum_tools.autoenum",
-    "sphinx_toolbox",
-    "sphinx_toolbox.more_autodoc.overloads",
-    "sphinx_toolbox.more_autodoc.typehints",
-    "sphinx_toolbox.more_autodoc.sourcelink",
-    
     # Pydantic Support
     "sphinxcontrib.autodoc_pydantic",
 ]
@@ -454,6 +456,8 @@ autoapi_member_order = "groupwise"
 autoapi_root = "api"
 autoapi_add_toctree_entry = True
 autoapi_keep_files = True
+# ✅ HIERARCHICAL ORGANIZATION FIX - The key setting!
+autoapi_own_page_level = "module"  # Keep classes with their modules
 
 # Napoleon settings
 napoleon_google_docstring = True
