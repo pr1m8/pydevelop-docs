@@ -521,7 +521,12 @@ def _get_complete_extensions(
 
 
 def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
-    """Get complete AutoAPI configuration."""
+    """Get complete AutoAPI configuration with hierarchical organization.
+
+    ✅ INCLUDES AUTOAPI HIERARCHICAL FIX - Issue #4 Solution
+    This configuration applies the validated solution that transforms flat
+    alphabetical API listings into organized hierarchical structure.
+    """
     return {
         "autoapi_type": "python",
         "autoapi_dirs": [package_path],
@@ -529,11 +534,13 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
         "autoapi_add_toctree_entry": True,
         "autoapi_generate_api_docs": True,
         "autoapi_keep_files": True,
+        # ✅ HIERARCHICAL ORGANIZATION FIX - The key setting!
+        "autoapi_own_page_level": "module",  # Keep classes with their modules (not individual pages)
         "autoapi_options": [
             "members",
             "undoc-members",
             "show-inheritance",
-            "show-module-summary",
+            "show-module-summary",  # Critical for hierarchical organization
             "private-members",
             "special-members",
             "imported-members",
@@ -582,15 +589,20 @@ def _get_collections_config() -> Dict[str, Any]:
 def _get_complete_theme_options(
     package_name: str, is_central_hub: bool
 ) -> Dict[str, Any]:
-    """Get complete Furo theme options with intense theming."""
+    """Get complete Furo theme options with intense theming.
+
+    ✅ INCLUDES AUTOAPI HIERARCHICAL FIX SUPPORT - Issue #4 Solution
+    These theme options work perfectly with autoapi_own_page_level='module'
+    to provide beautiful hierarchical navigation instead of flat listings.
+    """
     return {
         "sidebar_hide_name": False,
-        # Enhanced TOC configuration
-        "navigation_depth": 4,
-        "collapse_navigation": False,
+        # ✅ HIERARCHICAL NAVIGATION SUPPORT - Perfect for AutoAPI module organization
+        "navigation_depth": 4,  # Package → Module → Class → Method (4 levels)
+        "collapse_navigation": False,  # Keep hierarchical structure visible
         "sticky_navigation": True,
         "includehidden": True,
-        "titles_only": False,
+        "titles_only": False,  # Show all navigation levels (not just titles)
         # Breadcrumb configuration
         "breadcrumb": True,
         "breadcrumb_separator": " › ",

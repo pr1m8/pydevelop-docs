@@ -232,10 +232,21 @@ class ProjectAnalyzer:
 class DocsInitializer:
     """Initialize documentation for Python projects."""
 
-    def __init__(self, project_path: Path, project_info: Dict[str, Any]):
+    def __init__(
+        self,
+        project_path: Path,
+        project_info: Dict[str, Any],
+        doc_config: Dict[str, bool] = None,
+    ):
         self.project_path = project_path
         self.project_info = project_info
         self.template_path = Path(__file__).parent / "templates"
+        self.doc_config = doc_config or {
+            "with_guides": False,
+            "with_examples": False,
+            "with_cli": False,
+            "with_tutorials": False,
+        }
 
     def initialize(self, force: bool = False):
         """Initialize documentation structure."""
@@ -263,8 +274,9 @@ class DocsInitializer:
             self._add_poetry_dependencies()
 
     def _create_directories(self):
-        """Create standard documentation directory structure."""
-        dirs = [
+        """Create documentation directory structure based on configuration."""
+        # Essential directories that are always needed
+        essential_dirs = [
             "docs",
             "docs/source",
             "docs/source/_static",
@@ -272,15 +284,31 @@ class DocsInitializer:
             "docs/source/_static/js",
             "docs/source/_templates",
             "docs/source/_templates/includes",
-            "docs/source/api",
-            "docs/source/guides",
-            "docs/source/examples",
             "docs/build",
             "scripts",
         ]
 
-        for dir_path in dirs:
+        for dir_path in essential_dirs:
             (self.project_path / dir_path).mkdir(parents=True, exist_ok=True)
+
+        # Optional directories - only create if enabled in configuration
+        if self.doc_config.get("with_guides", False):
+            (self.project_path / "docs/source/guides").mkdir(
+                parents=True, exist_ok=True
+            )
+
+        if self.doc_config.get("with_examples", False):
+            (self.project_path / "docs/source/examples").mkdir(
+                parents=True, exist_ok=True
+            )
+
+        if self.doc_config.get("with_cli", False):
+            (self.project_path / "docs/source/cli").mkdir(parents=True, exist_ok=True)
+
+        if self.doc_config.get("with_tutorials", False):
+            (self.project_path / "docs/source/tutorials").mkdir(
+                parents=True, exist_ok=True
+            )
 
     def _copy_static_files(self):
         """Copy static assets from templates."""
@@ -566,7 +594,34 @@ def setup(app):
         conf_path.write_text(conf_content)
 
     def _generate_index_rst(self):
-        """Generate index.rst file."""
+        """Generate index.rst file with configurable TOC sections."""
+        # Build TOC entries based on configuration options
+        toc_entries = []
+
+        # Always include autoapi if it will be generated
+        toc_entries.append("autoapi/index")
+
+        # Add optional sections based on configuration (defaulting to false)
+        if self.doc_config.get("with_guides", False):
+            toc_entries.append("guides/index")
+
+        if self.doc_config.get("with_examples", False):
+            toc_entries.append("examples/index")
+
+        if self.doc_config.get("with_cli", False):
+            toc_entries.append("cli/index")
+
+        if self.doc_config.get("with_tutorials", False):
+            toc_entries.append("tutorials/index")
+
+        # Always include changelog if it exists (this is typically generated)
+        docs_source = self.project_path / "docs" / "source"
+        if (docs_source / "changelog.rst").exists():
+            toc_entries.append("changelog")
+
+        # Generate TOC content
+        toc_content = "\n   ".join(toc_entries)
+
         index_content = f"""
 Welcome to {self.project_info["name"]} Documentation
 {"=" * (len(self.project_info["name"]) + 25)}
@@ -575,10 +630,7 @@ Welcome to {self.project_info["name"]} Documentation
    :maxdepth: 2
    :caption: Contents:
 
-   autoapi/index
-   guides/index
-   examples/index
-   changelog
+   {toc_content}
 
 Indices and tables
 ==================
@@ -749,6 +801,24 @@ def cli(ctx):
 @click.option("--debug", is_flag=True, help="Show debug information")
 @click.option("--fix-dependencies", is_flag=True, help="Auto-fix dependency conflicts")
 @click.option("--yes", "-y", is_flag=True, help="Skip confirmation prompts")
+@click.option(
+    "--with-guides", is_flag=True, help="Include guides section in TOC (default: false)"
+)
+@click.option(
+    "--with-examples",
+    is_flag=True,
+    help="Include examples section in TOC (default: false)",
+)
+@click.option(
+    "--with-cli",
+    is_flag=True,
+    help="Include CLI documentation section in TOC (default: false)",
+)
+@click.option(
+    "--with-tutorials",
+    is_flag=True,
+    help="Include tutorials section in TOC (default: false)",
+)
 def init(
     packages_dir,
     include_root,
@@ -759,6 +829,10 @@ def init(
     debug,
     fix_dependencies,
     yes,
+    with_guides,
+    with_examples,
+    with_cli,
+    with_tutorials,
 ):
     """Initialize documentation for any Python project.
 
@@ -889,8 +963,14 @@ def init(
 
         summary["packages_configured"] += 1
 
-    # Initialize documentation
-    initializer = DocsInitializer(project_path, analysis)
+    # Initialize documentation with configuration options
+    doc_config = {
+        "with_guides": with_guides,
+        "with_examples": with_examples,
+        "with_cli": with_cli,
+        "with_tutorials": with_tutorials,
+    }
+    initializer = DocsInitializer(project_path, analysis, doc_config)
 
     try:
         init_start = datetime.now()
