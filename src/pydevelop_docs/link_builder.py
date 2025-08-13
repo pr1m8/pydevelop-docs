@@ -53,8 +53,8 @@ class DocumentationLinker:
 
         # Add each package
         for name, info in packages.items():
-            # Use relative paths from root docs build
-            relative_path = f"../../packages/{name}/docs/build/html"
+            # Use relative paths from hub docs build to package docs
+            relative_path = f"../../../packages/{name}/docs/build/html"
             mapping[name] = (relative_path, None)
 
         return mapping
@@ -116,10 +116,12 @@ Click any package to explore its documentation:
             # Count HTML files for stats
             html_files = list(info["html_dir"].glob("**/*.html"))
 
-            # Create better display name
+            # Create better display name and relative path
             display_name = self._get_display_name(name)
+            # Calculate correct relative path from hub docs/build/html to package docs
+            relative_path = f"../../../packages/{name}/docs/build/html/index.html"
             content += f"""   .. grid-item-card:: {display_name}
-      :link: ../../packages/{name}/docs/build/html/index.html
+      :link: {relative_path}
       :shadow: md
       
       {self._get_package_description(name)}
@@ -149,9 +151,9 @@ Documentation Navigation
         # Add each package to the TOC
         for name, info in sorted(packages.items()):
             display_name = self._get_display_name(name)
-            content += (
-                f"   {display_name} <../../packages/{name}/docs/build/html/index>\n"
-            )
+            # Calculate correct relative path from hub docs/source to package docs
+            relative_path = f"../../../packages/{name}/docs/build/html/index"
+            content += f"   {display_name} <{relative_path}>\n"
 
         content += """
 .. toctree::
@@ -541,8 +543,9 @@ Detailed documentation for each package:
    
 """
         for name in sorted(packages.keys()):
+            # Path from hub docs/source/packages/index.rst to package docs
             packages_index += (
-                f"   {name} <../../../packages/{name}/docs/build/html/index>\n"
+                f"   {name} <../../../../packages/{name}/docs/build/html/index>\n"
             )
 
         (packages_dir / "index.rst").write_text(packages_index)
