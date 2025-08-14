@@ -1,25 +1,11 @@
 testhaive
-=========
-
-.. py:module:: testhaive
-
-.. autoapi-nested-parse::
-
+=========.. py:module:: testhaive
    TestHaive Framework - Agents namespace package.
-
-
-   .. autolink-examples:: testhaive
-      :collapse:
-
-
+TestHaive Framework - Agents namespace package.
 Submodules
 ----------
 
+**Subpackages:**
+
 .. toctree::
-   :maxdepth: 1
-
-   /autoapi/testhaive/agents/index
-   /autoapi/testhaive/core/index
-   /autoapi/testhaive/tools/index
-
-
+   :maxdepth: 1   testhaive.agents/index   testhaive.core/index   testhaive.tools/index

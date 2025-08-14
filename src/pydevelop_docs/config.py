@@ -235,9 +235,9 @@ def get_haive_config(
         # Issues configuration
         "issues_github_path": "haive-ai/haive",
         "issues_uri": "https://github.com/haive-ai/haive/issues/{issue}",
-        # Sphinx Tippy configuration - Rich hover tooltips
+        # Sphinx Tippy configuration - Enhanced hover tooltips
         "tippy_props": {
-            "placement": "auto",
+            "placement": "auto-start",
             "maxWidth": 600,
             "theme": "light-border",
             "delay": [200, 100],
@@ -246,8 +246,12 @@ def get_haive_config(
         },
         "tippy_enable_mathjax": True,
         "tippy_enable_doitips": True,
+        "tippy_enable_wikitips": True,
+        "tippy_enable_footnotes": True,
         "tippy_rtd_urls": ["https://docs.haive.ai"],
         "tippy_anchor_parent_selector": "article.bd-article",
+        "tippy_skip_anchor_classes": ["headerlink", "sd-stretched-link"],
+        "tippy_add_class": "has-tooltip",
         # Sphinx-prompt configuration
         "prompt_modifiers": "auto",
         "prompt_default_prompts": ["$", ">>>", "..."],
@@ -464,7 +468,7 @@ def _get_complete_extensions(
         "sphinx_tabs.tabs",
         # Execution (Priority 31-40) - TESTING FOCUS
         "sphinxcontrib.programoutput",
-        "sphinx_runpython",
+        # "sphinx_runpython",  # Disabled - has no setup() function
         "sphinx_exec_code",
         # Diagrams (Priority 41-50) - MERMAID FOCUS
         "sphinx.ext.graphviz",
@@ -525,11 +529,22 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
     ✅ INCLUDES AUTOAPI HIERARCHICAL FIX - Issue #4 Solution
     This configuration applies the validated solution that transforms flat
     alphabetical API listings into organized hierarchical structure.
+
+    ✅ INCLUDES INTELLIGENT TEMPLATES - Issue #6 Solution
+    When _autoapi_templates directory exists, it uses our intelligent
+    Jinja2 templates with full extension integration.
     """
+    # Check if intelligent templates are available
+    template_dir = Path(__file__).parent / "templates" / "_autoapi_templates"
+    if template_dir.exists():
+        autoapi_template_dir = str(template_dir)
+    else:
+        autoapi_template_dir = "_autoapi_templates"
+
     return {
         "autoapi_type": "python",
         "autoapi_dirs": [package_path],
-        "autoapi_template_dir": "_autoapi_templates",
+        "autoapi_template_dir": autoapi_template_dir,
         "autoapi_add_toctree_entry": True,
         "autoapi_generate_api_docs": True,
         "autoapi_keep_files": True,
@@ -667,7 +682,7 @@ def _get_complete_intersphinx_mapping() -> Dict[str, tuple]:
         "python": ("https://docs.python.org/3", None),
         "sphinx": ("https://www.sphinx-doc.org/en/master", None),
         "pydantic": ("https://docs.pydantic.dev/latest", None),
-        "langchain": ("https://python.langchain.com/", None),
+        "langchain": ("https://api.python.langchain.com/en/latest/", None),
         "fastapi": ("https://fastapi.tiangolo.com/", None),
         # Add other Haive packages as they become available
         # "haive-core": ("https://docs.haive.ai/packages/haive-core/", None),
@@ -739,7 +754,7 @@ def process_docstring(app, what, name, obj, options, lines):
 
 
 def setup(app):
-    """Setup Sphinx application with custom handlers."""
+    """Setup Sphinx application with custom handlers and intelligent templates."""
     # Add autodoc skip handler to prevent processing metaclasses
     app.connect("autodoc-skip-member", autodoc_skip_member)
 
@@ -748,6 +763,69 @@ def setup(app):
 
     # Add custom CSS for better styling
     app.add_css_file("custom.css", priority=600)
+    app.add_css_file("tippy-enhancements.css", priority=601)
+    app.add_css_file("api-docs.css", priority=602)
+
+    # Add custom JS for API enhancements
+    app.add_js_file("js/api-enhancements.js", {"defer": "defer"})
+
+    # Configure Jinja environment for intelligent templates
+    def configure_jinja_env(app, config):
+        """Configure Jinja environment with custom filters."""
+        try:
+            # Import custom filters if available
+            from .templates._autoapi_templates.python._filters.type_filters import (
+                FILTERS,
+            )
+
+            # Get Jinja environment
+            if hasattr(app, "jinja_env"):
+                jinja_env = app.jinja_env
+            else:
+                # Fallback for AutoAPI
+                try:
+                    import autoapi
+
+                    if hasattr(autoapi, "jinja_env"):
+                        jinja_env = autoapi.jinja_env
+                    else:
+                        return
+                except:
+                    return
+
+            # Add custom filters
+            for name, func in FILTERS.items():
+                jinja_env.filters[name] = func
+
+            # Add extension detection globals
+            jinja_env.globals["extensions"] = config.extensions
+            jinja_env.globals["has_mermaid"] = (
+                "sphinxcontrib.mermaid" in config.extensions
+            )
+            jinja_env.globals["has_design"] = "sphinx_design" in config.extensions
+            jinja_env.globals["has_toggles"] = (
+                "sphinx_togglebutton" in config.extensions
+            )
+            jinja_env.globals["has_tabs"] = (
+                "sphinx_tabs.tabs" in config.extensions
+                or "sphinx_inline_tabs" in config.extensions
+            )
+            jinja_env.globals["has_copybutton"] = (
+                "sphinx_copybutton" in config.extensions
+            )
+            jinja_env.globals["has_tippy"] = "sphinx_tippy" in config.extensions
+
+            # Add utility functions
+            jinja_env.globals["len"] = len
+            jinja_env.globals["isinstance"] = isinstance
+            jinja_env.globals["hasattr"] = hasattr
+
+        except ImportError:
+            # Intelligent templates not available, continue with defaults
+            pass
+
+    # Connect Jinja configuration
+    app.connect("config-inited", configure_jinja_env)
 
     return {
         "version": "1.0.0",

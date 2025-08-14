@@ -1,14 +1,4 @@
 testhaive.tools
-===============
-
-.. py:module:: testhaive.tools
-
-.. autoapi-nested-parse::
-
+===============.. py:module:: testhaive.tools
    TestHaive Tools - Tool implementations.
-
-
-   .. autolink-examples:: testhaive.tools
-      :collapse:
-
-
+TestHaive Tools - Tool implementations.
