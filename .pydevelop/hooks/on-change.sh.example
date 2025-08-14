@@ -1,0 +1,18 @@
+#!/bin/bash
+# Example on-change hook
+# This runs when files change during watch mode
+
+changed_file="$1"
+echo "📝 File changed: $changed_file"
+
+# Example: Run linter on Python files
+if [[ "$changed_file" == *.py ]]; then
+    echo "Running linter..."
+    ruff check "$changed_file" || true
+fi
+
+# Example: Validate RST files
+if [[ "$changed_file" == *.rst ]]; then
+    echo "Validating RST..."
+    rst2html "$changed_file" > /dev/null 2>&1 || echo "⚠️ RST validation failed"
+fi

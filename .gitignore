@@ -71,3 +71,8 @@ logs/
 *.temp
 *.bak
 poetry.lock
+
+# PyDevelop-Docs
+.pydevelop/cache/
+.pydevelop/hooks/*.log
+.pydevelop/templates/_build/

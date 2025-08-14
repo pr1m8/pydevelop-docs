@@ -1,0 +1,41 @@
+documentation:
+  theme: furo
+  logo: ${auto:find-logo}
+  favicon: ${auto:find-favicon}
+  copyright: ${auto:year} pydevelop-docs contributors
+build:
+  auto_fix: true
+  selective_rebuild: true
+  parallel: true
+  clean_build: false
+watch:
+  enabled: true
+  patterns:
+    - "**/*.py"
+    - "**/*.rst"
+    - "**/*.md"
+    - "**/conf.py"
+    - .pydevelop/**/*.yaml
+  ignore:
+    - .venv/**
+    - "**/build/**"
+    - "**/__pycache__/**"
+    - "**/.pytest_cache/**"
+    - "**/node_modules/**"
+  rebuild_delay: 2
+  batch_changes: true
+api:
+  hierarchical: true
+  show_private: false
+  show_inherited: true
+  member_order: groupwise
+  class_content: both
+intersphinx:
+  auto_detect: true
+  mappings:
+    python: https://docs.python.org/3
+    sphinx: https://www.sphinx-doc.org/en/master
+extensions:
+  enable_all: true
+  custom: []
+  disable: []

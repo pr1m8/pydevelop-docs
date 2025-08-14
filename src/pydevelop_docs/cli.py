@@ -4,6 +4,7 @@ This tool can initialize Sphinx documentation with the full PyAutoDoc configurat
 for any Python project, whether it's a single package or monorepo.
 """
 
+import asyncio
 import json
 import shutil
 import subprocess
@@ -1174,7 +1175,8 @@ def doctor(fix, quiet):
 @click.option("--no-parallel", is_flag=True, help="Disable parallel building")
 @click.option("--package", "-p", help="Specific package to build (monorepo only)")
 @click.option("--config", "-f", type=click.Path(exists=True), help="Custom config file")
-def build(clean, builder, no_parallel, package, config):
+@click.option("--ignore-warnings", is_flag=True, help="Don't treat warnings as errors")
+def build(clean, builder, no_parallel, package, config, ignore_warnings):
     """Build documentation for current project.
 
     Supports single packages and monorepos. Auto-detects project type.
@@ -1199,16 +1201,26 @@ def build(clean, builder, no_parallel, package, config):
             pkg_builder = get_builder(pkg_path, project_type="single")
             pkg_builder.prepare()
             success = pkg_builder.build(
-                builder=builder, clean=clean, parallel=not no_parallel
+                builder=builder,
+                clean=clean,
+                parallel=not no_parallel,
+                warnings_as_errors=not ignore_warnings,
             )
         else:
             # Build all packages
-            success = doc_builder.build_all(clean=clean, parallel=not no_parallel)
+            success = doc_builder.build_all(
+                clean=clean,
+                parallel=not no_parallel,
+                warnings_as_errors=not ignore_warnings,
+            )
     else:
         # Single package
         doc_builder.prepare()
         success = doc_builder.build(
-            builder=builder, clean=clean, parallel=not no_parallel
+            builder=builder,
+            clean=clean,
+            parallel=not no_parallel,
+            warnings_as_errors=not ignore_warnings,
         )
 
     if not success:
@@ -1217,7 +1229,8 @@ def build(clean, builder, no_parallel, package, config):
 
 @cli.command()
 @click.option("--clean", "-c", is_flag=True, help="Clean all build artifacts")
-def build_all(clean):
+@click.option("--ignore-warnings", is_flag=True, help="Don't treat warnings as errors")
+def build_all(clean, ignore_warnings):
     """Build documentation for all packages in monorepo."""
     project_path = Path.cwd()
 
@@ -1231,7 +1244,7 @@ def build_all(clean):
     builder.prepare()
 
     # Build all packages
-    success = builder.build_all(clean=clean)
+    success = builder.build_all(clean=clean, warnings_as_errors=not ignore_warnings)
 
     # Build aggregate docs
     if success:
@@ -1416,6 +1429,98 @@ def list_extensions():
     click.echo("📚 Available Sphinx Extensions (43 total):\n")
     for ext in extensions:
         click.echo(f"   • {ext}")
+
+
+@cli.command()
+@click.option(
+    "--auto-fix/--no-auto-fix",
+    default=True,
+    help="Automatically fix documentation issues while watching",
+)
+@click.option(
+    "--selective/--no-selective",
+    default=True,
+    help="Only rebuild changed packages (faster)",
+)
+def watch(auto_fix: bool, selective: bool):
+    """Watch for changes and automatically rebuild documentation."""
+    import asyncio
+
+    from .config_discovery import PyDevelopConfig
+    from .watcher import watch_documentation
+
+    project_path = Path.cwd()
+
+    # Initialize .pydevelop if needed
+    pydevelop = PyDevelopConfig(project_path)
+    if not pydevelop.config_dir.exists():
+        click.echo("🔧 Initializing .pydevelop configuration...")
+        pydevelop.initialize()
+
+    # Start watching
+    asyncio.run(
+        watch_documentation(
+            project_path,
+            auto_fix=auto_fix,
+            selective=selective,
+        )
+    )
+
+
+@cli.command()
+def discover():
+    """Discover and display project configuration."""
+    import json
+
+    from .config_discovery import ConfigDiscovery
+
+    project_path = Path.cwd()
+    discovery = ConfigDiscovery(project_path)
+    config = discovery.discover_all()
+
+    click.echo("🔍 Discovered Project Configuration:\n")
+    click.echo(json.dumps(config, indent=2, default=str))
+
+
+@cli.command()
+def setup():
+    """Initialize .pydevelop configuration directory."""
+    from .config_discovery import PyDevelopConfig
+
+    project_path = Path.cwd()
+    pydevelop = PyDevelopConfig(project_path)
+
+    if pydevelop.config_dir.exists():
+        click.echo("⚠️  .pydevelop directory already exists")
+        if not click.confirm("Reinitialize configuration?"):
+            return
+
+    pydevelop.initialize()
+
+    # Create example hooks and templates
+    from .hooks import HookManager, TemplateOverrideManager
+
+    hooks = HookManager(project_path)
+    templates = TemplateOverrideManager(project_path)
+
+    hooks.create_example_hooks()
+    templates.create_example_overrides()
+
+    click.echo("\n📁 Created .pydevelop/ structure:")
+    click.echo("   .pydevelop/")
+    click.echo("   ├── config.yaml          # Main project configuration")
+    click.echo("   ├── docs.yaml            # Documentation settings")
+    click.echo("   ├── cache/               # Build cache (gitignored)")
+    click.echo("   ├── templates/           # Custom template overrides")
+    click.echo("   │   └── *.example        # Example templates")
+    click.echo("   └── hooks/               # Pre/post build scripts")
+    click.echo("       └── *.example        # Example hooks")
+
+    click.echo("\n✨ Next steps:")
+    click.echo("   1. Review .pydevelop/config.yaml and docs.yaml")
+    click.echo("   2. Check .pydevelop/hooks/*.example for customization ideas")
+    click.echo("   3. Check .pydevelop/templates/*.example for override examples")
+    click.echo("   4. Run 'pydevelop-docs watch' for auto-rebuild")
 
 
 if __name__ == "__main__":

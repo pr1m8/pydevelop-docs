@@ -1,7 +1,9 @@
 """Documentation builders for different project types."""
 
+import logging
 import shutil
 import subprocess
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -9,6 +11,8 @@ import click
 import tomlkit
 
 from .config import get_haive_config
+from .config_discovery import PyDevelopConfig
+from .hooks import HookManager, TemplateOverrideManager
 
 
 class BaseDocumentationBuilder:
@@ -18,6 +22,8 @@ class BaseDocumentationBuilder:
         self.project_path = project_path
         self.config = config
         self.docs_path = project_path / "docs"
+        self.hooks = HookManager(project_path)
+        self.templates = TemplateOverrideManager(project_path)
 
     def clean(self):
         """Clean build artifacts."""
@@ -32,48 +38,155 @@ class BaseDocumentationBuilder:
             shutil.rmtree(autoapi_path)
             click.echo(f"✅ Cleaned {autoapi_path}")
 
-    def build(self, builder: str = "html", clean: bool = False, parallel: bool = True):
-        """Build documentation."""
+    def build(
+        self,
+        builder: str = "html",
+        clean: bool = False,
+        parallel: bool = True,
+        warnings_as_errors: bool = True,
+    ):
+        """Build documentation with comprehensive logging."""
+        # Setup logging
+        log_dir = self.docs_path / "logs"
+        log_dir.mkdir(exist_ok=True)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        log_file = log_dir / f"build_{timestamp}.log"
+
+        # Setup file logger
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        file_handler.setFormatter(formatter)
+
+        logger = logging.getLogger(
+            f"pydevelop_docs.{self.config.get('name', 'unknown')}"
+        )
+        logger.setLevel(logging.DEBUG)
+        logger.addHandler(file_handler)
+
+        # Log build start
+        logger.info(f"Starting build for {self.config.get('name', 'documentation')}")
+        logger.info(
+            f"Builder: {builder}, Clean: {clean}, Parallel: {parallel}, Warnings as errors: {warnings_as_errors}"
+        )
+
+        # Run pre-build hook
+        if not self.hooks.run_hook("pre-build", {"builder": builder, "clean": clean}):
+            click.echo("⚠️  Pre-build hook failed, continuing anyway...", err=True)
+            logger.warning("Pre-build hook failed")
+
         if clean:
+            logger.info("Cleaning build artifacts")
             self.clean()
 
         # Ensure build directory exists
         build_dir = self.docs_path / "build" / builder
         build_dir.mkdir(parents=True, exist_ok=True)
+        logger.info(f"Build directory: {build_dir}")
 
         # Build command
         cmd = [
             "sphinx-build",
             "-b",
             builder,
-            "-W",
-            "--keep-going",  # Warnings as errors but continue
         ]
+
+        if warnings_as_errors:
+            cmd.extend(["-W", "--keep-going"])  # Warnings as errors but continue
+            logger.info("Using warnings as errors mode")
+        else:
+            cmd.extend(["-v", "-v"])  # Very verbose output instead of strict warnings
+            logger.info("Using verbose mode (warnings ignored)")
+
+        # Always add some verbosity for debugging
+        cmd.append("--color")
 
         if parallel:
             cmd.extend(["-j", "auto"])  # Use all CPU cores
+            logger.info("Using parallel build with all CPU cores")
 
         cmd.extend([str(self.docs_path / "source"), str(build_dir)])
+        logger.info(f"Full command: {' '.join(cmd)}")
 
         # Run build
         click.echo(f"🔨 Building {self.config.get('name', 'documentation')}...")
+        click.echo(f"📝 Logging to: {log_file}")
 
         try:
             result = subprocess.run(
                 cmd, cwd=self.project_path, capture_output=True, text=True
             )
 
+            # Log full output
+            logger.info("=== SPHINX BUILD OUTPUT ===")
+            if result.stdout:
+                logger.info("STDOUT:")
+                logger.info(result.stdout)
+            if result.stderr:
+                logger.info("STDERR:")
+                logger.info(result.stderr)
+            logger.info(f"Return code: {result.returncode}")
+
+            # Count output files
+            html_files = list(build_dir.rglob("*.html")) if build_dir.exists() else []
+            logger.info(f"Generated {len(html_files)} HTML files")
+
             if result.returncode == 0:
                 click.echo(f"✅ Build successful: {build_dir}")
+                click.echo(f"📊 Generated {len(html_files)} HTML files")
+                logger.info("Build completed successfully")
+
+                # Run post-build hook
+                hook_context = {
+                    "builder": builder,
+                    "build_dir": str(build_dir),
+                    "success": True,
+                    "html_file_count": len(html_files),
+                }
+                if not self.hooks.run_hook("post-build", hook_context):
+                    click.echo("⚠️  Post-build hook failed", err=True)
+                    logger.warning("Post-build hook failed")
+
                 return True
             else:
                 click.echo(f"❌ Build failed with errors:")
                 click.echo(result.stderr)
+                logger.error(f"Build failed with return code {result.returncode}")
+
+                # Show first few lines of stderr for immediate feedback
+                stderr_lines = (
+                    result.stderr.strip().split("\n") if result.stderr else []
+                )
+                if stderr_lines:
+                    click.echo("🔍 First few error lines:")
+                    for line in stderr_lines[:5]:
+                        click.echo(f"   {line}")
+                    if len(stderr_lines) > 5:
+                        click.echo(
+                            f"   ... and {len(stderr_lines) - 5} more lines (see log file)"
+                        )
+
+                # Run post-build hook even on failure
+                hook_context = {
+                    "builder": builder,
+                    "build_dir": str(build_dir),
+                    "success": False,
+                    "error": result.stderr,
+                    "html_file_count": len(html_files),
+                }
+                self.hooks.run_hook("post-build", hook_context)
+
                 return False
 
         except Exception as e:
             click.echo(f"❌ Build error: {e}")
+            logger.error(f"Build exception: {e}")
             return False
+        finally:
+            # Clean up logger
+            logger.removeHandler(file_handler)
+            file_handler.close()
 
 
 class SinglePackageBuilder(BaseDocumentationBuilder):
@@ -90,7 +203,15 @@ class SinglePackageBuilder(BaseDocumentationBuilder):
 
     def _generate_conf_py(self):
         """Generate conf.py for single package."""
-        conf_content = f'''"""
+        # Check for template override first
+        override = self.templates.get_override("conf.py")
+        if override:
+            click.echo(f"📝 Using template override: {override}")
+            conf_content = override.read_text()
+            # Perform variable substitution
+            conf_content = self._substitute_variables(conf_content)
+        else:
+            conf_content = f'''"""
 Sphinx configuration for {self.config['name']}.
 Generated by pydevelop-docs with AutoAPI hierarchical organization.
 
@@ -124,6 +245,24 @@ except ImportError:
         conf_path.parent.mkdir(parents=True, exist_ok=True)
         conf_path.write_text(conf_content)
 
+    def _substitute_variables(self, content: str) -> str:
+        """Substitute template variables in content."""
+        # Basic variable substitutions
+        substitutions = {
+            "{{package_name}}": self.config.get("name", "Unknown"),
+            "{{project_path}}": str(self.project_path),
+            "{{project_name}}": self.config.get("name", "Unknown"),
+            "{{version}}": self.config.get("version", "1.0.0"),
+            "{{description}}": self.config.get("description", ""),
+            "{{author}}": self.config.get("author", ""),
+        }
+
+        result = content
+        for placeholder, value in substitutions.items():
+            result = result.replace(placeholder, value)
+
+        return result
+
     def _get_embedded_config(self):
         """Get embedded configuration as fallback."""
         # This would include the full configuration
@@ -142,16 +281,42 @@ class MonorepoBuilder(BaseDocumentationBuilder):
 
     def __init__(self, project_path: Path, config: Dict[str, Any]):
         super().__init__(project_path, config)
+
+        # Load pydevelop configuration for ignore settings first
+        self.pydevelop_config = self._load_pydevelop_config()
+
+        # Then discover packages (respecting ignore list)
         self.packages = self._discover_packages()
 
+    def _load_pydevelop_config(self) -> Dict[str, Any]:
+        """Load pydevelop configuration including ignore settings."""
+        try:
+            config_manager = PyDevelopConfig(self.project_path)
+            return config_manager.load_config()
+        except Exception as e:
+            click.echo(f"⚠️  Failed to load pydevelop config: {e}", err=True)
+            return {}
+
     def _discover_packages(self) -> List[Path]:
-        """Discover all packages in monorepo."""
+        """Discover all packages in monorepo, respecting ignore_packages configuration."""
         packages = []
         packages_dir = self.project_path / "packages"
+
+        # Get ignore list from configuration
+        ignore_packages = self.pydevelop_config.get("build", {}).get(
+            "ignore_packages", []
+        )
 
         if packages_dir.exists():
             for pkg_dir in packages_dir.iterdir():
                 if pkg_dir.is_dir() and not pkg_dir.name.startswith("."):
+                    # Check if package should be ignored
+                    if pkg_dir.name in ignore_packages:
+                        click.echo(
+                            f"🚫 Ignoring package: {pkg_dir.name} (configured in .pydevelop/docs.yaml)"
+                        )
+                        continue
+
                     # Check if it has docs
                     if (pkg_dir / "docs").exists():
                         packages.append(pkg_dir)
@@ -165,29 +330,123 @@ class MonorepoBuilder(BaseDocumentationBuilder):
         for package in self.packages:
             click.echo(f"   • {package.name}")
 
-    def build_all(self, clean: bool = False, parallel: bool = True):
-        """Build documentation for all packages."""
+    def build_all(
+        self,
+        clean: bool = False,
+        parallel: bool = True,
+        warnings_as_errors: bool = True,
+    ):
+        """Build documentation for all packages with detailed logging."""
         results = []
+        start_time = datetime.now()
 
-        for package in self.packages:
-            click.echo(f"\n📚 Building {package.name}...")
+        # Setup main build log
+        main_log_dir = self.project_path / "logs"
+        main_log_dir.mkdir(exist_ok=True)
 
-            # Create builder for each package
-            pkg_config = {"name": package.name}
-            builder = SinglePackageBuilder(package, pkg_config)
+        timestamp = start_time.strftime("%Y%m%d_%H%M%S")
+        main_log_file = main_log_dir / f"monorepo_build_{timestamp}.log"
 
-            # Prepare and build
-            builder.prepare()
-            success = builder.build(clean=clean, parallel=parallel)
-            results.append((package.name, success))
+        # Setup main logger
+        main_handler = logging.FileHandler(main_log_file)
+        main_handler.setLevel(logging.INFO)
+        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        main_handler.setFormatter(formatter)
 
-        # Summary
-        click.echo("\n📊 Build Summary:")
-        for name, success in results:
-            status = "✅" if success else "❌"
-            click.echo(f"   {status} {name}")
+        main_logger = logging.getLogger("pydevelop_docs.monorepo")
+        main_logger.setLevel(logging.INFO)
+        main_logger.addHandler(main_handler)
 
-        return all(success for _, success in results)
+        main_logger.info(f"Starting monorepo build for {len(self.packages)} packages")
+        main_logger.info(
+            f"Clean: {clean}, Parallel: {parallel}, Warnings as errors: {warnings_as_errors}"
+        )
+
+        click.echo(f"🏗️  Building {len(self.packages)} packages...")
+        click.echo(f"📝 Main log: {main_log_file}")
+
+        try:
+            for package in self.packages:
+                package_start = datetime.now()
+                click.echo(f"\n📚 Building {package.name}...")
+                main_logger.info(f"Starting build for package: {package.name}")
+
+                # Create builder for each package
+                pkg_config = {"name": package.name}
+                builder = SinglePackageBuilder(package, pkg_config)
+
+                # Prepare and build
+                try:
+                    builder.prepare()
+                    success = builder.build(
+                        clean=clean,
+                        parallel=parallel,
+                        warnings_as_errors=warnings_as_errors,
+                    )
+
+                    package_duration = datetime.now() - package_start
+                    main_logger.info(
+                        f"Package {package.name} build completed in {package_duration.total_seconds():.1f}s - Success: {success}"
+                    )
+
+                    # Check for package-specific logs
+                    package_logs = (
+                        list((package / "docs" / "logs").glob("*.log"))
+                        if (package / "docs" / "logs").exists()
+                        else []
+                    )
+                    if package_logs:
+                        latest_log = max(package_logs, key=lambda x: x.stat().st_mtime)
+                        click.echo(f"   📝 Package log: {latest_log}")
+                        main_logger.info(
+                            f"Package {package.name} detailed log: {latest_log}"
+                        )
+
+                    results.append((package.name, success))
+
+                except Exception as e:
+                    click.echo(f"   ❌ Exception during {package.name} build: {e}")
+                    main_logger.error(f"Exception building {package.name}: {e}")
+                    results.append((package.name, False))
+
+            # Summary
+            total_duration = datetime.now() - start_time
+            successful = sum(1 for _, success in results if success)
+            failed = len(results) - successful
+
+            click.echo(
+                f"\n📊 Build Summary ({total_duration.total_seconds():.1f}s total):"
+            )
+            click.echo(f"   ✅ Successful: {successful}")
+            click.echo(f"   ❌ Failed: {failed}")
+            click.echo(f"   📁 Total packages: {len(results)}")
+
+            main_logger.info(
+                f"Monorepo build completed - {successful}/{len(results)} successful"
+            )
+
+            click.echo("\n📦 Package Details:")
+            for name, success in results:
+                status = "✅" if success else "❌"
+                # Check for HTML file count
+                html_count = 0
+                build_dir = (
+                    self.project_path / "packages" / name / "docs" / "build" / "html"
+                )
+                if build_dir.exists():
+                    html_count = len(list(build_dir.rglob("*.html")))
+
+                click.echo(f"   {status} {name:15} ({html_count:3} HTML files)")
+                main_logger.info(
+                    f"Package {name}: Success={success}, HTML files={html_count}"
+                )
+
+            return all(success for _, success in results)
+
+        finally:
+            # Clean up logger
+            main_logger.removeHandler(main_handler)
+            main_handler.close()
 
     def build_aggregate(self):
         """Build aggregate documentation using sphinx-collections."""
