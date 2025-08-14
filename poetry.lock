@@ -7800,6 +7800,22 @@ nbformat = "*"
 sphinx = "*"
 
 [[package]]
+name = "sphinxcontrib-lunrsearch"
+version = "0.4"
+description = "Instant search for Sphinx"
+optional = false
+python-versions = "*"
+groups = ["docs"]
+files = [
+    {file = "sphinxcontrib-lunrsearch-0.4.tar.gz", hash = "sha256:2c0c572c0fdf0c5d24400b43ff1d886cac9ceb21b0ff29e753c3b9f4f2c90c02"},
+    {file = "sphinxcontrib_lunrsearch-0.4-py2.py3-none-any.whl", hash = "sha256:c8ed5f5bb106589b123a3ff7458e32404c5b10978578c64f759a02a7040fceb7"},
+]
+
+[package.dependencies]
+six = ">=1.4.1"
+Sphinx = ">=1.0"
+
+[[package]]
 name = "sphinxcontrib-mermaid"
 version = "1.0.0"
 description = "Mermaid diagrams in yours Sphinx powered docs"
@@ -9078,4 +9094,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.13"
-content-hash = "dca61863e6d33bf1bab6a624eba1a59b9d34001269387bf1070dddccc5162e4a"
+content-hash = "236b8d90044f728e678af3beba951618b639249718eda7c34c5627e3b9423d4b"
