@@ -98,7 +98,7 @@ def get_haive_config(
         # Extensions - Complete 40+ extension system with optimal configurations
         "extensions": _get_complete_extensions(is_central_hub, extra_extensions),
         # General configuration
-        "templates_path": ["_templates", "_autoapi_templates"],
+        "templates_path": ["_templates"],
         "html_static_path": ["_static"],
         "exclude_patterns": [
             "_build",
@@ -530,25 +530,12 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
     This configuration applies the validated solution that transforms flat
     alphabetical API listings into organized hierarchical structure.
 
-    ✅ INCLUDES INTELLIGENT TEMPLATES - Issue #6 Solution
-    When _autoapi_templates directory exists, it uses our intelligent
-    Jinja2 templates with full extension integration.
+    Uses default AutoAPI templates which have proven to work perfectly
+    with the hierarchical organization fix.
     """
-    # Check if intelligent templates are available
-    # TEMPORARILY DISABLED to debug AutoAPI issues
-    # template_dir = Path(__file__).parent / "templates" / "_autoapi_templates"
-    # if template_dir.exists():
-    #     autoapi_template_dir = str(template_dir)
-    # else:
-    #     autoapi_template_dir = "_autoapi_templates"
-
-    # Temporarily disable custom templates to test default behavior
-    autoapi_template_dir = None  # Use default AutoAPI templates
-
     return {
         "autoapi_type": "python",
         "autoapi_dirs": [package_path],
-        # "autoapi_template_dir": autoapi_template_dir,  # Disabled temporarily
         "autoapi_add_toctree_entry": True,
         "autoapi_generate_api_docs": True,
         "autoapi_keep_files": True,
@@ -773,63 +760,8 @@ def setup(app):
     # Add custom JS for API enhancements
     app.add_js_file("js/api-enhancements.js", {"defer": "defer"})
 
-    # Configure Jinja environment for intelligent templates
-    def configure_jinja_env(app, config):
-        """Configure Jinja environment with custom filters."""
-        try:
-            # Import custom filters if available
-            from .templates._autoapi_templates.python._filters.type_filters import (
-                FILTERS,
-            )
-
-            # Get Jinja environment
-            if hasattr(app, "jinja_env"):
-                jinja_env = app.jinja_env
-            else:
-                # Fallback for AutoAPI
-                try:
-                    import autoapi
-
-                    if hasattr(autoapi, "jinja_env"):
-                        jinja_env = autoapi.jinja_env
-                    else:
-                        return
-                except:
-                    return
-
-            # Add custom filters
-            for name, func in FILTERS.items():
-                jinja_env.filters[name] = func
-
-            # Add extension detection globals
-            jinja_env.globals["extensions"] = config.extensions
-            jinja_env.globals["has_mermaid"] = (
-                "sphinxcontrib.mermaid" in config.extensions
-            )
-            jinja_env.globals["has_design"] = "sphinx_design" in config.extensions
-            jinja_env.globals["has_toggles"] = (
-                "sphinx_togglebutton" in config.extensions
-            )
-            jinja_env.globals["has_tabs"] = (
-                "sphinx_tabs.tabs" in config.extensions
-                or "sphinx_inline_tabs" in config.extensions
-            )
-            jinja_env.globals["has_copybutton"] = (
-                "sphinx_copybutton" in config.extensions
-            )
-            jinja_env.globals["has_tippy"] = "sphinx_tippy" in config.extensions
-
-            # Add utility functions
-            jinja_env.globals["len"] = len
-            jinja_env.globals["isinstance"] = isinstance
-            jinja_env.globals["hasattr"] = hasattr
-
-        except ImportError:
-            # Intelligent templates not available, continue with defaults
-            pass
-
-    # Connect Jinja configuration
-    app.connect("config-inited", configure_jinja_env)
+    # Custom Jinja configuration removed - using default AutoAPI templates
+    # The hierarchical organization is achieved through configuration, not custom templates
 
     return {
         "version": "1.0.0",
