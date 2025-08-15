@@ -397,14 +397,12 @@ def get_haive_config(
         # Theme configuration - INTENSE FURO THEMING
         "html_theme": "furo",
         "html_theme_options": _get_complete_theme_options(package_name, is_central_hub),
-        # Custom CSS and JS files
+        # Custom CSS and JS files - CONSOLIDATED to avoid conflicts
         "html_css_files": [
-            "enhanced-design.css",  # Modern design system - must be first
-            "furo-intense.css",
-            "api-docs.css",
-            "mermaid-custom.css",
-            "toc-enhancements.css",
-            "tippy-enhancements.css",
+            "enhanced-design.css",  # Modern design system - contains all styling
+            # Removed conflicting files: furo-intense.css, api-docs.css, toc-enhancements.css
+            "mermaid-custom.css",  # Keep diagram-specific styling
+            "tippy-enhancements.css",  # Keep tooltip-specific styling
         ],
         "html_js_files": [
             "furo-enhancements.js",
@@ -606,16 +604,10 @@ def _get_complete_theme_options(
     """
     return {
         "sidebar_hide_name": False,
-        # ✅ HIERARCHICAL NAVIGATION SUPPORT - Perfect for AutoAPI module organization
-        "navigation_depth": 4,  # Package → Module → Class → Method (4 levels)
-        "collapse_navigation": False,  # Keep hierarchical structure visible
-        "sticky_navigation": True,
-        "includehidden": True,
-        "titles_only": False,  # Show all navigation levels (not just titles)
-        # Breadcrumb configuration
-        "breadcrumb": True,
-        "breadcrumb_separator": " › ",
-        "breadcrumb_depth": 3,
+        # REMOVED unsupported Furo options that caused warnings:
+        # navigation_depth, collapse_navigation, sticky_navigation,
+        # includehidden, titles_only, breadcrumb, breadcrumb_separator, breadcrumb_depth
+        # Furo handles navigation automatically - no need to override
         # Intense branding colors
         "light_css_variables": {
             "color-brand-primary": "#2563eb",  # Blue-600

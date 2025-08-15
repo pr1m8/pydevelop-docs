@@ -238,46 +238,46 @@
   opacity: 1 !important;
 }
 
-/* ===== ENHANCED ADMONITIONS ===== */
+/* ===== SIMPLIFIED ADMONITIONS - Work with Furo ===== */
+/* Reduced overrides to avoid conflicts with Furo's built-in styling */
 .admonition {
-  border-radius: 12px !important;
-  border: none !important;
-  padding: 1.5rem !important;
-  margin: 1.5rem 0 !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-}
-
-.admonition.tip {
-  background: linear-gradient(135deg, #ecfdf5, #d1fae5) !important;
-  border-left: 4px solid #10b981 !important;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .admonition.note {
-  background: linear-gradient(135deg, #eff6ff, #dbeafe) !important;
-  border-left: 4px solid #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 4px solid #3b82f6;
+}
+
+.admonition.tip {
+  background: rgba(16, 185, 129, 0.1);
+  border-left: 4px solid #10b981;
 }
 
 .admonition.warning {
-  background: linear-gradient(135deg, #fffbeb, #fef3c7) !important;
-  border-left: 4px solid #f59e0b !important;
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 4px solid #f59e0b;
 }
 
 .admonition.danger {
-  background: linear-gradient(135deg, #fef2f2, #fecaca) !important;
-  border-left: 4px solid #ef4444 !important;
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 4px solid #ef4444;
 }
 
 .admonition.important {
-  background: linear-gradient(135deg, #f3e8ff, #e9d5ff) !important;
-  border-left: 4px solid #8b5cf6 !important;
+  background: rgba(139, 92, 246, 0.1);
+  border-left: 4px solid #8b5cf6;
 }
 
 .admonition-title {
-  font-weight: 600 !important;
-  margin-bottom: 0.75rem !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.5rem !important;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* ===== ENHANCED TABLES ===== */
@@ -471,24 +471,34 @@ body[data-theme="dark"] .table-striped tbody tr:hover {
 }
 
 body[data-theme="dark"] .admonition.tip {
-  background: linear-gradient(135deg, #064e3b, #065f46) !important;
-  color: white !important;
+  background: rgba(16, 185, 129, 0.15);
+  color: #e2e8f0;
 }
 
 body[data-theme="dark"] .admonition.note {
-  background: linear-gradient(135deg, #1e3a8a, #1d4ed8) !important;
-  color: white !important;
+  background: rgba(59, 130, 246, 0.15);
+  color: #e2e8f0;
 }
 
 body[data-theme="dark"] .admonition.warning {
-  background: linear-gradient(135deg, #92400e, #b45309) !important;
-  color: white !important;
+  background: rgba(245, 158, 11, 0.15);
+  color: #e2e8f0;
+}
+
+body[data-theme="dark"] .admonition.danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #e2e8f0;
+}
+
+body[data-theme="dark"] .admonition.important {
+  background: rgba(139, 92, 246, 0.15);
+  color: #e2e8f0;
 }
 
 body[data-theme="dark"] .mermaid {
-  background: #1e293b !important;
-  border-color: #334155 !important;
-  color: #e2e8f0 !important;
+  background: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
 }
 
 /* ===== ANIMATIONS ===== */
@@ -643,28 +653,84 @@ body[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
   }
 }
 
-/* ===== 6. MODULE TEMPLATE ENHANCEMENTS ===== */
+/* ===== 6. AUTOAPI MODULE ENHANCEMENTS ===== */
 
-/* Module stats styling */
-.module-stats {
+/* Clean module summary styling */
+.autoapi-module-summary {
   margin: 1rem 0;
-  padding: 0.75rem 1rem;
-  background: rgba(var(--color-brand-primary-rgb), 0.1);
-  border-radius: 0.5rem;
-  border-left: 4px solid var(--color-brand-primary);
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1),
+    rgba(139, 92, 246, 0.05)
+  );
+  border-radius: 8px;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  font-size: 0.9rem;
+  color: var(--color-foreground-secondary);
 }
 
-.stat-item {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
+.module-stat {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
   font-weight: 500;
   margin: 0 0.25rem;
+  display: inline-block;
+  border: 1px solid rgba(59, 130, 246, 0.15);
 }
 
-[data-theme="dark"] .stat-item {
-  background: rgba(0, 0, 0, 0.3);
+[data-theme="dark"] .autoapi-module-summary {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.15),
+    rgba(139, 92, 246, 0.08)
+  );
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .module-stat {
+  background: rgba(30, 41, 59, 0.8);
   color: var(--color-foreground-primary);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+/* Simplified AutoAPI module styling */
+.autoapi-module-title {
+  border-bottom: 2px solid var(--color-brand-primary);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Clean admonition styling for AutoAPI sections */
+.autoapi-section {
+  margin: 1.5rem 0;
+}
+
+.autoapi-section .admonition {
+  border-radius: 6px;
+  border: 1px solid var(--color-background-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.autoapi-section .admonition.note {
+  border-left: 4px solid #3b82f6;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.autoapi-section .admonition.tip {
+  border-left: 4px solid #10b981;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.autoapi-section .admonition.info {
+  border-left: 4px solid #06b6d4;
+  background: rgba(6, 182, 212, 0.05);
+}
+
+.autoapi-section .admonition.warning {
+  border-left: 4px solid #f59e0b;
+  background: rgba(245, 158, 11, 0.05);
 }
 
 /* Enhanced dropdown styling for modules - REDUCED OVERRIDES */
