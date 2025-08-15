@@ -448,7 +448,7 @@ def setup(app):
         "tippy-enhancements.css"
     ]
     for css_file in css_files:
-        if os.path.exists(f"_static/{css_file}"):
+        if os.path.exists("_static/" + css_file):
             app.add_css_file(css_file)
     
     # Legacy fallback
@@ -726,6 +726,17 @@ coverage_show_missing_items = True
 
 def setup(app):
     """Sphinx setup hook."""
+    # Modern CSS files (matches html_css_files)  
+    css_files = [
+        "enhanced-design.css",
+        "breadcrumb-navigation.css",
+        "mermaid-custom.css", 
+        "tippy-enhancements.css"
+    ]
+    for css_file in css_files:
+        app.add_css_file(css_file)
+    
+    # Legacy fallback
     app.add_css_file("css/custom.css")
     app.add_js_file("js/api-enhancements.js")
 '''
@@ -1529,6 +1540,165 @@ def discover():
 
     click.echo("🔍 Discovered Project Configuration:\n")
     click.echo(json.dumps(config, indent=2, default=str))
+
+
+@cli.command()
+@click.option(
+    "--packages",
+    "-p",
+    multiple=True,
+    help="Specific packages to rebuild (default: all)",
+)
+@click.option("--no-master", is_flag=True, help="Skip master documentation hub")
+@click.option("--no-clean", is_flag=True, help="Don't clean existing build artifacts")
+@click.option("--quiet", "-q", is_flag=True, help="Minimal output")
+@click.option("--debug", is_flag=True, help="Show detailed debug information")
+@click.option("--save-log", is_flag=True, help="Save detailed operations log to JSON")
+def rebuild_haive(packages, no_master, no_clean, quiet, debug, save_log):
+    """Rebuild all documentation for the Haive AI Agent Framework.
+
+    This command performs a complete documentation rebuild across the entire
+    Haive monorepo including all 7 packages and the master documentation hub.
+
+    Process:
+    1. Clear all existing documentation build artifacts
+    2. Initialize documentation for each package with modern CSS
+    3. Build documentation for each package with hierarchical AutoAPI
+    4. Initialize and build the master documentation hub with cross-links
+
+    Examples:
+        # Rebuild everything
+        pydevelop-docs rebuild-haive
+
+        # Rebuild specific packages only
+        pydevelop-docs rebuild-haive -p haive-core -p haive-agents
+
+        # Rebuild with detailed logging
+        pydevelop-docs rebuild-haive --debug --save-log
+
+        # Quick rebuild without master hub
+        pydevelop-docs rebuild-haive --no-master
+    """
+    from .haive_utils import HaiveDocumentationManager
+
+    # Auto-detect Haive root directory
+    current_path = Path.cwd()
+    haive_root = None
+
+    # Look for Haive markers in current path and parents
+    for path in [current_path] + list(current_path.parents):
+        if (path / "packages").exists() and (path / "CLAUDE.md").exists():
+            haive_root = path
+            break
+
+    if not haive_root:
+        click.echo("❌ Not in a Haive monorepo directory!")
+        click.echo("   This command must be run from within the Haive project.")
+        click.echo("   Expected structure: /path/to/haive/packages/, CLAUDE.md")
+        raise click.Abort()
+
+    # Initialize the documentation manager
+    try:
+        manager = HaiveDocumentationManager(
+            haive_root=haive_root, quiet=quiet, debug=debug
+        )
+    except ValueError as e:
+        click.echo(f"❌ {e}")
+        raise click.Abort()
+
+    if not quiet:
+        click.echo("🎯 Haive Documentation Rebuild")
+        click.echo(f"📁 Root: {haive_root}")
+        click.echo("=" * 60)
+
+    # Execute the complete rebuild
+    try:
+        results = manager.rebuild_all_documentation(
+            packages=list(packages) if packages else None,
+            include_master=not no_master,
+            force=True,
+            clean=not no_clean,
+        )
+
+        # Show results summary
+        if not quiet:
+            click.echo("\n" + "=" * 60)
+            click.echo("📊 REBUILD SUMMARY")
+            click.echo("=" * 60)
+
+            summary = results["summary"]
+
+            # Package results
+            click.echo(
+                f"📦 Packages: {summary['successful_builds']}/{summary['total_packages']} built successfully"
+            )
+
+            # Master hub results
+            if not no_master:
+                master_status = (
+                    "✅ Success" if summary["master_success"] else "❌ Failed"
+                )
+                click.echo(f"🏛️  Master Hub: {master_status}")
+
+            # Failed packages
+            if summary["failed_packages"]:
+                click.echo(f"❌ Failed: {', '.join(summary['failed_packages'])}")
+
+            # Cleared artifacts
+            cleared = results["cleared"]
+            click.echo(
+                f"🧹 Cleared: {cleared['directories']} dirs, {cleared['files']} files"
+            )
+
+            # Performance
+            ops_summary = manager.get_operations_summary()
+            click.echo(f"⏱️  Total time: {ops_summary['total_duration_seconds']:.1f}s")
+            click.echo(f"🔄 Operations: {ops_summary['total_operations']}")
+
+        # Save detailed log if requested
+        if save_log:
+            log_path = manager.save_operations_log()
+            if not quiet:
+                click.echo(f"\n📝 Detailed log: {log_path}")
+
+        # Final status
+        if summary["successful_builds"] == summary["total_packages"] and (
+            no_master or summary["master_success"]
+        ):
+            if not quiet:
+                click.echo("\n🎉 Complete success! All documentation rebuilt.")
+
+                # Show how to view the results
+                master_index = haive_root / "docs" / "build" / "html" / "index.html"
+                if master_index.exists():
+                    click.echo(f"\n🌐 View documentation: file://{master_index}")
+                    click.echo(
+                        "   Or run: python -m http.server 8000 --directory docs/build/html/"
+                    )
+        else:
+            click.echo("\n⚠️  Some operations failed. Check the log for details.")
+            if debug:
+                failed_ops = [
+                    op for op in manager.operations_log if op["status"] == "error"
+                ]
+                for op in failed_ops[-3:]:  # Show last 3 errors
+                    click.echo(f"   ❌ {op['operation']}: {op['details']}")
+            raise click.Abort()
+
+    except KeyboardInterrupt:
+        click.echo("\n\n⚠️  Rebuild interrupted by user")
+        if save_log:
+            manager.save_operations_log()
+        raise click.Abort()
+    except Exception as e:
+        click.echo(f"\n❌ Rebuild failed: {e}")
+        if debug:
+            import traceback
+
+            click.echo(traceback.format_exc())
+        if save_log:
+            manager.save_operations_log()
+        raise click.Abort()
 
 
 @cli.command()
