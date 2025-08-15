@@ -316,20 +316,19 @@ class DocsInitializer:
     def _copy_static_files(self):
         """Copy static assets from templates."""
         static_files = [
-            # CSS files
-            ("static/css/custom.css", "docs/source/_static/css/custom.css"),
-            ("static/css/furo-intense.css", "docs/source/_static/furo-intense.css"),
-            ("static/api-docs.css", "docs/source/_static/api-docs.css"),
+            # CSS files - Modern 4-file system (matches template)
+            ("static/enhanced-design.css", "docs/source/_static/enhanced-design.css"),
             (
                 "static/breadcrumb-navigation.css",
                 "docs/source/_static/breadcrumb-navigation.css",
             ),
             ("static/mermaid-custom.css", "docs/source/_static/mermaid-custom.css"),
-            ("static/toc-enhancements.css", "docs/source/_static/toc-enhancements.css"),
             (
                 "static/tippy-enhancements.css",
                 "docs/source/_static/tippy-enhancements.css",
             ),
+            # Legacy CSS (keep for backward compatibility)
+            ("static/css/custom.css", "docs/source/_static/css/custom.css"),
             # JS files
             (
                 "static/js/api-enhancements.js",
@@ -441,8 +440,21 @@ autoapi_dirs = {autoapi_dirs}
 
 def setup(app):
     """Sphinx setup hook."""
+    # Modern CSS files (matches html_css_files)
+    css_files = [
+        "enhanced-design.css",
+        "breadcrumb-navigation.css", 
+        "mermaid-custom.css",
+        "tippy-enhancements.css"
+    ]
+    for css_file in css_files:
+        if os.path.exists(f"_static/{css_file}"):
+            app.add_css_file(css_file)
+    
+    # Legacy fallback
     if os.path.exists("_static/css/custom.css"):
         app.add_css_file("css/custom.css")
+        
     if os.path.exists("_static/js/api-enhancements.js"):
         app.add_js_file("js/api-enhancements.js")
 '''
@@ -640,7 +652,10 @@ intersphinx_mapping = {{
 html_theme = "furo"
 html_static_path = ["_static"]
 html_css_files = [
-    "css/custom.css",
+    "enhanced-design.css",      # Complete modern design system
+    "breadcrumb-navigation.css", # Breadcrumb navigation for Furo
+    "mermaid-custom.css",       # Mermaid diagram theming
+    "tippy-enhancements.css",   # Enhanced tooltip system
 ]
 html_js_files = [
     "js/api-enhancements.js",
