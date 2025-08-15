@@ -14,6 +14,8 @@ from typing import Dict, List, Optional, Tuple
 
 import click
 
+from .build_error_classifier import BuildErrorClassifier, ErrorSeverity
+
 
 class HaiveDocumentationManager:
     """Comprehensive documentation management for the Haive monorepo."""
