@@ -556,6 +556,8 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
         "autoapi_member_order": "groupwise",
         "autoapi_root": "autoapi",
         "autoapi_toctree_depth": 3,
+        # Enable custom templates with hierarchical support
+        "autoapi_template_dir": "_autoapi_templates",
         # Skip problematic patterns
         "autoapi_ignore": [
             "**/test_*.py",

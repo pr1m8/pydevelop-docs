@@ -238,10 +238,12 @@ class DocsInitializer:
         project_path: Path,
         project_info: Dict[str, Any],
         doc_config: Dict[str, bool] = None,
+        quiet: bool = False,
     ):
         self.project_path = project_path
         self.project_info = project_info
         self.template_path = Path(__file__).parent / "templates"
+        self.quiet = quiet
         self.doc_config = doc_config or {
             "with_guides": False,
             "with_examples": False,
@@ -263,6 +265,9 @@ class DocsInitializer:
 
         # Copy static files and templates
         self._copy_static_files()
+
+        # Copy AutoAPI templates
+        self._copy_autoapi_templates()
 
         # Generate configuration files
         if self.doc_config.get("use_shared_config", True):
@@ -339,6 +344,24 @@ class DocsInitializer:
 
             if src_path.exists():
                 shutil.copy2(src_path, dest_path)
+
+    def _copy_autoapi_templates(self):
+        """Copy AutoAPI templates to the project documentation directory."""
+        src_template_dir = self.template_path / "_autoapi_templates"
+        dest_template_dir = self.project_path / "docs" / "source" / "_autoapi_templates"
+
+        if src_template_dir.exists():
+            import shutil
+
+            # Remove existing templates if they exist
+            if dest_template_dir.exists():
+                shutil.rmtree(dest_template_dir)
+
+            # Copy the entire template directory
+            shutil.copytree(src_template_dir, dest_template_dir)
+
+            if not self.quiet:
+                click.echo(f"✅ Copied AutoAPI templates to {dest_template_dir}")
 
     def _generate_conf_py_from_config(self):
         """Generate Sphinx configuration using shared config module.
@@ -1072,7 +1095,7 @@ def init(
         "with_tutorials": with_tutorials,
         "use_shared_config": use_shared_config,
     }
-    initializer = DocsInitializer(project_path, analysis, doc_config)
+    initializer = DocsInitializer(project_path, analysis, doc_config, quiet=quiet)
 
     try:
         init_start = datetime.now()

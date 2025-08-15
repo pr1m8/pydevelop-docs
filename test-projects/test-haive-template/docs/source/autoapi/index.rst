@@ -7,6 +7,7 @@ This page contains auto-generated API reference documentation [#f1]_.
    :titlesonly:
 
    /autoapi/conf/index
+   /autoapi/_filters/index
    /autoapi/testhaive/index
    /autoapi/demo_autoapi_issue/index
 
