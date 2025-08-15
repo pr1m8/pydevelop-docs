@@ -1,0 +1,5 @@
+❌ No navigation sidebar found
+⚠️ No TOC tree found
+📊 CSS files loaded: 28
+✅ AutoAPI content found: 1 elements
+✅ Source links found: 105

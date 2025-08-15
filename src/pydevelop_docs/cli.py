@@ -320,6 +320,10 @@ class DocsInitializer:
             ("static/css/custom.css", "docs/source/_static/css/custom.css"),
             ("static/css/furo-intense.css", "docs/source/_static/furo-intense.css"),
             ("static/api-docs.css", "docs/source/_static/api-docs.css"),
+            (
+                "static/breadcrumb-navigation.css",
+                "docs/source/_static/breadcrumb-navigation.css",
+            ),
             ("static/mermaid-custom.css", "docs/source/_static/mermaid-custom.css"),
             ("static/toc-enhancements.css", "docs/source/_static/toc-enhancements.css"),
             (
@@ -336,6 +340,8 @@ class DocsInitializer:
                 "docs/source/_static/furo-enhancements.js",
             ),
             ("static/js/mermaid-config.js", "docs/source/_static/mermaid-config.js"),
+            # Templates
+            ("_templates/layout.html", "docs/source/_templates/layout.html"),
         ]
 
         for src, dest in static_files:

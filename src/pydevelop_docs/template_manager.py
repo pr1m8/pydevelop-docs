@@ -50,6 +50,19 @@ class TemplateManager:
         # TODO: Implement git remote parsing
         return "your-org"
 
+    def _write_file(self, file_path: str, content: str) -> None:
+        """Write content to file with proper directory creation.
+
+        Args:
+            file_path: Path to the file to write
+            content: Content to write to the file
+        """
+        output_file = Path(file_path)
+        if not output_file.is_absolute():
+            output_file = self.project_path / file_path
+        output_file.parent.mkdir(parents=True, exist_ok=True)
+        output_file.write_text(content, encoding="utf-8")
+
     def render_template(
         self, template_name: str, context: Optional[Dict[str, Any]] = None
     ) -> str:

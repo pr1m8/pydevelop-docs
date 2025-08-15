@@ -201,6 +201,161 @@ python -m http.server 8003 --directory docs/build
 # Open http://localhost:8003
 ```
 
+## 📸 Documentation Screenshot Tools
+
+### Overview
+
+PyDevelop-Docs includes powerful screenshot utilities for visual documentation testing and debugging. These tools help identify rendering issues, theme problems, and navigation failures.
+
+### Available Scripts
+
+Located in `/scripts/debug/`:
+
+#### 1. `comprehensive_screenshot.py` - Full Documentation Screenshots
+
+Takes screenshots of all major documentation pages in both light and dark themes.
+
+```bash
+# First, serve the docs
+python -m http.server 8003 --directory docs/build
+
+# Then run the screenshot tool
+poetry run python scripts/debug/comprehensive_screenshot.py [port]
+```
+
+**Features:**
+
+- Captures 20+ documentation pages automatically
+- Tests both light and dark themes
+- Checks for common issues (missing navigation, white-on-white text)
+- Creates timestamped session directories
+- Generates comprehensive summary reports
+
+**Output:**
+
+- Full page screenshots (entire scrollable content)
+- Viewport screenshots (above the fold)
+- Issue reports for each page
+- Summary markdown report with analysis
+
+#### 2. `screenshot_specific.py` - Single Page Screenshots
+
+Captures screenshots of a specific documentation page.
+
+```bash
+# Screenshot a specific page
+poetry run python scripts/debug/screenshot_specific.py <url> [output_prefix]
+
+# Example: Screenshot the downloader config page
+poetry run python scripts/debug/screenshot_specific.py \
+  "http://localhost:8003/autoapi/mcp/downloader/config/index.html" \
+  "downloader_config"
+```
+
+**Features:**
+
+- Captures any specific URL
+- Light and dark theme versions
+- Quick issue detection
+- Custom output naming
+
+### Using the Screenshot Tools
+
+1. **Build the documentation:**
+
+   ```bash
+   poetry run sphinx-build -b html docs/source docs/build
+   ```
+
+2. **Start the documentation server:**
+
+   ```bash
+   python -m http.server 8003 --directory docs/build
+   ```
+
+3. **Run screenshots:**
+
+   ```bash
+   # Comprehensive session
+   poetry run python scripts/debug/comprehensive_screenshot.py
+
+   # Specific page
+   poetry run python scripts/debug/screenshot_specific.py "http://localhost:8003/autoapi/index.html"
+   ```
+
+4. **Review results:**
+
+   ```bash
+   # View screenshots
+   ls -la debug/screenshots/
+
+   # Check issue reports
+   cat debug/screenshots/*/SUMMARY.md
+
+   # Open specific screenshot (Linux)
+   xdg-open debug/screenshots/*_light_full.png
+   ```
+
+### Common Issues Detected
+
+The screenshot tools automatically check for:
+
+- **Missing navigation sidebar** - Critical for usability
+- **Missing TOC tree** - Table of contents issues
+- **White-on-white text** - Dark mode visibility problems
+- **CSS loading failures** - Styling not applied
+- **Missing AutoAPI content** - API documentation generation issues
+- **Broken source links** - GitHub integration problems
+
+### Output Directory Structure
+
+```
+debug/screenshots/
+├── comprehensive_20250815_135311/
+│   ├── 01_index_light_full.png
+│   ├── 01_index_light_viewport.png
+│   ├── 01_index_light_issues.txt
+│   ├── 01_index_dark_full.png
+│   ├── 01_index_dark_viewport.png
+│   ├── 01_index_dark_issues.txt
+│   └── SUMMARY.md
+└── downloader_config_20250815_135704_light_full.png
+```
+
+### Why Use These Tools?
+
+1. **Visual Regression Testing** - Catch rendering issues before release
+2. **Theme Testing** - Ensure both light and dark modes work
+3. **Navigation Verification** - Confirm TOC and sidebar render correctly
+4. **Cross-browser Testing** - Screenshots use Chromium engine
+5. **Documentation QA** - Part of documentation quality assurance
+
+### Testing on Real Projects
+
+The screenshot tools are tested against real documentation, particularly the **haive-mcp** package documentation. This provides real-world validation of:
+
+- Complex module hierarchies
+- Multiple submodules (agents, cli, config, downloader, etc.)
+- AutoAPI generation with nested structures
+- Source code linking to GitHub repositories
+
+Example testing workflow with haive-mcp:
+
+```bash
+# In haive-mcp directory
+cd /home/will/Projects/haive/backend/haive/packages/haive-mcp
+
+# Build docs
+poetry run sphinx-build -b html docs/source docs/build
+
+# Serve
+python -m http.server 8003 --directory docs/build
+
+# Run screenshots (from pydevelop-docs)
+cd /home/will/Projects/haive/backend/haive/tools/pydevelop-docs
+poetry run python scripts/debug/comprehensive_screenshot.py
+```
+
 ## 🚀 Quick Reference
 
 ### Key Settings That Make It Work

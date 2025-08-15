@@ -401,6 +401,7 @@ def get_haive_config(
         "html_css_files": [
             "enhanced-design.css",  # Modern design system - contains all styling
             # Removed conflicting files: furo-intense.css, api-docs.css, toc-enhancements.css
+            "breadcrumb-navigation.css",  # Breadcrumb navigation for Furo
             "mermaid-custom.css",  # Keep diagram-specific styling
             "tippy-enhancements.css",  # Keep tooltip-specific styling
         ],
@@ -411,39 +412,8 @@ def get_haive_config(
         ],
     }
 
-    # Add linkcode_resolve function for GitHub source links
-    def linkcode_resolve(domain, info):
-        """Generate GitHub source links for AutoAPI documentation."""
-        if domain != "py":
-            return None
-
-        if not info.get("module"):
-            return None
-
-        # Get the module name and convert to file path
-        module_name = info["module"]
-
-        # Handle different package structures
-        if "." in package_name and package_name.startswith("haive-"):
-            # For haive packages, map to appropriate GitHub path
-            module_base = package_name.replace("haive-", "").replace("-", "_")
-            if module_name.startswith(module_base):
-                module_path = module_name.replace(".", "/")
-                package_prefix = f"packages/{package_name}/src"
-            else:
-                return None
-        else:
-            # For other packages, use standard mapping
-            module_path = module_name.replace(".", "/")
-            package_prefix = "src"
-
-        file_path = f"{package_prefix}/{module_path}.py"
-        github_base = "https://github.com/haive-ai/haive"  # Default, can be overridden
-        branch = "main"
-
-        return f"{github_base}/blob/{branch}/{file_path}"
-
-    config["linkcode_resolve"] = linkcode_resolve
+    # Note: Using viewcode extension for local source viewing
+    # This works better with Furo theme than linkcode
 
     return config
 
@@ -487,8 +457,8 @@ def _get_complete_extensions(
         # Core (Priority 1-10) - AutoAPI FIRST as requested
         "sphinx.ext.autodoc",
         "sphinx.ext.napoleon",
-        "sphinx.ext.viewcode",
-        "sphinx.ext.linkcode",  # GitHub source links for AutoAPI
+        "sphinx.ext.viewcode",  # Local source code viewing (works with Furo)
+        # "sphinx.ext.linkcode",  # Disabled - conflicts with viewcode
         "sphinx.ext.intersphinx",
         "seed_intersphinx_mapping",  # Auto-populate intersphinx from pyproject.toml
         # Enhanced API (Priority 11-20)
