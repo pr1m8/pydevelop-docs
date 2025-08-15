@@ -119,7 +119,9 @@ How to fix:
 {#- Macro for version tooltips -#}
 {%- macro version_tooltip(version_info) -%}
 {%- if has_tippy %}
+{# djlint:off H025 #}
 :tippy:`v{{ version_info.version }}<Added in version {{ version_info.version }}{% if version_info.date %} ({{ version_info.date }}){% endif %}{% if version_info.notes %}. {{ version_info.notes }}{% endif %}>`
+{# djlint:on #}
 {%- else %}
 *New in version {{ version_info.version }}*
 {%- endif %}

@@ -22,12 +22,14 @@
       {%- endfor %}
       {%- endif %}
       
+{# djlint:off H025 #}
       class {{ obj.name }} {
          {%- if obj.is_abstract %}
          <<abstract>>
          {%- elif obj.is_interface %}
          <<interface>>
          {%- endif %}
+{# djlint:on #}
          {%- for attr in obj.attributes[:3] %}
          +{{ attr.name }}{% if attr.annotation %}: {{ attr.annotation }}{% endif %}
          {%- endfor %}
@@ -42,10 +44,12 @@
          {%- endif %}
       }
       
+{# djlint:off H025,H026 #}
       {%- for base in obj.bases %}
       class {{ base.name }} {
          <<base class>>
       }
+{# djlint:on #}
       {%- endfor %}
       
       style {{ obj.name }} fill:#f9f,stroke:#333,stroke-width:4px
