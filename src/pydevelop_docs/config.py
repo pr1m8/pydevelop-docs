@@ -399,6 +399,7 @@ def get_haive_config(
         "html_theme_options": _get_complete_theme_options(package_name, is_central_hub),
         # Custom CSS and JS files
         "html_css_files": [
+            "enhanced-design.css",  # Modern design system - must be first
             "furo-intense.css",
             "api-docs.css",
             "mermaid-custom.css",
@@ -455,6 +456,7 @@ def _get_complete_extensions(
         "sphinx.ext.autodoc",
         "sphinx.ext.napoleon",
         "sphinx.ext.viewcode",
+        "sphinx.ext.linkcode",  # GitHub source links for AutoAPI
         "sphinx.ext.intersphinx",
         "seed_intersphinx_mapping",  # Auto-populate intersphinx from pyproject.toml
         # Enhanced API (Priority 11-20)
@@ -746,6 +748,63 @@ def process_docstring(app, what, name, obj, options, lines):
     lines.extend(fixed_lines)
 
 
+def linkcode_resolve(domain, info):
+    """Generate GitHub source links for AutoAPI documentation.
+
+    This function is called by sphinx.ext.linkcode to generate source code links
+    that point to the actual source files on GitHub.
+
+    Args:
+        domain: The language domain (e.g., 'py' for Python)
+        info: Dictionary containing module and object information
+
+    Returns:
+        String URL pointing to the source code on GitHub, or None if not found
+    """
+    if domain != "py":
+        return None
+
+    if not info.get("module"):
+        return None
+
+    # Get the module name and convert to file path
+    module_name = info["module"]
+
+    # Handle different package structures
+    if module_name.startswith("haive."):
+        # Remove haive prefix and convert to path
+        module_path = module_name.replace("haive.", "").replace(".", "/")
+
+        # Determine which package this belongs to
+        if module_path.startswith("core"):
+            package_prefix = "packages/haive-core/src/haive"
+        elif module_path.startswith("agents"):
+            package_prefix = "packages/haive-agents/src/haive"
+        elif module_path.startswith("tools"):
+            package_prefix = "packages/haive-tools/src/haive"
+        elif module_path.startswith("games"):
+            package_prefix = "packages/haive-games/src/haive"
+        elif module_path.startswith("mcp"):
+            package_prefix = "packages/haive-mcp/src"
+            module_path = module_path  # mcp is already the top level
+        else:
+            # Default to core for unknown modules
+            package_prefix = "packages/haive-core/src/haive"
+    else:
+        # Non-haive module, try to map directly
+        package_prefix = "src"
+        module_path = module_name.replace(".", "/")
+
+    # Construct the full file path
+    file_path = f"{package_prefix}/{module_path}.py"
+
+    # Generate GitHub URL
+    github_base = "https://github.com/haive-ai/haive"
+    branch = "main"
+
+    return f"{github_base}/blob/{branch}/{file_path}"
+
+
 def setup(app):
     """Setup Sphinx application with custom handlers and intelligent templates."""
     # Add autodoc skip handler to prevent processing metaclasses
@@ -754,7 +813,7 @@ def setup(app):
     # DISABLED: Let Napoleon handle Google-style docstrings properly
     # app.connect("autodoc-process-docstring", process_docstring)
 
-    # Add custom CSS for better styling
+    # Add custom CSS for better styling (enhanced-design.css is already in html_css_files)
     app.add_css_file("custom.css", priority=600)
     app.add_css_file("tippy-enhancements.css", priority=601)
     app.add_css_file("api-docs.css", priority=602)

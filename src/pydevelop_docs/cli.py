@@ -942,6 +942,11 @@ def cli(ctx):
     default=True,
     help="Use shared config module vs inline config (default: shared)",
 )
+@click.option(
+    "--modern-design/--classic-design",
+    default=True,
+    help="Use modern design templates with enhanced styling (default: modern)",
+)
 def init(
     packages_dir,
     include_root,
@@ -957,6 +962,7 @@ def init(
     with_cli,
     with_tutorials,
     use_shared_config,
+    modern_design,
 ):
     """Initialize documentation for any Python project.
 
