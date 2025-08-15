@@ -44,13 +44,16 @@
 
    Click any module name below to jump directly to its documentation:
 
-   .. toctree::
-      :maxdepth: 2
-      :titlesonly:
+.. toctree::
+   :maxdepth: 2
+   :titlesonly:
 
-      {% for page in pages|selectattr("is_top_level_object") %}
-      {{ page.include_path }}
-      {% endfor %}
+{% for page in pages -%}
+{%- if page.name and '.' in page.name -%}
+{%- set short_name = page.name.split('.')[-1] %}
+   {{ page.include_path }} <{{ short_name }}>
+{%- endif -%}
+{%- endfor -%}
 
 🎯 Getting Started
 ==================

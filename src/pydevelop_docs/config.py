@@ -591,7 +591,9 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
         "autoapi_root": "autoapi",
         "autoapi_toctree_depth": 3,
         # Enable custom templates with hierarchical support
-        "autoapi_template_dir": "_autoapi_templates",
+        "autoapi_template_dir": os.path.join(
+            os.path.dirname(__file__), "templates", "_autoapi_templates"
+        ),
         # Skip problematic patterns
         "autoapi_ignore": [
             "**/test_*.py",
@@ -811,7 +813,7 @@ def linkcode_resolve(domain, info):
         elif module_path.startswith("games"):
             package_prefix = "packages/haive-games/src/haive"
         elif module_path.startswith("mcp"):
-            package_prefix = "packages/haive-mcp/src"
+            package_prefix = "packages/haive-mcp/src/haive"
             module_path = module_path  # mcp is already the top level
         else:
             # Default to core for unknown modules
@@ -825,7 +827,7 @@ def linkcode_resolve(domain, info):
     file_path = f"{package_prefix}/{module_path}.py"
 
     # Generate GitHub URL
-    github_base = "https://github.com/haive-ai/haive"
+    github_base = "https://github.com/prim8/haive"
     branch = "main"
 
     return f"{github_base}/blob/{branch}/{file_path}"
