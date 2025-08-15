@@ -1,5 +1,30 @@
 {#- type_specific.j2 - Type-specific rendering macros for different object types -#}
 
+{#- Main entry point macros for different class types -#}
+{%- macro render_pydantic_model(obj) -%}
+{{ render_pydantic_fields(obj) }}
+{%- endmacro -%}
+
+{%- macro render_agent_class(obj) -%}
+{{ render_agent_details(obj) }}
+{%- endmacro -%}
+
+{%- macro render_tool_class(obj) -%}
+{{ render_tool_details(obj) }}
+{%- endmacro -%}
+
+{%- macro render_enum_class(obj) -%}
+{{ render_enum_values(obj) }}
+{%- endmacro -%}
+
+{%- macro render_exception_class(obj) -%}
+{#- Exception classes can use default rendering -#}
+{%- endmacro -%}
+
+{%- macro render_dataclass(obj) -%}
+{{ render_pydantic_fields(obj) }}
+{%- endmacro -%}
+
 {#- Macro for rendering Pydantic model fields -#}
 {%- macro render_pydantic_fields(obj) -%}
 {%- if obj.fields %}

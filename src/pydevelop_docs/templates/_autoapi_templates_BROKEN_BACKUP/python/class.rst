@@ -4,7 +4,6 @@
 {#- Import component macros -#}
 {%- import "python/_components/diagrams.j2" as diagrams with context -%}
 {%- import "python/_components/code_blocks.j2" as code with context -%}
-{%- import "python/_components/interactive.j2" as interactive with context -%}
 {%- import "python/_components/tooltips.j2" as tooltips with context -%}
 {%- import "python/_macros/type_specific.j2" as types with context -%}
 

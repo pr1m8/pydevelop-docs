@@ -5,7 +5,105 @@
 {%- import "python/_components/navigation.j2" as nav with context -%}
 {%- import "python/_components/diagrams.j2" as diagrams with context -%}
 
-{#- Define helper macros FIRST before using them -#}
+{%- block header -%}
+{%- if obj.all %}
+:mod:`{{ obj.name }}`
+{{ "=" * (obj.name|length + 8) }}
+{%- else %}
+{{ obj.name }}
+{{ "=" * obj.name|length }}
+{%- endif %}
+{%- endblock header -%}
+
+{%- block signature -%}
+.. py:module:: {{ obj.name }}
+{%- if obj.summary %}
+
+   {{ obj.summary|indent(3) }}
+{%- endif %}
+{%- endblock signature -%}
+
+{%- block content -%}
+{#- Module overview with cards -#}
+{%- if has_design %}
+{{ nav.render_module_overview_cards(obj) }}
+{%- endif %}
+
+{#- Module-level attributes -#}
+{%- if obj.attributes %}
+
+Module Attributes
+-----------------
+
+{%- for attr in obj.attributes %}
+.. py:data:: {{ attr.name }}
+   {%- if attr.annotation %}
+   :type: {{ attr.annotation }}
+   {%- endif %}
+   {%- if attr.value %}
+   :value: {{ attr.value|truncate(50) }}
+   {%- endif %}
+   
+   {%- if attr.docstring %}
+   {{ attr.docstring|indent(3) }}
+   {%- endif %}
+{%- endfor %}
+{%- endif %}
+
+{#- Submodules and subpackages -#}
+{%- set has_submodules = obj.submodules or obj.subpackages -%}
+{%- if has_submodules %}
+
+{{ progressive_section('Submodules', render_submodules_section(obj), {'open': true, 'icon': '📦'}) }}
+{%- endif %}
+
+{#- Module contents organized by type -#}
+{%- set contents = organize_module_contents(obj) -%}
+
+{#- Classes section -#}
+{%- if contents.classes %}
+{{ progressive_section('Classes (' ~ contents.classes|length ~ ')', 
+                      render_classes_section(contents.classes), 
+                      {'open': true, 'icon': '🏗️'}) }}
+{%- endif %}
+
+{#- Functions section -#}
+{%- if contents.functions %}
+{{ progressive_section('Functions (' ~ contents.functions|length ~ ')', 
+                      render_functions_section(contents.functions), 
+                      {'open': true, 'icon': '⚡'}) }}
+{%- endif %}
+
+{#- Exceptions section -#}
+{%- if contents.exceptions %}
+{{ progressive_section('Exceptions (' ~ contents.exceptions|length ~ ')', 
+                      render_exceptions_section(contents.exceptions), 
+                      {'open': false, 'icon': '⚠️'}) }}
+{%- endif %}
+
+{#- Type aliases and constants -#}
+{%- if contents.type_aliases or contents.constants %}
+{{ progressive_section('Types & Constants', 
+                      render_types_constants_section(contents), 
+                      {'open': false, 'icon': '🔤'}) }}
+{%- endif %}
+
+{#- Module dependency graph -#}
+{%- if has_mermaid and (obj.imports or obj.imported_by) %}
+{{ progressive_section('Module Dependencies', 
+                      diagrams.render_dependency_graph(obj), 
+                      {'open': false, 'icon': '🔗'}) }}
+{%- endif %}
+
+{#- Module source metrics -#}
+{%- if obj.source_metrics %}
+{{ progressive_section('Source Metrics', 
+                      render_source_metrics(obj.source_metrics), 
+                      {'open': false, 'icon': '📊'}) }}
+{%- endif %}
+{%- endblock content -%}
+
+{#- Helper macros -#}
 {%- macro organize_module_contents(obj) -%}
 {%- set contents = {
     'classes': [],
@@ -42,10 +140,10 @@
 
 .. toctree::
    :maxdepth: 1
-
-   {%- for subpkg in obj.subpackages|sort(attribute='name') %}
+   
+{%- for subpkg in obj.subpackages|sort(attribute='name') %}
    {{ subpkg.name }}/index
-   {%- endfor %}
+{%- endfor %}
 {%- endif %}
 
 {%- if obj.submodules %}
@@ -53,10 +151,10 @@
 
 .. toctree::
    :maxdepth: 1
-
-   {%- for submod in obj.submodules|sort(attribute='name') %}
+   
+{%- for submod in obj.submodules|sort(attribute='name') %}
    {{ submod.name }}
-   {%- endfor %}
+{%- endfor %}
 {%- endif %}
 {%- endmacro -%}
 
@@ -199,102 +297,3 @@
    * - Cyclomatic Complexity
      - {{ metrics.complexity|default('N/A') }}
 {%- endmacro -%}
-
-{#- Now the actual template blocks -#}
-{%- block header -%}
-{%- if obj.all %}
-:mod:`{{ obj.name }}`
-====================={{ "=" * obj.name|length }}
-{%- else %}
-{{ obj.name }}
-{{ "=" * obj.name|length }}
-{%- endif %}
-{%- endblock header -%}
-
-{%- block signature -%}
-.. py:module:: {{ obj.name }}
-{%- if obj.summary %}
-
-   {{ obj.summary|indent(3) }}
-{%- endif %}
-{%- endblock signature -%}
-
-{%- block content -%}
-{#- Module overview with cards -#}
-{%- if has_design %}
-{{ nav.render_module_overview_cards(obj) }}
-{%- endif %}
-
-{#- Module-level attributes -#}
-{%- if obj.attributes %}
-
-Module Attributes
------------------
-
-{%- for attr in obj.attributes %}
-.. py:data:: {{ attr.name }}
-   {%- if attr.annotation %}
-   :type: {{ attr.annotation }}
-   {%- endif %}
-   {%- if attr.value %}
-   :value: {{ attr.value|truncate(50) }}
-   {%- endif %}
-   
-   {%- if attr.docstring %}
-   {{ attr.docstring|indent(3) }}
-   {%- endif %}
-{%- endfor %}
-{%- endif %}
-
-{#- Submodules and subpackages -#}
-{%- set has_submodules = obj.submodules or obj.subpackages -%}
-{%- if has_submodules %}
-
-{{ progressive_section('Submodules', render_submodules_section(obj), {'open': true, 'icon': '📦'}) }}
-{%- endif %}
-
-{#- Module contents organized by type -#}
-{%- set contents = organize_module_contents(obj) -%}
-
-{#- Classes section -#}
-{%- if contents.classes %}
-{{ progressive_section('Classes (' ~ contents.classes|length ~ ')', 
-                      render_classes_section(contents.classes), 
-                      {'open': true, 'icon': '🏗️'}) }}
-{%- endif %}
-
-{#- Functions section -#}
-{%- if contents.functions %}
-{{ progressive_section('Functions (' ~ contents.functions|length ~ ')', 
-                      render_functions_section(contents.functions), 
-                      {'open': true, 'icon': '⚡'}) }}
-{%- endif %}
-
-{#- Exceptions section -#}
-{%- if contents.exceptions %}
-{{ progressive_section('Exceptions (' ~ contents.exceptions|length ~ ')', 
-                      render_exceptions_section(contents.exceptions), 
-                      {'open': false, 'icon': '⚠️'}) }}
-{%- endif %}
-
-{#- Type aliases and constants -#}
-{%- if contents.type_aliases or contents.constants %}
-{{ progressive_section('Types & Constants', 
-                      render_types_constants_section(contents), 
-                      {'open': false, 'icon': '🔤'}) }}
-{%- endif %}
-
-{#- Module dependency graph -#}
-{%- if has_mermaid and (obj.imports or obj.imported_by) %}
-{{ progressive_section('Module Dependencies', 
-                      diagrams.render_dependency_graph(obj), 
-                      {'open': false, 'icon': '🔗'}) }}
-{%- endif %}
-
-{#- Module source metrics -#}
-{%- if obj.source_metrics %}
-{{ progressive_section('Source Metrics', 
-                      render_source_metrics(obj.source_metrics), 
-                      {'open': false, 'icon': '📊'}) }}
-{%- endif %}
-{%- endblock content -%}

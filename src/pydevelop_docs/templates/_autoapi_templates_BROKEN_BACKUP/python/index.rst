@@ -244,6 +244,12 @@ Indices
 {%- endif %}
 {%- endmacro -%}
 
+{%- macro render_class_list(classes) -%}
+{%- for cls in classes|sort(attribute='name') %}
+* :class:`{{ cls.full_name }}` - {{ cls.summary|truncate(80) }}
+{%- endfor %}
+{%- endmacro -%}
+
 {%- macro render_function_list(functions) -%}
 .. list-table::
    :header-rows: 1
