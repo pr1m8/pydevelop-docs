@@ -227,6 +227,51 @@ body[data-pagename="autoapi/index"] .section > ul > li a:hover {
   color: var(--color-brand-content) !important;
 }
 
+/* AUTOAPI MODULE CONTENTS DARK MODE FIX */
+/* Fix for white-on-white text in Module Contents sections */
+body[data-theme="dark"] .section,
+body[data-theme="dark"] .rst-content {
+  background-color: var(--color-background-primary) !important;
+  color: var(--color-foreground-primary) !important;
+}
+
+/* AutoAPI generated content boxes */
+body[data-theme="dark"] .py,
+body[data-theme="dark"] .py-class,
+body[data-theme="dark"] .py-method,
+body[data-theme="dark"] .py-function,
+body[data-theme="dark"] .py-attribute,
+body[data-theme="dark"] .py-module {
+  background-color: var(--color-background-secondary) !important;
+  color: var(--color-foreground-primary) !important;
+  border: 1px solid var(--color-background-border) !important;
+}
+
+/* Module Contents and other AutoAPI sections */
+body[data-theme="dark"] .section .highlight-default,
+body[data-theme="dark"] .section pre,
+body[data-theme="dark"] .section .highlight {
+  background-color: var(--color-code-background) !important;
+  color: var(--color-code-foreground) !important;
+}
+
+/* AutoAPI docstring content */
+body[data-theme="dark"] .py .docstring,
+body[data-theme="dark"] .py dd,
+body[data-theme="dark"] .py dt {
+  color: var(--color-foreground-primary) !important;
+  background-color: transparent !important;
+}
+
+/* Fix for any remaining white content boxes */
+body[data-theme="dark"] .content,
+body[data-theme="dark"] .document,
+body[data-theme="dark"] .documentwrapper,
+body[data-theme="dark"] .bodywrapper {
+  background-color: var(--color-background-primary) !important;
+  color: var(--color-foreground-primary) !important;
+}
+
 /* API Module Cards Enhancement */
 .api-module-card {
   display: flex !important;
