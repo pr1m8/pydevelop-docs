@@ -184,6 +184,12 @@ sphinx-apischema = "^0.1"
 sphinx-exec-code = "^0.16"
 sphinx-runpython = "^0.4.0"
 sphinxcontrib-lunrsearch = "^0.4"
+sphinx = "^8.2.3"
+sphinxcontrib-autodoc-pydantic = "^2.2.0"
+furo = "^2024.8.6"
+myst-parser = "^4.0.1"
+sphinx-toolbox = "^3.8.1"
+seed-intersphinx-mapping = "^1.2.2"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.2.0"
