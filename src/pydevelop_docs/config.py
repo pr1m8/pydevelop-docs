@@ -411,6 +411,40 @@ def get_haive_config(
         ],
     }
 
+    # Add linkcode_resolve function for GitHub source links
+    def linkcode_resolve(domain, info):
+        """Generate GitHub source links for AutoAPI documentation."""
+        if domain != "py":
+            return None
+
+        if not info.get("module"):
+            return None
+
+        # Get the module name and convert to file path
+        module_name = info["module"]
+
+        # Handle different package structures
+        if "." in package_name and package_name.startswith("haive-"):
+            # For haive packages, map to appropriate GitHub path
+            module_base = package_name.replace("haive-", "").replace("-", "_")
+            if module_name.startswith(module_base):
+                module_path = module_name.replace(".", "/")
+                package_prefix = f"packages/{package_name}/src"
+            else:
+                return None
+        else:
+            # For other packages, use standard mapping
+            module_path = module_name.replace(".", "/")
+            package_prefix = "src"
+
+        file_path = f"{package_prefix}/{module_path}.py"
+        github_base = "https://github.com/haive-ai/haive"  # Default, can be overridden
+        branch = "main"
+
+        return f"{github_base}/blob/{branch}/{file_path}"
+
+    config["linkcode_resolve"] = linkcode_resolve
+
     return config
 
 
