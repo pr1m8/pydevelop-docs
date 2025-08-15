@@ -340,6 +340,40 @@ class DocsInitializer:
             if src_path.exists():
                 shutil.copy2(src_path, dest_path)
 
+        # Copy AutoAPI templates
+        self._copy_autoapi_templates()
+
+    def _copy_autoapi_templates(self):
+        """Copy custom AutoAPI templates to project."""
+        autoapi_src = self.template_path / "_autoapi_templates"
+        autoapi_dst = self.project_path / "docs" / "source" / "_autoapi_templates"
+
+        if autoapi_src.exists() and autoapi_src.is_dir():
+            try:
+                # Remove existing templates if they exist
+                if autoapi_dst.exists():
+                    shutil.rmtree(autoapi_dst)
+
+                # Copy the entire template directory
+                shutil.copytree(autoapi_src, autoapi_dst)
+
+                click.echo(
+                    click.style(
+                        f"✓ Copied AutoAPI templates to docs/source/_autoapi_templates",
+                        fg="green",
+                    )
+                )
+            except Exception as e:
+                click.echo(
+                    click.style(f"⚠ Failed to copy AutoAPI templates: {e}", fg="yellow")
+                )
+        else:
+            click.echo(
+                click.style(
+                    "⚠ No custom AutoAPI templates found in pydevelop-docs", fg="yellow"
+                )
+            )
+
     def _generate_conf_py_from_config(self):
         """Generate Sphinx configuration using shared config module.
 

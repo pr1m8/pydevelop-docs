@@ -535,16 +535,20 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
     Jinja2 templates with full extension integration.
     """
     # Check if intelligent templates are available
-    template_dir = Path(__file__).parent / "templates" / "_autoapi_templates"
-    if template_dir.exists():
-        autoapi_template_dir = str(template_dir)
-    else:
-        autoapi_template_dir = "_autoapi_templates"
+    # TEMPORARILY DISABLED to debug AutoAPI issues
+    # template_dir = Path(__file__).parent / "templates" / "_autoapi_templates"
+    # if template_dir.exists():
+    #     autoapi_template_dir = str(template_dir)
+    # else:
+    #     autoapi_template_dir = "_autoapi_templates"
+
+    # Temporarily disable custom templates to test default behavior
+    autoapi_template_dir = None  # Use default AutoAPI templates
 
     return {
         "autoapi_type": "python",
         "autoapi_dirs": [package_path],
-        "autoapi_template_dir": autoapi_template_dir,
+        # "autoapi_template_dir": autoapi_template_dir,  # Disabled temporarily
         "autoapi_add_toctree_entry": True,
         "autoapi_generate_api_docs": True,
         "autoapi_keep_files": True,
