@@ -36,8 +36,9 @@ __email__ = "team@haive.ai"
 # Export main configuration functions
 from .config import get_central_hub_config, get_haive_config
 
-# Export builders (if available)
+# Export builders and utilities (if available)
 try:
+    from .build_error_classifier import BuildErrorClassifier, ErrorSeverity
     from .builders import (
         BaseDocumentationBuilder,
         CustomConfigBuilder,
@@ -45,6 +46,7 @@ try:
         SinglePackageBuilder,
         get_builder,
     )
+    from .utils import HaiveDocumentationManager
 
     __all__ = [
         "get_haive_config",
@@ -54,6 +56,9 @@ try:
         "MonorepoBuilder",
         "CustomConfigBuilder",
         "get_builder",
+        "BuildErrorClassifier",
+        "ErrorSeverity",
+        "HaiveDocumentationManager",
     ]
 except ImportError:
     # CLI dependencies might not be installed

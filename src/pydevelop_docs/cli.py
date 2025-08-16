@@ -1579,7 +1579,7 @@ def rebuild_haive(packages, no_master, no_clean, quiet, debug, save_log):
         # Quick rebuild without master hub
         pydevelop-docs rebuild-haive --no-master
     """
-    from .haive_utils import HaiveDocumentationManager
+    from .utils import HaiveDocumentationManager
 
     # Auto-detect Haive root directory
     current_path = Path.cwd()

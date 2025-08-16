@@ -1,6 +1,22 @@
 /* Custom CSS for PyAutoDoc Documentation */
 
 /* ============================= */
+/* Copy Button Fix               */
+/* ============================= */
+/* Fix grey box issue after clicking copy button */
+.o-tooltip--left:after {
+  display: none !important;
+}
+
+/* Alternative: make tooltip more subtle */
+.o-tooltip--left:hover:after {
+  background: rgba(0, 0, 0, 0.8) !important;
+  padding: 0.1em 0.3em !important;
+  font-size: 0.7em !important;
+  border-radius: 3px !important;
+}
+
+/* ============================= */
 /* Color Variables               */
 /* ============================= */
 :root {
