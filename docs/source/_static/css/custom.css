@@ -165,17 +165,7 @@ div.highlight {
 /* ============================= */
 /* Notes and Warnings            */
 /* ============================= */
-.admonition.note {
-  border-left-color: #0066cc;
-}
-
-.admonition.warning {
-  border-left-color: #ff9900;
-}
-
-.admonition.error {
-  border-left-color: #cc0000;
-}
+/* Removed manual border colors - let Furo handle semantic admonition styling */
 
 /* ============================= */
 /* Module Headers                */
@@ -318,18 +308,9 @@ div.highlight {
   color: var(--color-foreground-primary) !important;
 }
 
-/* Admonition fixes */
+/* Admonition fixes - minimal dark mode adjustments */
 [data-theme="dark"] .admonition {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
-}
-
-[data-theme="dark"] .admonition .admonition-title {
-  color: #fff !important;
-}
-
-[data-theme="dark"] .admonition p {
-  color: #ddd !important;
+  /* Let Furo handle dark mode admonition styling naturally */
 }
 
 /* Legacy media query support */

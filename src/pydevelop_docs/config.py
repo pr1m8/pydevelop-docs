@@ -628,7 +628,7 @@ def _get_complete_theme_options(
             "color-sidebar-foreground": "#cbd5e1",  # Slate-300
             "color-api-background": "#f1f5f9",  # Slate-100
             "color-api-background-hover": "#e2e8f0",  # Slate-200
-            "color-admonition-background": "#dbeafe",  # Blue-100
+            # Removed color-admonition-background to let Furo handle semantic colors
         },
         "dark_css_variables": {
             "color-brand-primary": "#60a5fa",  # Blue-400

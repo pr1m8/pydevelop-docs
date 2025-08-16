@@ -516,24 +516,14 @@ body[data-theme="dark"] .bodywrapper {
   border-radius: 6px !important;
 }
 
-/* Admonition Enhancements */
+/* Admonition Enhancements - Furo-friendly */
 .admonition {
-  border-radius: 8px !important;
-  border: none !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-  margin: 1.5rem 0 !important;
+  border-radius: 6px; /* Subtle rounding without !important */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Gentle shadow */
 }
 
 .admonition-title {
-  font-weight: 700 !important;
-  padding: 1rem 1.5rem !important;
-  margin: 0 !important;
-  border-radius: 8px 8px 0 0 !important;
-}
-
-.admonition > p,
-.admonition > .last {
-  padding: 0 1.5rem 1.5rem 1.5rem !important;
+  font-weight: 600; /* Slightly bolder but not forced */
 }
 
 /* Pydantic Model Styling */
