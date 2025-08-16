@@ -20,6 +20,25 @@ dev = ["pillow", "pkginfo (>=1.10)", "playwright", "pre-commit", "setuptools", "
 tests = ["hypothesis", "pytest"]
 
 [[package]]
+name = "actdiag"
+version = "3.0.0"
+description = "actdiag generates activity-diagram image from text"
+optional = false
+python-versions = ">=3.7"
+groups = ["docs"]
+files = [
+    {file = "actdiag-3.0.0-py3-none-any.whl", hash = "sha256:1b24410a4796ab0d704fcaa96d132b559d2b9b0af194ccc663d7761623cd0581"},
+    {file = "actdiag-3.0.0.tar.gz", hash = "sha256:0efc9b2887d3ec765b0f45bde1d5757a52301151ea62bcc2297e77aad9264006"},
+]
+
+[package.dependencies]
+blockdiag = ">=3.0.0"
+
+[package.extras]
+rst = ["docutils"]
+testing = ["docutils", "flake8", "flake8-coding", "flake8-copyright", "flake8-isort", "nose", "pep8 (>=1.3)", "reportlab"]
+
+[[package]]
 name = "alabaster"
 version = "1.0.0"
 description = "A light, configurable Sphinx theme"
@@ -69,7 +88,7 @@ version = "1.4.1"
 description = "Handy tools for working with URLs and APIs."
 optional = false
 python-versions = ">=3.6.1"
-groups = ["main"]
+groups = ["main", "docs"]
 files = [
     {file = "apeye-1.4.1-py3-none-any.whl", hash = "sha256:44e58a9104ec189bf42e76b3a7fe91e2b2879d96d48e9a77e5e32ff699c9204e"},
     {file = "apeye-1.4.1.tar.gz", hash = "sha256:14ea542fad689e3bfdbda2189a354a4908e90aee4bf84c15ab75d68453d76a36"},
@@ -91,7 +110,7 @@ version = "1.1.5"
 description = "Core (offline) functionality for the apeye library."
 optional = false
 python-versions = ">=3.6.1"
-groups = ["main"]
+groups = ["main", "docs"]
 files = [
     {file = "apeye_core-1.1.5-py3-none-any.whl", hash = "sha256:dc27a93f8c9e246b3b238c5ea51edf6115ab2618ef029b9f2d9a190ec8228fbf"},
     {file = "apeye_core-1.1.5.tar.gz", hash = "sha256:5de72ed3d00cc9b20fea55e54b7ab8f5ef8500eb33a5368bc162a5585e238a55"},
@@ -1121,7 +1140,7 @@ version = "2.11.1"
 description = "A CSS Cascading Style Sheets library for Python"
 optional = false
 python-versions = ">=3.8"
-groups = ["main"]
+groups = ["main", "docs"]
 files = [
     {file = "cssutils-2.11.1-py3-none-any.whl", hash = "sha256:a67bfdfdff4f3867fab43698ec4897c1a828eca5973f4073321b3bccaf1199b1"},
     {file = "cssutils-2.11.1.tar.gz", hash = "sha256:0563a76513b6af6eebbe788c3bf3d01c920e46b3f90c8416738c5cfc773ff8e2"},
@@ -1331,7 +1350,7 @@ version = "0.3.0.post1"
 description = "A μ-library for constructing cascading style sheets from Python dictionaries."
 optional = false
 python-versions = ">=3.6"
-groups = ["main"]
+groups = ["main", "docs"]
 files = [
     {file = "dict2css-0.3.0.post1-py3-none-any.whl", hash = "sha256:f006a6b774c3e31869015122ae82c491fd25e7de4a75607a62aa3e798f837e0d"},
     {file = "dict2css-0.3.0.post1.tar.gz", hash = "sha256:89c544c21c4ca7472c3fffb9d37d3d926f606329afdb751dc1de67a411b70719"},
@@ -1363,7 +1382,7 @@ version = "0.9.0"
 description = "Parse and create Python distribution metadata."
 optional = false
 python-versions = ">=3.6.1"
-groups = ["main"]
+groups = ["main", "docs"]
 files = [
     {file = "dist_meta-0.9.0-py3-none-any.whl", hash = "sha256:1d38a7f5e83ab2fc5e1fb9af92d995ec27718377d000c7318367db85a2ba07db"},
     {file = "dist_meta-0.9.0.tar.gz", hash = "sha256:fa16ebd5574744a09596ab342083a11d7209d8d05cf32891d1c985be7ec0cbd7"},
@@ -1835,7 +1854,7 @@ version = "2024.8.6"
 description = "A clean customisable Sphinx documentation theme."
 optional = false
 python-versions = ">=3.8"
-groups = ["main"]
+groups = ["main", "docs"]
 files = [
     {file = "furo-2024.8.6-py3-none-any.whl", hash = "sha256:6cd97c58b47813d3619e63e9081169880fbe331f0ca883c871ff1f3f11814f5c"},
     {file = "furo-2024.8.6.tar.gz", hash = "sha256:b63e4cee8abfc3136d3bc03a3d45a76a850bada4d6374d24c1716b0e01394a01"},
@@ -1996,7 +2015,7 @@ version = "0.2.0"
 description = "Some handy archive helpers for Python."
 optional = false
 python-versions = ">=3.6.1"
-groups = ["main"]
+groups = ["main", "docs"]
 files = [
     {file = "handy_archives-0.2.0-py3-none-any.whl", hash = "sha256:8495e08f3cd1c452fe65570db1869db07f709149f85c7e9cd8f3f461df436318"},
     {file = "handy_archives-0.2.0.tar.gz", hash = "sha256:fba21101fd9e29d5e3b72823261aaae06b9350686f0d2067786d64dce73eb3f6"},
@@ -3238,6 +3257,26 @@ files = [
 ]
 
 [[package]]
+name = "nwdiag"
+version = "3.0.0"
+description = "nwdiag generates network-diagram image from text"
+optional = false
+python-versions = ">=3.7"
+groups = ["docs"]
+files = [
+    {file = "nwdiag-3.0.0-py3-none-any.whl", hash = "sha256:549cab5400ca33b8c05ea119414fa41e6bd85be222ba524418c2c176eea87e80"},
+    {file = "nwdiag-3.0.0.tar.gz", hash = "sha256:e267530fcaac8a1d9e7403048597ed30e031e17f0191569dc6f704087bacb2eb"},
+]
+
+[package.dependencies]
+blockdiag = ">=3.0.0"
+
+[package.extras]
+pdf = ["reportlab"]
+rst = ["docutils"]
+testing = ["docutils", "flake8", "flake8-coding", "flake8-copyright", "flake8-isort", "nose", "pep8 (>=1.3)", "reportlab"]
+
+[[package]]
 name = "openapi-core"
 version = "0.19.5"
 description = "client-side and server-side support for the OpenAPI Specification v3"
@@ -4394,7 +4433,7 @@ version = "0.4.0"
 description = "PyPI JSON API client library"
 optional = false
 python-versions = ">=3.6"
-groups = ["main"]
+groups = ["main", "docs"]
 files = [
     {file = "pypi_json-0.4.0-py3-none-any.whl", hash = "sha256:956e1c80ea476ff9771f846d149aa7b433c42ca9158b0b0c1885239a50bfe0ac"},
     {file = "pypi_json-0.4.0.tar.gz", hash = "sha256:8ce9ecdb584b54704ef019a21e10c712729be0a12e564bcc5dbfecfd1b7e33f4"},
@@ -5224,7 +5263,7 @@ version = "1.2.2"
 description = "Populate the Sphinx 'intersphinx_mapping' dictionary from the project's requirements."
 optional = false
 python-versions = ">=3.6"
-groups = ["main"]
+groups = ["main", "docs"]
 files = [
     {file = "seed_intersphinx_mapping-1.2.2-py3-none-any.whl", hash = "sha256:c16ee5456681c2b5d8897a9828ddf700f0fa3b17d8520d6c56ded7a7c8e92808"},
     {file = "seed_intersphinx_mapping-1.2.2.tar.gz", hash = "sha256:baacbebf001c3123c006d2b498aa21c036db6ff8cc4032c2b958e464c6700bfd"},
@@ -5297,7 +5336,7 @@ version = "2.3.0"
 description = "Utilities for handling packages."
 optional = false
 python-versions = ">=3.7"
-groups = ["main"]
+groups = ["main", "docs"]
 files = [
     {file = "shippinglabel-2.3.0-py3-none-any.whl", hash = "sha256:37811ae077f4a40e524efa013a136e3e2d295a96ad149a4e84b7788dd7f3b64a"},
     {file = "shippinglabel-2.3.0.tar.gz", hash = "sha256:25c0c3194c011c0355dff8f56cc0b31688f693b209f5849d44991d8a2ec91f2f"},
@@ -7409,7 +7448,7 @@ version = "3.10.0"
 description = "Box of handy tools for Sphinx 🧰 📔"
 optional = false
 python-versions = ">=3.7"
-groups = ["main"]
+groups = ["main", "docs"]
 files = [
     {file = "sphinx_toolbox-3.10.0-py3-none-any.whl", hash = "sha256:675e5978eaee31adf21701054fa75bacf820459d56e93ac30ad01eaee047a6ef"},
     {file = "sphinx_toolbox-3.10.0.tar.gz", hash = "sha256:6afea9ac9afabe76bd5bd4d2b01edfdad81d653a1a34768e776e6a56d5a6f572"},
@@ -7624,6 +7663,23 @@ Sphinx = "*"
 watchdog = "*"
 
 [[package]]
+name = "sphinxcontrib-actdiag"
+version = "3.0.0"
+description = "Sphinx \"actdiag\" extension"
+optional = false
+python-versions = ">=3.7"
+groups = ["docs"]
+files = [
+    {file = "sphinxcontrib-actdiag-3.0.0.tar.gz", hash = "sha256:3c55d454ffc3b9efe7c20f2adaf022199b825612d32f200be8a497aa87e0f81f"},
+    {file = "sphinxcontrib_actdiag-3.0.0-py2.py3-none-any.whl", hash = "sha256:09fd3abf2ce465146c1c956c2e9501467939fd6395a2eb74b46870892a1977ba"},
+]
+
+[package.dependencies]
+actdiag = ">=0.5.3"
+blockdiag = ">=1.5.0"
+Sphinx = ">=2.0"
+
+[[package]]
 name = "sphinxcontrib-applehelp"
 version = "2.0.0"
 description = "sphinxcontrib-applehelp is a Sphinx extension which outputs Apple help books"
@@ -7833,6 +7889,23 @@ sphinx = "*"
 
 [package.extras]
 test = ["defusedxml", "myst-parser", "pytest", "ruff", "sphinx"]
+
+[[package]]
+name = "sphinxcontrib-nwdiag"
+version = "2.0.0"
+description = "Sphinx \"nwdiag\" extension"
+optional = false
+python-versions = "*"
+groups = ["docs"]
+files = [
+    {file = "sphinxcontrib-nwdiag-2.0.0.tar.gz", hash = "sha256:6ee95ad43bad46fe8dc1f65185c8997cb1d16665eee36a7eaaf6de13137ff859"},
+    {file = "sphinxcontrib_nwdiag-2.0.0-py2.py3-none-any.whl", hash = "sha256:5aae8c83b19e940409554b69249cf97e4f565331effd208cca9fddbc90b6ea36"},
+]
+
+[package.dependencies]
+blockdiag = ">=1.5.0"
+nwdiag = ">=1.0.3"
+Sphinx = ">=2.0"
 
 [[package]]
 name = "sphinxcontrib-openapi"
@@ -9094,4 +9167,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.13"
-content-hash = "236b8d90044f728e678af3beba951618b639249718eda7c34c5627e3b9423d4b"
+content-hash = "829934e3760e2e95d2a4edf03e3051ce955d451dc2480a48a5c5d64d17b085f7"

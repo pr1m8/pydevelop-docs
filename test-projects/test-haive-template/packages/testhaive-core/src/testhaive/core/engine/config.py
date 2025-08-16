@@ -34,7 +34,9 @@ class TestLLMConfig(BaseModel):
         metadata: Additional configuration metadata
 
     Examples:
-        Basic configuration::
+        Basic configuration:
+
+        .. code-block:: python
 
             config = TestLLMConfig(
                 name="simple_config",
