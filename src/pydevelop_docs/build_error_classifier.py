@@ -223,16 +223,47 @@ class BuildErrorClassifier:
         Returns:
             User-friendly message
         """
+        # Safely get match groups
+        group1 = (
+            match.group(1)
+            if match and match.lastindex and match.lastindex >= 1
+            else None
+        )
+
         messages = {
-            "import_error": f"Cannot import '{match.group(1)}'",
-            "module_not_found": f"Module '{match.group(1)}' not found",
-            "undefined_name": f"Name '{match.group(1)}' is not defined",
-            "pydantic_forward_ref": f"Pydantic forward reference error: '{match.group(1)}' not defined",
+            "import_error": (
+                f"Cannot import '{group1}'" if group1 else "Import error detected"
+            ),
+            "module_not_found": (
+                f"Module '{group1}' not found" if group1 else "Module not found"
+            ),
+            "undefined_name": (
+                f"Name '{group1}' is not defined" if group1 else "Undefined name error"
+            ),
+            "pydantic_forward_ref": (
+                f"Pydantic forward reference error: '{group1}' not defined"
+                if group1
+                else "Pydantic forward reference error"
+            ),
             "circular_import": "Circular import detected",
             "grid_structure": "Grid layout issue in documentation",
             "docstring_markup": "Docstring formatting issue",
-            "duplicate_object": f"Duplicate documentation for '{match.group(1)}'",
-            "extension_error": f"Extension '{match.group(1)}' failed",
+            "docstring_block_quote": "Docstring block quote formatting issue",
+            "docstring_definition": "Docstring definition list formatting issue",
+            "docstring_indentation": "Docstring indentation issue",
+            "docstring_indentation_error": "Docstring indentation error",
+            "duplicate_object": (
+                f"Duplicate documentation for '{group1}'"
+                if group1
+                else "Duplicate object documentation"
+            ),
+            "extension_error": (
+                f"Extension '{group1}' failed" if group1 else "Extension error"
+            ),
+            "orphan_document": "Document not included in any toctree",
+            "undefined_reference": (
+                f"Undefined reference: '{group1}'" if group1 else "Undefined reference"
+            ),
         }
 
         return messages.get(category, line.strip())
@@ -250,12 +281,21 @@ class BuildErrorClassifier:
         Returns:
             Suggestion for fixing the error
         """
+        # Safely get match groups
+        group1 = (
+            match.group(1)
+            if match and match.lastindex and match.lastindex >= 1
+            else None
+        )
+
         suggestions = {
             "pydantic_forward_ref": (
                 f"Use TYPE_CHECKING import:\n"
                 f"   from typing import TYPE_CHECKING\n"
                 f"   if TYPE_CHECKING:\n"
-                f"       from module import {match.group(1)}"
+                f"       from module import {group1}"
+                if group1
+                else "Use TYPE_CHECKING imports to avoid forward reference issues"
             ),
             "circular_import": (
                 "Break circular dependency:\n"
@@ -275,15 +315,37 @@ class BuildErrorClassifier:
                 "   \n"
                 "      Note content here"
             ),
+            "docstring_block_quote": (
+                "Add blank line after block quote:\n"
+                "   Block quote text\n"
+                "   \n"
+                "   Regular text here"
+            ),
+            "docstring_indentation": (
+                "Fix indentation in docstring:\n"
+                "   Ensure consistent indentation levels"
+            ),
             "duplicate_object": (
-                f"Add :no-index: to one occurrence of {match.group(1)}:\n"
-                f"   .. automethod:: {match.group(1)}\n"
+                f"Add :no-index: to one occurrence of {group1}:\n"
+                f"   .. automethod:: {group1}\n"
                 f"      :no-index:"
+                if group1
+                else "Add :no-index: to duplicate object documentation"
             ),
             "module_not_found": (
-                f"Ensure {match.group(1)} is installed:\n"
-                f"   poetry add {match.group(1)}\n"
+                f"Ensure {group1} is installed:\n"
+                f"   poetry add {group1}\n"
                 f"   # or check import path"
+                if group1
+                else "Check that the module is installed and import path is correct"
+            ),
+            "orphan_document": (
+                "Add document to a toctree:\n"
+                "   In index.rst or another toctree, add:\n"
+                "   .. toctree::\n"
+                "      :maxdepth: 2\n"
+                "      \n"
+                "      your_document"
             ),
         }
 
@@ -376,11 +438,21 @@ class BuildErrorClassifier:
 
         # Print file location if available
         if error.file_path:
-            file_display = (
-                Path(error.file_path).relative_to(Path.cwd())
-                if Path(error.file_path).is_absolute()
-                else error.file_path
-            )
+            try:
+                # Try to make path relative to current directory
+                file_path = Path(error.file_path)
+                if file_path.is_absolute():
+                    try:
+                        file_display = file_path.relative_to(Path.cwd())
+                    except ValueError:
+                        # If not relative to cwd, just use the path as is
+                        file_display = error.file_path
+                else:
+                    file_display = error.file_path
+            except Exception:
+                # Fallback to original path if any error
+                file_display = error.file_path
+
             if error.line_number:
                 click.echo(f"   📄 {file_display}:{error.line_number}")
             else:
