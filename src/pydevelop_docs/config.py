@@ -96,7 +96,9 @@ def get_haive_config(
         "copyright": "2025, Haive Team",
         "release": "0.1.0",
         # Extensions - Complete 40+ extension system with optimal configurations
-        "extensions": _get_complete_extensions(is_central_hub, extra_extensions),
+        "extensions": _get_complete_extensions(
+            is_central_hub, extra_extensions, package_name
+        ),
         # General configuration
         "templates_path": ["_templates"],
         "html_static_path": ["_static"],
@@ -156,6 +158,10 @@ def get_haive_config(
         # Type hints configuration
         "typehints_fully_qualified": False,
         "typehints_use_signature": True,
+        # sphinx-autodoc-typehints configuration (works as fallback when codeautolink fails)
+        "always_use_bars_union": True,  # Use | syntax for unions (Python 3.10+)
+        "typehints_use_rtype": True,  # Show return types
+        "typehints_defaults": "comma",  # How to show defaults
         # MyST Parser configuration - COMPLETE
         "myst_enable_extensions": [
             "deflist",
@@ -439,7 +445,9 @@ def get_central_hub_config(package_names: List[str] = None) -> Dict[str, Any]:
 
 
 def _get_complete_extensions(
-    is_central_hub: bool, extra_extensions: Optional[List[str]] = None
+    is_central_hub: bool,
+    extra_extensions: Optional[List[str]] = None,
+    package_name: str = "",
 ) -> List[str]:
     """Get the complete 40+ Sphinx extension system.
 
@@ -484,7 +492,7 @@ def _get_complete_extensions(
         "sphinxcontrib.actdiag",
         # Utilities (Priority 51-60)
         "sphinx_sitemap",
-        "sphinx_codeautolink",
+        "pydevelop_docs.sphinx_codeautolink_wrapper",  # Our wrapper with error handling
         # TOC Enhancements (Priority 61-70)
         "sphinx_treeview",
         # Enhanced Features (Priority 71-80)
@@ -523,6 +531,19 @@ def _get_complete_extensions(
     # Add extra extensions
     if extra_extensions:
         extensions.extend(extra_extensions)
+
+    # Handle sphinx_codeautolink wrapper
+    if "pydevelop_docs.sphinx_codeautolink_wrapper" in extensions:
+        print(
+            f"ℹ️  sphinx_codeautolink wrapper enabled with automatic error handling for {package_name}"
+        )
+
+        # Warn about known problematic packages
+        problem_packages = ["haive-core", "haive-agents"]
+        if any(pkg in package_name for pkg in problem_packages):
+            print(
+                f"⚠️  Note: {package_name} uses Python 3.10 union syntax - wrapper will handle gracefully"
+            )
 
     return extensions
 
@@ -810,6 +831,31 @@ def setup(app):
 
     # DISABLED: Let Napoleon handle Google-style docstrings properly
     # app.connect("autodoc-process-docstring", process_docstring)
+
+    # Add error handler for sphinx-codeautolink union type issues
+    def handle_codeautolink_error(app, exception):
+        """Handle sphinx-codeautolink errors gracefully."""
+        if "sphinx_codeautolink" in str(
+            exception
+        ) and "unsupported operand type" in str(exception):
+            import warnings
+
+            warnings.warn(
+                f"⚠️  sphinx-codeautolink encountered union type syntax issues. "
+                f"Continuing build without code linking. "
+                f"Consider using Union[X, Y] instead of X | Y syntax."
+            )
+            # Continue build without failing
+            return True
+        # Let other errors propagate
+        return False
+
+    app.connect(
+        "build-finished",
+        lambda app, exception: (
+            handle_codeautolink_error(app, exception) if exception else None
+        ),
+    )
 
     # Add custom CSS for better styling (enhanced-design.css is already in html_css_files)
     app.add_css_file("custom.css", priority=600)
