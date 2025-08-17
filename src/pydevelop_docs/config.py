@@ -491,7 +491,7 @@ def _get_complete_extensions(
         "sphinxcontrib.actdiag",
         # Utilities (Priority 51-60)
         "sphinx_sitemap",
-        "sphinx_codeautolink",  # Direct usage - accept union type warnings
+        # "sphinx_codeautolink",  # Temporarily disabled - missing dependency
         # TOC Enhancements (Priority 61-70)
         "sphinx_treeview",
         # Enhanced Features (Priority 71-80)
