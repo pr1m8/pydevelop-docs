@@ -2806,7 +2806,7 @@ version = "3.0.0"
 description = "Python port of markdown-it. Markdown parsing, done right!"
 optional = false
 python-versions = ">=3.8"
-groups = ["main", "docs"]
+groups = ["main", "dev", "docs"]
 files = [
     {file = "markdown-it-py-3.0.0.tar.gz", hash = "sha256:e3f60a94fa066dc52ec76661e37c851cb232d92f9886b15cb560aaada2df8feb"},
     {file = "markdown_it_py-3.0.0-py3-none-any.whl", hash = "sha256:355216845c60bd96232cd8d8c40e8f9765cc86f46880e43a8fd22dc1a1a8cab1"},
@@ -2979,7 +2979,7 @@ version = "0.1.2"
 description = "Markdown URL utilities"
 optional = false
 python-versions = ">=3.7"
-groups = ["main", "docs"]
+groups = ["main", "dev", "docs"]
 files = [
     {file = "mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8"},
     {file = "mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba"},
@@ -4304,7 +4304,7 @@ version = "2.19.2"
 description = "Pygments is a syntax highlighting package written in Python."
 optional = false
 python-versions = ">=3.8"
-groups = ["main", "docs"]
+groups = ["main", "dev", "docs"]
 files = [
     {file = "pygments-2.19.2-py3-none-any.whl", hash = "sha256:86540386c03d588bb81d44bc3928634ff26449851e99741617ecb9037ee5ec0b"},
     {file = "pygments-2.19.2.tar.gz", hash = "sha256:636cb2477cec7f8952536970bc533bc43743542f70392ae026374600add5b887"},
@@ -4971,7 +4971,7 @@ version = "14.1.0"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
 optional = false
 python-versions = ">=3.8.0"
-groups = ["main", "docs"]
+groups = ["main", "dev", "docs"]
 files = [
     {file = "rich-14.1.0-py3-none-any.whl", hash = "sha256:536f5f1785986d6dbdea3c75205c473f970777b4a0d6c6dd1b696aa05a3fa04f"},
     {file = "rich-14.1.0.tar.gz", hash = "sha256:e497a48b844b0320d45007cdebfeaeed8db2a4f4bcf49f15e455cfc4af11eaa8"},
@@ -5933,25 +5933,6 @@ files = [
 [package.extras]
 dev = ["black", "flake8", "isort", "mypy", "pre-commit", "pytest (>=7.0.0)"]
 test = ["pytest (>=7.0.0)"]
-
-[[package]]
-name = "sphinx-codeautolink"
-version = "0.17.5"
-description = "Automatic links from code examples to reference documentation."
-optional = false
-python-versions = ">=3.10"
-groups = ["docs"]
-files = [
-    {file = "sphinx_codeautolink-0.17.5-py3-none-any.whl", hash = "sha256:a84595ad3a12da93f82796e638f27e239d07b388037f3d3f69d65fc7ea6e05bf"},
-    {file = "sphinx_codeautolink-0.17.5.tar.gz", hash = "sha256:75098c20aa32de01481fa62409e6d2fbfdde760e6696ae9beb233a77bcb49283"},
-]
-
-[package.dependencies]
-beautifulsoup4 = ">=4.8.1"
-sphinx = ">=3.2.0"
-
-[package.extras]
-ipython = ["ipython (!=8.7.0)"]
 
 [[package]]
 name = "sphinx-codefence"
@@ -9167,4 +9148,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.13"
-content-hash = "829934e3760e2e95d2a4edf03e3051ce955d451dc2480a48a5c5d64d17b085f7"
+content-hash = "47655896f487c17fae4deb949bdba0879e0f52476b06244853945c4666203949"

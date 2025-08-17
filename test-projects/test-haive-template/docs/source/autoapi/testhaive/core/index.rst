@@ -695,7 +695,9 @@ This package mimics the structure of haive.core for testing documentation genera
 
             .. rubric:: Examples
 
-            Basic configuration::
+            Basic configuration:
+
+            .. code-block:: python
 
                 config = TestLLMConfig(
                     name="simple_config",

@@ -117,7 +117,9 @@ This module provides configuration management similar to AugLLMConfig in Haive.
 
             .. rubric:: Examples
 
-            Basic configuration::
+            Basic configuration:
+
+            .. code-block:: python
 
                 config = TestLLMConfig(
                     name="simple_config",

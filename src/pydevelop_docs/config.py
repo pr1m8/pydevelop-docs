@@ -492,7 +492,7 @@ def _get_complete_extensions(
         "sphinxcontrib.actdiag",
         # Utilities (Priority 51-60)
         "sphinx_sitemap",
-        "pydevelop_docs.sphinx_codeautolink_wrapper",  # Our wrapper with error handling
+        "sphinx_codeautolink",  # Direct usage - accept union type warnings
         # TOC Enhancements (Priority 61-70)
         "sphinx_treeview",
         # Enhanced Features (Priority 71-80)
@@ -532,18 +532,10 @@ def _get_complete_extensions(
     if extra_extensions:
         extensions.extend(extra_extensions)
 
-    # Handle sphinx_codeautolink wrapper
-    if "pydevelop_docs.sphinx_codeautolink_wrapper" in extensions:
-        print(
-            f"ℹ️  sphinx_codeautolink wrapper enabled with automatic error handling for {package_name}"
-        )
-
-        # Warn about known problematic packages
-        problem_packages = ["haive-core", "haive-agents"]
-        if any(pkg in package_name for pkg in problem_packages):
-            print(
-                f"⚠️  Note: {package_name} uses Python 3.10 union syntax - wrapper will handle gracefully"
-            )
+    # Note about sphinx_codeautolink
+    if "sphinx_codeautolink" in extensions:
+        # Known to have issues with Python 3.10 union syntax but we accept the warnings
+        pass
 
     return extensions
 
@@ -832,30 +824,8 @@ def setup(app):
     # DISABLED: Let Napoleon handle Google-style docstrings properly
     # app.connect("autodoc-process-docstring", process_docstring)
 
-    # Add error handler for sphinx-codeautolink union type issues
-    def handle_codeautolink_error(app, exception):
-        """Handle sphinx-codeautolink errors gracefully."""
-        if "sphinx_codeautolink" in str(
-            exception
-        ) and "unsupported operand type" in str(exception):
-            import warnings
-
-            warnings.warn(
-                f"⚠️  sphinx-codeautolink encountered union type syntax issues. "
-                f"Continuing build without code linking. "
-                f"Consider using Union[X, Y] instead of X | Y syntax."
-            )
-            # Continue build without failing
-            return True
-        # Let other errors propagate
-        return False
-
-    app.connect(
-        "build-finished",
-        lambda app, exception: (
-            handle_codeautolink_error(app, exception) if exception else None
-        ),
-    )
+    # Note: sphinx-codeautolink may warn about Python 3.10 union syntax
+    # We accept these warnings and continue with the build
 
     # Add custom CSS for better styling (enhanced-design.css is already in html_css_files)
     app.add_css_file("custom.css", priority=600)
