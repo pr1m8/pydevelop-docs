@@ -403,10 +403,9 @@ def get_haive_config(
         # Theme configuration - INTENSE FURO THEMING
         "html_theme": "furo",
         "html_theme_options": _get_complete_theme_options(package_name, is_central_hub),
-        # Custom CSS and JS files - CONSOLIDATED to avoid conflicts
+        # Custom CSS and JS files - SIMPLIFIED for clean documentation
         "html_css_files": [
-            "enhanced-design.css",  # Modern design system - contains all styling
-            # Removed conflicting files: furo-intense.css, api-docs.css, toc-enhancements.css
+            # "enhanced-design.css",  # REMOVED - too aggressive marketing-style design
             "breadcrumb-navigation.css",  # Breadcrumb navigation for Furo
             "mermaid-custom.css",  # Keep diagram-specific styling
             "tippy-enhancements.css",  # Keep tooltip-specific styling
@@ -827,10 +826,10 @@ def setup(app):
     # Note: sphinx-codeautolink may warn about Python 3.10 union syntax
     # We accept these warnings and continue with the build
 
-    # Add custom CSS for better styling (enhanced-design.css is already in html_css_files)
-    app.add_css_file("custom.css", priority=600)
-    app.add_css_file("tippy-enhancements.css", priority=601)
-    app.add_css_file("api-docs.css", priority=602)
+    # Add minimal custom CSS
+    app.add_css_file("css/custom.css", priority=600)
+    # Removed tippy-enhancements.css - already in html_css_files
+    # Removed api-docs.css - too aggressive with badges and gradients
 
     # Add custom JS for API enhancements
     app.add_js_file("js/api-enhancements.js", {"defer": "defer"})
