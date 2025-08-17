@@ -6,6 +6,7 @@ Welcome to pydevelop-docs Documentation
    :maxdepth: 2
    :caption: Contents:
 
+   guides/index
    autoapi/index
    changelog
 
