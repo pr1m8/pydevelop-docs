@@ -491,7 +491,7 @@ def _get_complete_extensions(
         "sphinxcontrib.actdiag",
         # Utilities (Priority 51-60)
         "sphinx_sitemap",
-        # "sphinx_codeautolink",  # Temporarily disabled - missing dependency
+        # "sphinx_codeautolink",  # Temporarily disabled - causes TypeError with union types
         # TOC Enhancements (Priority 61-70)
         "sphinx_treeview",
         # Enhanced Features (Priority 71-80)
@@ -580,16 +580,22 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
         "autoapi_ignore": [
             "**/test_*.py",
             "**/tests/*",
+            "**/tests/**",
             "**/test/**",
             "**/*_test.py",
             "**/*_tests.py",
             "**/conftest.py",
+            "**/pytest.ini",
             "**/engine_node_test/**",  # Test directory in wrong location
             "**/engine_node_test/*",  # All files in engine_node_test
             # Skip metaclass files that cause issues
             "**/graph/state_graph/base.py",  # Contains SerializableModelMetaclass
             # Skip test files in wrong location
             "**/engine_node_test.py",  # Test file in src directory
+            # Skip additional problematic patterns
+            "**/debug_*.py",
+            "**/archive/**",
+            "**/archives/**",
         ],
     }
 

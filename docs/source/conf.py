@@ -40,7 +40,20 @@ autoapi_dirs = ["../../src"]
 
 def setup(app):
     """Sphinx setup hook."""
+    # Modern CSS files (matches html_css_files)
+    css_files = [
+        "enhanced-design.css",
+        "breadcrumb-navigation.css",
+        "mermaid-custom.css",
+        "tippy-enhancements.css",
+    ]
+    for css_file in css_files:
+        if os.path.exists("_static/" + css_file):
+            app.add_css_file(css_file)
+
+    # Legacy fallback
     if os.path.exists("_static/css/custom.css"):
         app.add_css_file("css/custom.css")
+
     if os.path.exists("_static/js/api-enhancements.js"):
         app.add_js_file("js/api-enhancements.js")

@@ -80,7 +80,6 @@ sphinx-last-updated-by-git = "^0.3.8"
 sphinxext-rediraffe = "^0.2.7"
 sphinx-math-dollar = "^1.2.1"
 sphinx-lint = "^1.0.0"
-autodoc-pydantic = "^2.2.0"
 sphinxcontrib-plantuml = "^0.30"
 sphinxcontrib-drawio = "^0.0.17"
 sphinxcontrib-images = "^1.0.1"
@@ -184,13 +183,14 @@ sphinx-exec-code = "^0.16"
 sphinx-runpython = "^0.4.0"
 sphinxcontrib-lunrsearch = "^0.4"
 sphinx = "^8.2.3"
-# sphinxcontrib-autodoc-pydantic = "^1.9.0"  # Temporarily disabled due to version conflicts
+# autodoc-pydantic = "^2.0.1"  # Temporarily disabled due to version conflicts
 furo = "^2024.8.6"
 myst-parser = "^4.0.1"
 sphinx-toolbox = "^3.8.1"
 seed-intersphinx-mapping = "^1.2.2"
 sphinxcontrib-nwdiag = "^2.0.0"
 sphinxcontrib-actdiag = "^3.0.0"
+autodoc-pydantic = "^2.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.2.0"
