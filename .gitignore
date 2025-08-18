@@ -94,3 +94,4 @@ poetry.lock
 .pydevelop/cache/
 .pydevelop/hooks/*.log
 .pydevelop/templates/_build/
+debug/screenshots/

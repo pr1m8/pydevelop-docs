@@ -90,6 +90,9 @@ class DocServerScreenshotTester:
         pages = [
             ("index", "/", "PyDevelop-Docs Home"),
             ("getting_started", "/getting_started.html", "Getting Started"),
+            ("configuration", "/configuration.html", "Configuration Guide"),
+            ("themes", "/themes.html", "Themes Guide"),
+            ("cli_reference", "/cli-reference.html", "CLI Reference"),
             ("api_reference", "/autoapi/index.html", "API Reference"),
             (
                 "api_config",
@@ -102,8 +105,8 @@ class DocServerScreenshotTester:
                 "/autoapi/pydevelop_docs/builders/index.html",
                 "Builders Module",
             ),
-            ("configuration", "/configuration.html", "Configuration Guide"),
-            ("themes", "/themes.html", "Themes Guide"),
+            ("examples", "/examples.html", "Examples"),
+            ("changelog", "/changelog.html", "Changelog"),
             ("search", "/search.html", "Search Page"),
         ]
 
@@ -195,12 +198,19 @@ class DocServerScreenshotTester:
 
         # Check if AutoAPI content loaded
         if "autoapi" in page.url:
+            # Check for various AutoAPI content indicators
             api_content = await page.query_selector(".autoapi-summary")
             if not api_content:
-                # Try Furo-specific selectors
+                # Try standard Python domain selectors
                 api_content = await page.query_selector("dl.py")
-                if not api_content:
-                    issues.append("AutoAPI content may not be loading")
+            if not api_content:
+                # Try grid cards (custom template)
+                api_content = await page.query_selector(".sd-card")
+            if not api_content:
+                # Try toctree
+                api_content = await page.query_selector(".toctree-wrapper")
+            if not api_content:
+                issues.append("AutoAPI content may not be loading")
 
         return issues
 
