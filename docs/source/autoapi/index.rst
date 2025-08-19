@@ -43,7 +43,7 @@ Click any module name below to jump directly to its documentation:
    :maxdepth: 2
    :titlesonly:
 
-   pydevelop_docs/index
+   mcp/index
 
 🎯 Getting Started
 ==================
@@ -57,9 +57,7 @@ Click any module name below to jump directly to its documentation:
          :caption: Import and Use
 
          # Import the package
-         import pydevelop_docs
-         from pydevelop_docs.config import get_haive_config
-         from pydevelop_docs.builders import MonorepoBuilder
+         import _filters
 
          # Use the APIs
          # Documentation for each module is linked above

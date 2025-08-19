@@ -405,7 +405,7 @@ def get_haive_config(
         "html_theme_options": _get_complete_theme_options(package_name, is_central_hub),
         # Custom CSS and JS files - SIMPLIFIED for clean documentation
         "html_css_files": [
-            # "enhanced-design.css",  # REMOVED - too aggressive marketing-style design
+            "css/furo-intense.css",  # CRITICAL: Dark mode fixes for code visibility
             "breadcrumb-navigation.css",  # Breadcrumb navigation for Furo
             "mermaid-custom.css",  # Keep diagram-specific styling
             "tippy-enhancements.css",  # Keep tooltip-specific styling
