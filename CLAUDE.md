@@ -2,9 +2,9 @@
 
 **Project**: PyDevelop Documentation Tools
 **Purpose**: Universal Python documentation generator with 40+ Sphinx extensions pre-configured
-**Location**: `/home/will/Projects/haive/backend/haive/tools/pydevelop-docs`
+**Status**: Standalone Package Ready for Isolation
 **Created**: 2025-01-08
-**Last Updated**: 2025-08-18 (Post-Restoration)
+**Last Updated**: 2025-08-20 (Prepared for Isolation)
 
 ## 🎯 Project Overview
 
@@ -17,13 +17,16 @@ PyDevelop-Docs is a comprehensive documentation generation tool that transforms 
 ### **Most Used Commands:**
 
 ```bash
-# Build all Haive documentation (BEST)
-poetry run pydevelop-docs rebuild-haive --debug --save-log
+# Build documentation for any Python project
+poetry run pydevelop-docs build --clean
 
-# Monitor build progress
-tail -f /tmp/haive_rebuild_enhanced.log
+# Build all packages in a monorepo
+poetry run pydevelop-docs build-all --clean
 
-# Visual testing (after building and serving docs)
+# Interactive initialization
+poetry run pydevelop-docs init
+
+# Visual testing (after building and serving docs)  
 poetry run python scripts/debug/comprehensive_screenshot.py 8003
 
 # Smart analysis and building
@@ -32,7 +35,7 @@ python src/pydevelop_docs/smart_builder.py
 
 ### **What Each System Does:**
 
-- **Enhanced Build** ⭐ = Phase-based building with monitoring (best for Haive)
+- **Enhanced Build** ⭐ = Phase-based building with monitoring (best for large projects)
 - **Smart Builder** 🎯 = Intelligent analysis and dependency-aware building
 - **Visual Testing** 📸 = Playwright screenshots and quality validation
 - **Standard CLI** 📦 = Basic building for simple projects
