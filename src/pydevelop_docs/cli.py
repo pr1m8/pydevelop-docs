@@ -1742,5 +1742,205 @@ def setup():
     click.echo("   4. Run 'pydevelop-docs watch' for auto-rebuild")
 
 
+@cli.command()
+@click.argument("project_path", type=click.Path(exists=True, file_okay=False, dir_okay=True), required=False)
+@click.option("--target-dir", "-t", type=click.Path(), help="Target directory for documentation (default: PROJECT_PATH/docs)")
+@click.option("--force", "-f", is_flag=True, help="Overwrite existing documentation")
+@click.option("--non-interactive", "-n", is_flag=True, help="Skip interactive prompts")
+@click.option("--dry-run", "-d", is_flag=True, help="Show what would be done without executing")
+@click.option("--copy-to", "-c", type=click.Path(), help="Copy the setup to another directory")
+def setup_general(project_path, target_dir, force, non_interactive, dry_run, copy_to):
+    """Set up documentation for any Python project with automatic detection.
+    
+    This command analyzes any Python project structure and automatically
+    sets up comprehensive documentation with zero configuration required.
+    
+    Examples:
+    
+        # Setup docs for current directory
+        pydevelop-docs setup-general
+        
+        # Setup docs for specific project
+        pydevelop-docs setup-general /path/to/my-project
+        
+        # Dry run to see what would be done
+        pydevelop-docs setup-general --dry-run
+        
+        # Copy setup to another location
+        pydevelop-docs setup-general --copy-to /path/to/copy/destination
+    """
+    from .general_setup import setup_project_docs
+    
+    # Use current directory if no project path provided
+    if not project_path:
+        project_path = Path.cwd()
+    else:
+        project_path = Path(project_path)
+    
+    target_directory = Path(target_dir) if target_dir else None
+    
+    try:
+        click.echo(f"🔍 Analyzing Python project at: {project_path}")
+        
+        # Set up documentation
+        result = setup_project_docs(
+            project_path=str(project_path),
+            target_dir=str(target_directory) if target_directory else None,
+            force=force,
+            interactive=not non_interactive,
+            dry_run=dry_run
+        )
+        
+        if result["status"] == "cancelled":
+            click.echo("❌ Setup cancelled by user")
+            return
+        
+        if result["status"] == "dry_run":
+            click.echo("\n📋 Dry Run - Actions that would be performed:")
+            for action in result["actions"]:
+                click.echo(f"  {action}")
+            
+            click.echo(f"\n📊 Project Analysis:")
+            info = result["project_info"]
+            click.echo(f"  Type: {info['type']}")
+            click.echo(f"  Packages: {len(info['packages'])}")
+            click.echo(f"  Python files: {info['python_files']}")
+            click.echo(f"  Package manager: {info['package_manager']}")
+            return
+        
+        # Copy to another location if requested
+        if copy_to:
+            copy_destination = Path(copy_to)
+            click.echo(f"\n📂 Copying setup to: {copy_destination}")
+            
+            if copy_destination.exists() and not force:
+                if not click.confirm(f"Destination {copy_destination} exists. Continue?"):
+                    return
+            
+            # Copy the documentation setup
+            import shutil
+            source_docs = target_directory or (project_path / "docs")
+            if source_docs.exists():
+                shutil.copytree(source_docs, copy_destination, dirs_exist_ok=True)
+                click.echo(f"✅ Documentation setup copied to: {copy_destination}")
+            else:
+                click.echo("❌ No documentation found to copy")
+                return
+        
+        # Success message
+        docs_path = target_directory or (project_path / "docs")
+        click.echo(f"\n✅ Documentation setup complete!")
+        click.echo(f"📁 Documentation created at: {docs_path}")
+        
+        if not dry_run:
+            click.echo("\n🚀 Next steps:")
+            click.echo(f"   1. cd {docs_path}")
+            click.echo("   2. make html")
+            click.echo("   3. open build/html/index.html")
+            
+            click.echo("\n📝 Available commands:")
+            click.echo("   • make html          - Build HTML documentation")
+            click.echo("   • make livehtml      - Auto-rebuild on changes")
+            click.echo("   • make linkcheck     - Check for broken links")
+            click.echo("   • make clean         - Clean build artifacts")
+            
+    except Exception as e:
+        click.echo(f"❌ Error setting up documentation: {e}")
+        import traceback
+        if click.get_current_context().params.get('debug'):
+            click.echo(traceback.format_exc())
+        raise click.Abort()
+
+
+@cli.command()
+@click.argument("source_path", type=click.Path(exists=True, file_okay=False, dir_okay=True))
+@click.argument("destination_path", type=click.Path())
+@click.option("--include-config", "-c", is_flag=True, help="Include PyDevelop-Docs configuration files")
+@click.option("--include-static", "-s", is_flag=True, help="Include static assets and templates")
+@click.option("--force", "-f", is_flag=True, help="Overwrite destination if it exists")
+def copy_setup(source_path, destination_path, include_config, include_static, force):
+    """Copy documentation setup from one project to another.
+    
+    This command copies a complete documentation setup from a source project
+    to a destination, optionally including configuration and static files.
+    
+    Examples:
+    
+        # Copy basic documentation structure
+        pydevelop-docs copy-setup /path/to/source /path/to/destination
+        
+        # Copy with configuration files
+        pydevelop-docs copy-setup /path/to/source /path/to/dest --include-config
+        
+        # Copy everything including static assets
+        pydevelop-docs copy-setup /path/to/source /path/to/dest --include-config --include-static
+    """
+    import shutil
+    
+    source = Path(source_path)
+    destination = Path(destination_path)
+    
+    # Find documentation in source
+    source_docs = source / "docs"
+    if not source_docs.exists():
+        click.echo(f"❌ No docs directory found in source: {source}")
+        return
+    
+    # Check destination
+    if destination.exists() and not force:
+        if not click.confirm(f"Destination {destination} exists. Continue?"):
+            return
+    
+    try:
+        click.echo(f"📂 Copying documentation setup...")
+        click.echo(f"   From: {source_docs}")
+        click.echo(f"   To: {destination}")
+        
+        # Copy documentation
+        shutil.copytree(source_docs, destination, dirs_exist_ok=True)
+        
+        # Copy configuration files if requested
+        if include_config:
+            config_files = [
+                ".pydevelop",
+                "pyproject.toml",  # For dependencies
+                "requirements.txt",
+            ]
+            
+            for config_file in config_files:
+                source_file = source / config_file
+                if source_file.exists():
+                    if source_file.is_dir():
+                        shutil.copytree(source_file, destination.parent / config_file, dirs_exist_ok=True)
+                    else:
+                        shutil.copy2(source_file, destination.parent / config_file)
+                    click.echo(f"   ✅ Copied: {config_file}")
+        
+        # Copy additional static files if requested
+        if include_static:
+            static_files = [
+                "README.md",
+                "LICENSE",
+                ".gitignore",
+            ]
+            
+            for static_file in static_files:
+                source_file = source / static_file
+                if source_file.exists():
+                    shutil.copy2(source_file, destination.parent / static_file)
+                    click.echo(f"   ✅ Copied: {static_file}")
+        
+        click.echo(f"\n✅ Documentation setup copied successfully!")
+        click.echo(f"📁 Available at: {destination}")
+        
+        click.echo("\n🚀 To build documentation:")
+        click.echo(f"   cd {destination}")
+        click.echo("   make html")
+        
+    except Exception as e:
+        click.echo(f"❌ Error copying setup: {e}")
+        raise click.Abort()
+
+
 if __name__ == "__main__":
     cli()
