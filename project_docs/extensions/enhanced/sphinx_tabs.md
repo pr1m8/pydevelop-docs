@@ -22,7 +22,7 @@ Tabs enable clean separation of related but distinct content:
 
       .. code-block:: bash
 
-         pip install pydevelop-docs
+         pip install pydvlp-docs
 
    .. tab-item:: Development Setup
 
@@ -35,7 +35,7 @@ Tabs enable clean separation of related but distinct content:
 
       .. code-block:: bash
 
-         docker run pydevelop-docs
+         docker run pydvlp-docs
 ```
 
 ### Multi-Language Code Examples
@@ -57,14 +57,14 @@ Perfect for documenting APIs that support multiple programming languages:
 
       .. code-block:: javascript
 
-         const config = require('pydevelop-docs');
+         const config = require('pydvlp-docs');
          config.configure({theme: 'furo'});
 
    .. tab-item:: Shell
 
       .. code-block:: bash
 
-         pydevelop-docs configure --theme=furo
+         pydvlp-docs configure --theme=furo
 ```
 
 ## Current PyDevelop-Docs Configuration
@@ -399,7 +399,7 @@ This prevents accidental tab closure, ensuring users can navigate between tabs w
       .. code-block:: powershell
 
          # PowerShell
-         pip install pydevelop-docs
+         pip install pydvlp-docs
 
       **Configuration:**
 
@@ -417,7 +417,7 @@ This prevents accidental tab closure, ensuring users can navigate between tabs w
       .. code-block:: bash
 
          # Terminal
-         pip install pydevelop-docs
+         pip install pydvlp-docs
 
       **Configuration:**
 
@@ -435,11 +435,11 @@ This prevents accidental tab closure, ensuring users can navigate between tabs w
       .. code-block:: bash
 
          # Most distributions
-         pip install pydevelop-docs
+         pip install pydvlp-docs
 
          # Ubuntu/Debian
          sudo apt install python3-pip
-         pip3 install pydevelop-docs
+         pip3 install pydvlp-docs
 
       **Configuration:**
 

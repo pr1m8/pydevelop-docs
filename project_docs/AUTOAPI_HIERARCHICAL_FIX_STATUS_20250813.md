@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-The AutoAPI hierarchical fix (`autoapi_own_page_level = "module"`) has been successfully implemented in pydevelop-docs config.py but is NOT being included when the CLI generates new conf.py files. This creates a discrepancy where the fix exists in the codebase but doesn't reach end users.
+The AutoAPI hierarchical fix (`autoapi_own_page_level = "module"`) has been successfully implemented in pydvlp-docs config.py but is NOT being included when the CLI generates new conf.py files. This creates a discrepancy where the fix exists in the codebase but doesn't reach end users.
 
 ## Current State of the Fix
 
@@ -67,7 +67,7 @@ API Reference
 
 ### 1. CLI Direct Generation (Most Users)
 
-- **Usage**: `pydevelop-docs init`
+- **Usage**: `pydvlp-docs init`
 - **Result**: Generates standalone conf.py from hardcoded template
 - **Fix Status**: ❌ Missing hierarchical setting
 - **Impact**: Users get flat API documentation
@@ -126,14 +126,14 @@ autoapi_own_page_level = "module"  # Keep classes with their modules
 ### Alternative Approaches
 
 1. **Generate Import-Based Config**: Make CLI generate conf.py that imports from config module
-2. **Add CLI Flag**: `pydevelop-docs init --hierarchical-api`
+2. **Add CLI Flag**: `pydvlp-docs init --hierarchical-api`
 3. **Detect Project Type**: Auto-enable for monorepos
 
 ## Impact on Users
 
 ### Current State
 
-- New projects using `pydevelop-docs init` get flat API documentation
+- New projects using `pydvlp-docs init` get flat API documentation
 - Must manually add the fix to their conf.py
 - Many users unaware of the issue
 

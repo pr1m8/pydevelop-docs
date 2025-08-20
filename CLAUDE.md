@@ -18,13 +18,13 @@ PyDevelop-Docs is a comprehensive documentation generation tool that transforms 
 
 ```bash
 # Build documentation for any Python project
-poetry run pydevelop-docs build --clean
+poetry run pydvlp-docs build --clean
 
 # Build all packages in a monorepo
-poetry run pydevelop-docs build-all --clean
+poetry run pydvlp-docs build-all --clean
 
 # Interactive initialization
-poetry run pydevelop-docs init
+poetry run pydvlp-docs init
 
 # Visual testing (after building and serving docs)  
 poetry run python scripts/debug/comprehensive_screenshot.py 8003
@@ -43,7 +43,7 @@ python src/pydevelop_docs/smart_builder.py
 ## 🏗️ Project Structure
 
 ```
-pydevelop-docs/
+pydvlp-docs/
 ├── src/pydevelop_docs/          # Core source code
 │   ├── __init__.py              # Main exports and version info
 │   ├── cli.py                   # Command-line interface (main entry point)
@@ -109,7 +109,7 @@ pydevelop-docs/
 **Primary Command for Haive:**
 
 ```bash
-poetry run pydevelop-docs rebuild-haive --debug --save-log
+poetry run pydvlp-docs rebuild-haive --debug --save-log
 ```
 
 **Visual Testing:**
@@ -173,14 +173,14 @@ poetry run python scripts/debug/comprehensive_screenshot.py 8003
 ### For Haive Documentation (Recommended Workflow)
 
 ```bash
-# 1. Navigate to pydevelop-docs
-cd /home/will/Projects/haive/backend/haive/tools/pydevelop-docs
+# 1. Navigate to pydvlp-docs
+cd /home/will/Projects/haive/backend/haive/tools/pydvlp-docs
 
 # 2. Install dependencies
 poetry install --with dev,docs,web
 
 # 3. Run enhanced build (BEST for Haive)
-poetry run pydevelop-docs rebuild-haive --debug --save-log
+poetry run pydvlp-docs rebuild-haive --debug --save-log
 
 # 4. Monitor progress (from another terminal)
 tail -f /tmp/haive_rebuild_enhanced.log
@@ -196,10 +196,10 @@ find /home/will/Projects/haive/backend/haive/packages/*/docs/build/html -name "i
 cd /home/will/Projects/haive/backend/haive/packages/haive-core
 
 # Build just this package
-poetry run --directory=../../tools/pydevelop-docs pydevelop-docs build --clean
+poetry run --directory=../../tools/pydvlp-docs pydvlp-docs build --clean
 
 # Watch for changes during development
-poetry run --directory=../../tools/pydevelop-docs pydevelop-docs watch
+poetry run --directory=../../tools/pydvlp-docs pydvlp-docs watch
 ```
 
 ### For New Projects
@@ -207,10 +207,10 @@ poetry run --directory=../../tools/pydevelop-docs pydevelop-docs watch
 ```bash
 # Initialize documentation for any Python project
 cd your-project/
-poetry run pydevelop-docs init
+poetry run pydvlp-docs init
 
 # Build documentation
-poetry run pydevelop-docs build
+poetry run pydvlp-docs build
 
 # Serve locally for development
 cd docs && python -m http.server 8000
@@ -220,7 +220,7 @@ cd docs && python -m http.server 8000
 
 ```bash
 # For large monorepos - run in background with nohup
-nohup poetry run pydevelop-docs rebuild-haive --debug > /tmp/build.log 2>&1 &
+nohup poetry run pydvlp-docs rebuild-haive --debug > /tmp/build.log 2>&1 &
 
 # Monitor with
 tail -f /tmp/build.log
@@ -241,10 +241,10 @@ ps aux | grep rebuild-haive
 
 ```bash
 # Always test with shared config (default)
-poetry run pydevelop-docs init --use-shared-config
+poetry run pydvlp-docs init --use-shared-config
 
 # Never use inline config unless specifically debugging
-poetry run pydevelop-docs init --use-inline-config  # AVOID
+poetry run pydvlp-docs init --use-inline-config  # AVOID
 ```
 
 ### 3. Documentation Organization
@@ -268,13 +268,13 @@ poetry run pydevelop-docs init --use-inline-config  # AVOID
 
 ```bash
 # Full enhanced rebuild with monitoring and error classification
-poetry run pydevelop-docs rebuild-haive --debug --save-log
+poetry run pydvlp-docs rebuild-haive --debug --save-log
 
 # Rebuild specific packages only
-poetry run pydevelop-docs rebuild-haive -p haive-core -p haive-agents
+poetry run pydvlp-docs rebuild-haive -p haive-core -p haive-agents
 
 # Quick rebuild without master hub
-poetry run pydevelop-docs rebuild-haive --no-master
+poetry run pydvlp-docs rebuild-haive --no-master
 ```
 
 **Features:**
@@ -311,10 +311,10 @@ python src/pydevelop_docs/smart_builder.py
 
 ```bash
 # Build single package (from package directory)
-poetry run pydevelop-docs build --clean --ignore-warnings
+poetry run pydvlp-docs build --clean --ignore-warnings
 
 # Build all packages (basic, from monorepo root)
-poetry run pydevelop-docs build-all --clean --ignore-warnings
+poetry run pydvlp-docs build-all --clean --ignore-warnings
 ```
 
 ### 4. Configuration System (`config.py`)
@@ -385,24 +385,24 @@ globals().update(config)
 ```bash
 # Development
 poetry install --with dev
-poetry run pydevelop-docs --help
+poetry run pydvlp-docs --help
 
 # Testing with Shared Config (ALWAYS USE THIS)
 cd test-projects/test-haive-template
-poetry run pydevelop-docs init --force
+poetry run pydvlp-docs init --force
 poetry run sphinx-build -b html docs/source docs/build
 
 # Quick Test Commands
 poetry run pytest
-poetry run pydevelop-docs init --dry-run
+poetry run pydvlp-docs init --dry-run
 
 # Build PyDevelop-Docs own docs
 cd docs && make html
 
 # Full test cycle
 cd test-projects/test-haive-template
-poetry run pydevelop-docs init --force
-poetry run pydevelop-docs build
+poetry run pydvlp-docs init --force
+poetry run pydvlp-docs build
 python -m http.server 8003 --directory docs/build
 # Open http://localhost:8003
 ```
@@ -557,8 +557,8 @@ poetry run sphinx-build -b html docs/source docs/build
 # Serve
 python -m http.server 8003 --directory docs/build
 
-# Run screenshots (from pydevelop-docs)
-cd /home/will/Projects/haive/backend/haive/tools/pydevelop-docs
+# Run screenshots (from pydvlp-docs)
+cd /home/will/Projects/haive/backend/haive/tools/pydvlp-docs
 poetry run python scripts/debug/comprehensive_screenshot.py
 ```
 

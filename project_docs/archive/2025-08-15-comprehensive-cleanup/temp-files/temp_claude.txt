@@ -2,7 +2,7 @@
 
    /help for help, /status for your current setup
 
-   cwd: /home/will/Projects/haive/backend/haive/tools/pydevelop-docs
+   cwd: /home/will/Projects/haive/backend/haive/tools/pydvlp-docs
 
  ⚠Large /home/will/Projects/haive/backend/haive/CLAUDE.md will impact performance 
   (44.5k chars > 40.0k) • /memory to edit

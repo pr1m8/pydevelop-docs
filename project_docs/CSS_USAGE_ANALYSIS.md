@@ -195,7 +195,7 @@ Analyze what's in each file to see if further consolidation is possible:
 cd test-haive-template
 
 # Test CLI approach
-poetry run pydevelop-docs init --force
+poetry run pydvlp-docs init --force
 # Check what CSS files are in generated conf.py
 
 # Test shared config approach

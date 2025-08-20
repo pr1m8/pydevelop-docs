@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "pydevelop-docs"
-version = "0.1.0"
+name = "pydvlp-docs"
+version = "0.1.1"
 description = "Universal Python documentation generator with 40+ Sphinx extensions pre-configured. Zero-configuration setup for beautiful, professional documentation."
 authors = ["William R. Astley"]
 homepage = "https://will.astley.dev"
-repository = "https://github.com/pr1m8/pydevelop-docs"
-documentation = "https://pydevelop-docs.readthedocs.io"
+repository = "https://github.com/pr1m8/pydvlp-docs"
+documentation = "https://pydvlp-docs.readthedocs.io"
 keywords = ["documentation", "sphinx", "python", "docs", "api", "autodoc"]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -17,10 +17,10 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
 ]
 readme = "README.md"
-packages = [{ include = "pydevelop_docs", from = "src" }]
+packages = [{ include = "pydvlp_docs", from = "src" }]
 
 [tool.poetry.scripts]
-pydevelop-docs = "pydevelop_docs.cli:cli"
+pydvlp-docs = "pydvlp_docs.cli:cli"
 
 [tool.poetry.dependencies]
 python = ">=3.12,<3.13"

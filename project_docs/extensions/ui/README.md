@@ -201,8 +201,8 @@ Install and initialize:
 
 .. prompt:: bash $
 
-   pip install pydevelop-docs
-   pydevelop-docs init
+   pip install pydvlp-docs
+   pydvlp-docs init
 
 The UI enhancements are automatically enabled with professional defaults.
 ```

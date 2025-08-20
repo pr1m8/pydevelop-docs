@@ -108,14 +108,14 @@ watch -n 1 'ps aux | grep sphinx'
 
 ```bash
 # 1. Always run from PyDevelop-Docs directory
-cd /home/will/Projects/haive/backend/haive/tools/pydevelop-docs
+cd /home/will/Projects/haive/backend/haive/tools/pydvlp-docs
 
 # 2. Use relative paths in scripts
 haive_root = Path(__file__).parent.parent.parent
 packages_dir = haive_root / "packages"
 
 # 3. Check PYTHONPATH if needed
-export PYTHONPATH=/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src:$PYTHONPATH
+export PYTHONPATH=/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src:$PYTHONPATH
 ```
 
 ### 6. Warning Overload (600+ warnings)
@@ -148,7 +148,7 @@ suppress_warnings = [
 
 ```bash
 cd /path/to/package
-poetry run pydevelop-docs init --force --yes
+poetry run pydvlp-docs init --force --yes
 ```
 
 This creates:
@@ -366,7 +366,7 @@ main
 
    ```bash
    rm -rf docs/build docs/source/autoapi .doctrees
-   poetry run pydevelop-docs init --force --yes
+   poetry run pydvlp-docs init --force --yes
    ```
 
 2. **Minimal Build**:
@@ -399,7 +399,7 @@ main
 - [Sphinx Docs](https://www.sphinx-doc.org/)
 - [AutoAPI Docs](https://sphinx-autoapi.readthedocs.io/)
 - [Furo Theme](https://pradyunsg.me/furo/)
-- [PyDevelop-Docs Source](https://github.com/yourusername/pydevelop-docs)
+- [PyDevelop-Docs Source](https://github.com/yourusername/pydvlp-docs)
 
 ---
 

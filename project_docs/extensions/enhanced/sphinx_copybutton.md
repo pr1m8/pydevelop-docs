@@ -29,8 +29,8 @@ setup_docs(config)
 
 ```bash
 # Shell commands are also copyable
-$ pip install pydevelop-docs
-$ pydevelop-docs init my-project
+$ pip install pydvlp-docs
+$ pydvlp-docs init my-project
 ```
 
 ```python
@@ -222,7 +222,7 @@ The regex pattern handles multiple prompt types:
          export PYDEVELOP_OUTPUT_DIR=docs/build
 
          # Generate documentation
-         pydevelop-docs build
+         pydvlp-docs build
 ```
 
 ### Context-Aware Code Snippets
@@ -577,7 +577,7 @@ function enhanceCopyButtonAccessibility() {
       .. code-block:: bash
          :class: copyable-install
 
-         pip install pydevelop-docs
+         pip install pydvlp-docs
 
    .. grid-item-card:: Basic Usage
       :class-card: code-card

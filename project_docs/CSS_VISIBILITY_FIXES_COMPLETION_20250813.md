@@ -133,7 +133,7 @@ Used `html body[data-theme="light"]` selectors for maximum specificity to overri
 
 ## 🎯 Next Steps
 
-This issue is **completely resolved**. The CSS fixes ensure that all future projects using pydevelop-docs will have excellent text visibility in both light and dark modes.
+This issue is **completely resolved**. The CSS fixes ensure that all future projects using pydvlp-docs will have excellent text visibility in both light and dark modes.
 
 **Related Issues**:
 

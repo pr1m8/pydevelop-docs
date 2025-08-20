@@ -1,4 +1,4 @@
-"""Pytest configuration and fixtures for pydevelop-docs tests.
+"""Pytest configuration and fixtures for pydvlp-docs tests.
 
 This module provides common fixtures and configuration for all PyDevelop-Docs tests.
 """

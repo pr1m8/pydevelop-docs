@@ -17,7 +17,7 @@ Even though our CSS files are loading correctly (confirmed in HTML source):
 ```
 
 The white-on-white text is still visible in dark mode at:
-`file:///home/will/Projects/haive/backend/haive/tools/pydevelop-docs/test-projects/test-haive-template/docs/build/autoapi/testhaive/agents/react/index.html`
+`file:///home/will/Projects/haive/backend/haive/tools/pydvlp-docs/test-projects/test-haive-template/docs/build/autoapi/testhaive/agents/react/index.html`
 
 ## 🔍 Root Cause Analysis
 

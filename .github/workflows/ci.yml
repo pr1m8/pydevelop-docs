@@ -64,10 +64,10 @@ jobs:
     - name: Test CLI functionality
       run: |
         # Test CLI help
-        poetry run pydevelop-docs --help
+        poetry run pydvlp-docs --help
         
         # Test project analysis
-        poetry run pydevelop-docs analyze . --dry-run
+        poetry run pydvlp-docs analyze . --dry-run
         
         # Test general setup
         mkdir -p /tmp/test-project/src/testpkg
@@ -75,7 +75,7 @@ jobs:
         echo "def hello(): return 'world'" > /tmp/test-project/src/testpkg/core.py
         echo "[project]\nname = 'testpkg'\nversion = '0.1.0'" > /tmp/test-project/pyproject.toml
         
-        poetry run pydevelop-docs setup-general /tmp/test-project --dry-run --non-interactive
+        poetry run pydvlp-docs setup-general /tmp/test-project --dry-run --non-interactive
         
     - name: Upload coverage reports
       if: matrix.python-version == '3.12'

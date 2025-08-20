@@ -79,7 +79,7 @@ def _copy_autoapi_templates(self):
         )
     else:
         self.console.print(
-            "[yellow]⚠[/yellow] No custom AutoAPI templates found in pydevelop-docs"
+            "[yellow]⚠[/yellow] No custom AutoAPI templates found in pydvlp-docs"
         )
 ```
 
@@ -111,7 +111,7 @@ Consider removing the complex component system temporarily:
    cd /tmp
    mkdir test-pydevelop
    cd test-pydevelop
-   pydevelop-docs init --monorepo
+   pydvlp-docs init --monorepo
    ```
 
 2. **Verify templates were copied**:
@@ -136,7 +136,7 @@ Consider removing the complex component system temporarily:
 ### If templates aren't copied:
 
 - [ ] Check `template_src` path is correct
-- [ ] Verify templates exist in pydevelop-docs package
+- [ ] Verify templates exist in pydvlp-docs package
 - [ ] Check file permissions
 
 ### If templates are copied but not used:
@@ -156,7 +156,7 @@ Consider removing the complex component system temporarily:
 ### Test 1: Template Distribution
 
 ```python
-# After running pydevelop-docs init
+# After running pydvlp-docs init
 import os
 assert os.path.exists("docs/source/_autoapi_templates/python/module.rst")
 ```
@@ -186,7 +186,7 @@ assert 'autoapi_template_dir = "_autoapi_templates"' in open("docs/source/conf.p
 ## ✅ Success Criteria
 
 - [ ] Hierarchical API structure works (not flat list)
-- [ ] Templates are copied during `pydevelop-docs init`
+- [ ] Templates are copied during `pydvlp-docs init`
 - [ ] Custom templates are used during build
 - [ ] No template errors in build log
 - [ ] Clean RST output without formatting issues

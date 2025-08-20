@@ -45,12 +45,12 @@ The system is now fully integrated into `config.py`:
 ### 1. For New Projects
 
 ```bash
-# Initialize with pydevelop-docs
-pydevelop-docs init
+# Initialize with pydvlp-docs
+pydvlp-docs init
 
 # Templates are automatically used if available
 # Build to see enhanced documentation
-pydevelop-docs build
+pydvlp-docs build
 ```
 
 ### 2. For Existing Projects

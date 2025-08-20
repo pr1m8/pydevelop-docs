@@ -1,1 +1,1 @@
-"""Tests for pydevelop-docs package."""
+"""Tests for pydvlp-docs package."""

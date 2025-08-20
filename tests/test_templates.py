@@ -1,6 +1,6 @@
 """Test template rendering with real data.
 
-This module tests the Jinja2 template system in pydevelop-docs,
+This module tests the Jinja2 template system in pydvlp-docs,
 starting with simple templates and progressing to complex ones.
 """
 

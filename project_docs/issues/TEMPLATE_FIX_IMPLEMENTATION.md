@@ -6,7 +6,7 @@
 
 ## 🎯 Root Cause Confirmed
 
-The `_autoapi_templates` directory exists in pydevelop-docs but is NEVER copied to projects during initialization. This causes AutoAPI to reference non-existent templates, breaking the documentation generation.
+The `_autoapi_templates` directory exists in pydvlp-docs but is NEVER copied to projects during initialization. This causes AutoAPI to reference non-existent templates, breaking the documentation generation.
 
 ## 🔧 The Fix
 
@@ -74,8 +74,8 @@ The `_autoapi_templates` directory exists in pydevelop-docs but is NEVER copied 
 cd /tmp/test-pydevelop
 mkdir test-project && cd test-project
 poetry init -n
-poetry add pydevelop-docs --path /home/will/Projects/haive/backend/haive/tools/pydevelop-docs
-poetry run pydevelop-docs init --force
+poetry add pydvlp-docs --path /home/will/Projects/haive/backend/haive/tools/pydvlp-docs
+poetry run pydvlp-docs init --force
 
 # Verify templates copied
 ls -la docs/source/_autoapi_templates/
@@ -102,7 +102,7 @@ cat docs/source/autoapi/test_pkg/index.rst
 
 ```bash
 cd /home/will/Projects/haive/backend/haive/packages/haive-dataflow
-poetry run pydevelop-docs init --force
+poetry run pydvlp-docs init --force
 poetry run sphinx-build -b html docs/source docs/build
 
 # Verify hierarchical structure in browser
@@ -125,7 +125,7 @@ python -m http.server 8001 --directory docs/build
 
 ### Step 3: Deploy to Packages
 
-1. Run `pydevelop-docs init --force` on each package
+1. Run `pydvlp-docs init --force` on each package
 2. Rebuild documentation
 3. Verify hierarchical structure works
 
@@ -178,8 +178,8 @@ _autoapi_templates/
 ## 🔍 Verification Commands
 
 ```bash
-# Check if templates exist in pydevelop-docs
-ls -la /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates/_autoapi_templates/
+# Check if templates exist in pydvlp-docs
+ls -la /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/_autoapi_templates/
 
 # After fix, check if templates are copied
 ls -la docs/source/_autoapi_templates/
@@ -193,7 +193,7 @@ head -20 docs/source/autoapi/*/index.rst
 
 ## ✅ Success Criteria
 
-1. Templates are automatically copied during `pydevelop-docs init`
+1. Templates are automatically copied during `pydvlp-docs init`
 2. RST files have proper formatting (newlines, indentation)
 3. API documentation shows hierarchical structure
 4. No more "flat" API reference

@@ -225,18 +225,18 @@ html_theme_options = {
    - Maintain inheritance diagrams
    - Preserve search functionality
 
-### Phase 3: Integration with pydevelop-docs
+### Phase 3: Integration with pydvlp-docs
 
-**Target**: Make this fix available to all projects using pydevelop-docs
+**Target**: Make this fix available to all projects using pydvlp-docs
 
-1. **Add configuration options to pydevelop-docs**:
+1. **Add configuration options to pydvlp-docs**:
 
 ```bash
-pydevelop-docs init --with-hierarchical-api --api-page-level module
+pydvlp-docs init --with-hierarchical-api --api-page-level module
 ```
 
 2. **Template distribution**:
-   - Include custom templates in pydevelop-docs package
+   - Include custom templates in pydvlp-docs package
    - Make them configurable per project type (monorepo vs single package)
 
 3. **Auto-detection**:
@@ -280,7 +280,7 @@ Furo's sidebar can be enhanced to work better with hierarchical APIs:
 - Verify all cross-references still work
 - Check search functionality preservation
 
-### 2. pydevelop-docs Integration Testing
+### 2. pydvlp-docs Integration Testing
 
 - Test with monorepo structure (Haive)
 - Test with single-package structure
@@ -338,7 +338,7 @@ Furo's sidebar can be enhanced to work better with hierarchical APIs:
 - [x] **Dependencies audited**: Confirmed all needed packages available in Haive
 - [x] **Phase 1 testing**: ✅ **SUCCESSFUL** - Configuration fix validated in test environment
 - [ ] **Template development**: 📅 **OPTIONAL** - Phase 1 sufficient for most cases
-- [ ] **pydevelop-docs integration**: CLI options and auto-detection
+- [ ] **pydvlp-docs integration**: CLI options and auto-detection
 - [ ] **Full deployment**: Updated documentation across all Haive packages
 
 ---

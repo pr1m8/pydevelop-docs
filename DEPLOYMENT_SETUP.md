@@ -62,14 +62,14 @@
 ## 🔗 **Repository Configuration**
 
 **Updated URLs:**
-- **Repository**: `https://github.com/pr1m8/pydevelop-docs`
+- **Repository**: `https://github.com/pr1m8/pydvlp-docs`
 - **Homepage**: `https://will.astley.dev`
-- **Documentation**: `https://pydevelop-docs.readthedocs.io`
+- **Documentation**: `https://pydvlp-docs.readthedocs.io`
 
 ## 🚀 **Deployment Ready**
 
 ### **Read the Docs**
-1. **Import project** from `https://github.com/pr1m8/pydevelop-docs`
+1. **Import project** from `https://github.com/pr1m8/pydvlp-docs`
 2. **RTD automatically detects** `.readthedocs.yaml`
 3. **Dependencies install** from `docs/requirements.txt`
 4. **Documentation builds** with all 40+ extensions
@@ -104,7 +104,7 @@ The documentation now perfectly demonstrates:
 ## 🎯 **Next Steps**
 
 1. **Push to GitHub**: `git add . && git commit -m "feat: complete deployment setup with RTD and GitHub Actions"`
-2. **Create GitHub repository**: `pr1m8/pydevelop-docs`
+2. **Create GitHub repository**: `pr1m8/pydvlp-docs`
 3. **Enable GitHub Pages**: Repository Settings → Pages → GitHub Actions
 4. **Import to Read the Docs**: Connect GitHub account and import project
 5. **Update documentation URL**: Once RTD build completes

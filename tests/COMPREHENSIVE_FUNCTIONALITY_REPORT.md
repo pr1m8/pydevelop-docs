@@ -154,7 +154,7 @@ def complex_function(
 ### **Template System Architecture**
 
 ```
-pydevelop-docs/
+pydvlp-docs/
 ├── src/pydevelop_docs/templates/
 │   ├── doc_templates/           # ✅ 8 templates (all clean)
 │   ├── _autoapi_templates_BROKEN_BACKUP/

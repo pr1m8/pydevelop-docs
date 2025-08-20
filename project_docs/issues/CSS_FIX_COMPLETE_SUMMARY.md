@@ -50,7 +50,7 @@ app.add_css_file("css/custom.css", priority=600)
 
 ### 2. Updated All Haive Packages (✅ DONE)
 
-- Ran `pydevelop-docs init --force` on all 7 packages
+- Ran `pydvlp-docs init --force` on all 7 packages
 - All packages now use the clean CSS configuration
 
 ### 3. Cleaned Up Old CSS Files (✅ DONE)

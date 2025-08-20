@@ -422,7 +422,7 @@
       "category": "css",
       "title": "CSS Configuration Check",
       "description": "Verify CSS files after recent simplification",
-      "fix": "\n1. Ensure these CSS files were removed:\n   - enhanced-design.css (marketing style)\n   - api-docs.css (aggressive badges)\n   - furo-intense.css (dark mode overrides)\n\n2. Verify minimal CSS set is active:\n   - breadcrumb-navigation.css\n   - mermaid-custom.css\n   - tippy-enhancements.css\n   - css/custom.css\n\n3. Run `pydevelop-docs init --force` to update configuration\n"
+      "fix": "\n1. Ensure these CSS files were removed:\n   - enhanced-design.css (marketing style)\n   - api-docs.css (aggressive badges)\n   - furo-intense.css (dark mode overrides)\n\n2. Verify minimal CSS set is active:\n   - breadcrumb-navigation.css\n   - mermaid-custom.css\n   - tippy-enhancements.css\n   - css/custom.css\n\n3. Run `pydvlp-docs init --force` to update configuration\n"
     }
   ]
 }

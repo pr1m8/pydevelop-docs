@@ -70,7 +70,7 @@ Critical issues: 20
 2. CSS Configuration Check [INFO]
    - Remove marketing CSS files
    - Verify minimal CSS set
-   - Run pydevelop-docs init --force
+   - Run pydvlp-docs init --force
 ```
 
 ## 💡 Key Features Demonstrated

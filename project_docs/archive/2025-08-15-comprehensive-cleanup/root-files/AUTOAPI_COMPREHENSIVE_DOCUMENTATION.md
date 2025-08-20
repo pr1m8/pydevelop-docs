@@ -86,7 +86,7 @@
 ### Directory Structure
 
 ```
-/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/
+/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/
 ├── src/pydevelop_docs/
 │   ├── config.py                          # Master configuration
 │   │   ├── linkcode_resolve()             # GitHub source link resolver

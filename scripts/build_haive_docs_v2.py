@@ -232,7 +232,7 @@ def build_single_package(
             )
 
             success, output, warnings, union_issues = run_command_with_progress(
-                ["poetry", "run", "pydevelop-docs", "init", "--force", "--yes"],
+                ["poetry", "run", "pydvlp-docs", "init", "--force", "--yes"],
                 str(package_path),
                 "Initializing",
                 progress,

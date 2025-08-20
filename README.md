@@ -2,8 +2,8 @@
 
 > **Universal Python documentation generator with 40+ Sphinx extensions pre-configured**
 
-[![PyPI version](https://badge.fury.io/py/pydevelop-docs.svg)](https://badge.fury.io/py/pydevelop-docs)
-[![Python Support](https://img.shields.io/pypi/pyversions/pydevelop-docs.svg)](https://pypi.org/project/pydevelop-docs/)
+[![PyPI version](https://badge.fury.io/py/pydvlp-docs.svg)](https://badge.fury.io/py/pydvlp-docs)
+[![Python Support](https://img.shields.io/pypi/pyversions/pydvlp-docs.svg)](https://pypi.org/project/pydvlp-docs/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Transform any Python project into beautiful, professional documentation with **zero configuration**. PyDevelop-Docs automatically detects your project structure and generates a complete Sphinx documentation setup with modern themes, extensive features, and intelligent API documentation.
@@ -46,13 +46,13 @@ Transform any Python project into beautiful, professional documentation with **z
 
 ### Installation
 ```bash
-pip install pydevelop-docs
+pip install pydvlp-docs
 ```
 
 ### One-Command Setup
 ```bash
 # Set up documentation for any Python project
-pydevelop-docs setup-general /path/to/your/project
+pydvlp-docs setup-general /path/to/your/project
 
 # Navigate and build
 cd /path/to/your/project/docs
@@ -121,19 +121,19 @@ my-scripts/
 
 ```bash
 # Interactive setup with project analysis
-pydevelop-docs setup-general /path/to/project
+pydvlp-docs setup-general /path/to/project
 
 # Non-interactive setup
-pydevelop-docs setup-general /path/to/project --non-interactive --force
+pydvlp-docs setup-general /path/to/project --non-interactive --force
 
 # Preview what will be created
-pydevelop-docs setup-general /path/to/project --dry-run
+pydvlp-docs setup-general /path/to/project --dry-run
 
 # Custom documentation directory
-pydevelop-docs setup-general /path/to/project --target-dir /custom/docs/path
+pydvlp-docs setup-general /path/to/project --target-dir /custom/docs/path
 
 # Copy documentation setup between projects
-pydevelop-docs copy-setup /source/project /destination/project --include-config
+pydvlp-docs copy-setup /source/project /destination/project --include-config
 ```
 
 ### Python API
@@ -314,8 +314,8 @@ No manual configuration needed! 🎯
 
 ### Setting up for Development
 ```bash
-git clone https://github.com/your-org/pydevelop-docs.git
-cd pydevelop-docs
+git clone https://github.com/your-org/pydvlp-docs.git
+cd pydvlp-docs
 
 # Install with development dependencies
 poetry install --with dev,docs
@@ -346,7 +346,7 @@ cd docs
 make html
 
 # Or use the tool on itself
-pydevelop-docs setup-general . --force
+pydvlp-docs setup-general . --force
 cd docs && make html
 ```
 
@@ -357,8 +357,8 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ### Quick Contribution Setup
 ```bash
 # Fork and clone
-git clone https://github.com/your-username/pydevelop-docs.git
-cd pydevelop-docs
+git clone https://github.com/your-username/pydvlp-docs.git
+cd pydvlp-docs
 
 # Install development dependencies  
 poetry install --with dev,docs,test
@@ -406,9 +406,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 📞 Support
 
-- **Documentation**: [Full Documentation](https://pydevelop-docs.readthedocs.io/)
-- **Issues**: [GitHub Issues](https://github.com/pr1m8/pydevelop-docs/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/pr1m8/pydevelop-docs/discussions)
+- **Documentation**: [Full Documentation](https://pydvlp-docs.readthedocs.io/)
+- **Issues**: [GitHub Issues](https://github.com/pr1m8/pydvlp-docs/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/pr1m8/pydvlp-docs/discussions)
 
 ---
 

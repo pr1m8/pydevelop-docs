@@ -201,13 +201,13 @@ This roadmap outlines enhancements for both individual package documentation and
 - [ ] `scripts/generate-package-templates.py` - Template generation
 - [ ] `scripts/sync-cross-references.py` - Cross-package link management
 
-### Enhanced pydevelop-docs Commands to Add
+### Enhanced pydvlp-docs Commands to Add
 
-- [ ] `pydevelop-docs init-enhanced` - Create enhanced package structure
-- [ ] `pydevelop-docs validate-links` - Comprehensive link checking
-- [ ] `pydevelop-docs analyze-performance` - Documentation performance analysis
-- [ ] `pydevelop-docs generate-workflows` - Create cross-package tutorials
-- [ ] `pydevelop-docs health-check` - Documentation health assessment
+- [ ] `pydvlp-docs init-enhanced` - Create enhanced package structure
+- [ ] `pydvlp-docs validate-links` - Comprehensive link checking
+- [ ] `pydvlp-docs analyze-performance` - Documentation performance analysis
+- [ ] `pydvlp-docs generate-workflows` - Create cross-package tutorials
+- [ ] `pydvlp-docs health-check` - Documentation health assessment
 
 ## 📊 Success Metrics
 

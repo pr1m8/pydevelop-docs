@@ -49,7 +49,7 @@ templates/
 
 ### Issue 1: Template Distribution Not Implemented
 
-**Problem**: Templates are NOT copied during `pydevelop-docs init`
+**Problem**: Templates are NOT copied during `pydvlp-docs init`
 
 **Evidence**: In `cli.py`:
 
@@ -126,7 +126,7 @@ Submodules
 **In each package's conf.py**, add directly:
 
 ```python
-# Bypass pydevelop-docs temporarily
+# Bypass pydvlp-docs temporarily
 extensions = [
     "autoapi.extension",  # Must be first
     # ... other extensions
@@ -146,7 +146,7 @@ autoapi_options = [
 
 ### Phase 2: Fix Template Distribution
 
-**In pydevelop-docs cli.py**:
+**In pydvlp-docs cli.py**:
 
 ```python
 def init_command(...):
@@ -207,7 +207,7 @@ rm -rf source/_templates/autoapi
 ### Test 3: Full Integration
 
 ```bash
-# Use pydevelop-docs init
+# Use pydvlp-docs init
 # Verify templates are copied
 # Build docs and check structure
 ```

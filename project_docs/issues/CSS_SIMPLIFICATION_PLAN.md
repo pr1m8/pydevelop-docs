@@ -112,7 +112,7 @@ Ensure Furo's semantic colors work properly:
 
    ```bash
    cd test-projects/test-haive-template
-   poetry run pydevelop-docs init --force
+   poetry run pydvlp-docs init --force
    poetry run sphinx-build -b html docs/source docs/build
    ```
 

@@ -117,13 +117,13 @@ cd docs && poetry run sphinx-build -b html source build
 - Navigation showing: haive.core → haive.agents → haive.tools structure
 - Significantly improved usability
 
-### Phase 2: Update pydevelop-docs Default Configuration 🔄 **NEXT**
+### Phase 2: Update pydvlp-docs Default Configuration 🔄 **NEXT**
 
 **Target**: Make hierarchical organization the default for all new projects
 
-#### 2.1 Update pydevelop-docs Templates
+#### 2.1 Update pydvlp-docs Templates
 
-**File**: `/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates/conf.py.j2`
+**File**: `/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/conf.py.j2`
 
 **Changes**:
 
@@ -152,16 +152,16 @@ html_theme_options = {
 
 ```bash
 # New options for advanced users
-pydevelop-docs init --api-page-level module  # Default
-pydevelop-docs init --api-page-level class   # Old behavior
-pydevelop-docs init --with-flat-api          # Override hierarchical
+pydvlp-docs init --api-page-level module  # Default
+pydvlp-docs init --api-page-level class   # Old behavior
+pydvlp-docs init --with-flat-api          # Override hierarchical
 ```
 
 #### 2.3 Update Documentation
 
 **Files to update**:
 
-- pydevelop-docs README
+- pydvlp-docs README
 - CLI help text
 - Template documentation
 
@@ -284,10 +284,10 @@ API Reference (NEW - EXCELLENT)
 
 ### Short-term (Phase 2):
 
-- [ ] Update pydevelop-docs default templates
+- [ ] Update pydvlp-docs default templates
 - [ ] Add CLI options for API organization preferences
-- [ ] Update pydevelop-docs documentation
-- [ ] Test with new projects using pydevelop-docs
+- [ ] Update pydvlp-docs documentation
+- [ ] Test with new projects using pydvlp-docs
 
 ### Long-term (Phase 3):
 
@@ -301,7 +301,7 @@ API Reference (NEW - EXCELLENT)
 - **Main Analysis**: @project_docs/pydevelop_docs/AUTOAPI_HIERARCHICAL_ORGANIZATION_ANALYSIS.md
 - **Test Results**: `file:///home/will/Projects/haive/backend/haive/test-haive-template/docs/build/autoapi/index.html`
 - **Original Issue**: @project_docs/pydevelop_docs/COMPREHENSIVE_DOCUMENTATION_ISSUES_20250813.md #4
-- **pydevelop-docs**: @tools/pydevelop-docs/
+- **pydvlp-docs**: @tools/pydvlp-docs/
 - **Main Project Hub**: @CLAUDE.md
 
 ---

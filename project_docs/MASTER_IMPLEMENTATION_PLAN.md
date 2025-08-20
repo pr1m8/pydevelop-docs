@@ -346,7 +346,7 @@ config = {
 ```bash
 # Test with sample project
 cd test-projects/test-haive-template
-poetry run pydevelop-docs init --force
+poetry run pydvlp-docs init --force
 poetry run sphinx-build -b html docs/source docs/build
 
 # Validate:

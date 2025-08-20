@@ -14,7 +14,7 @@ There are three ways to configure PyDevelop-Docs:
 
 1. **Zero Configuration** (Default)
    
-   Just run ``pydevelop-docs init`` and it works out of the box.
+   Just run ``pydvlp-docs init`` and it works out of the box.
 
 2. **Shared Configuration** (Recommended)
    
@@ -188,16 +188,16 @@ Configuration via CLI flags:
 .. code-block:: bash
 
    # Force regeneration
-   pydevelop-docs build --force
+   pydvlp-docs build --force
    
    # Use specific config file
-   pydevelop-docs build --config myconfig.yaml
+   pydvlp-docs build --config myconfig.yaml
    
    # Enable debug mode
-   pydevelop-docs build --debug
+   pydvlp-docs build --debug
    
    # Parallel builds for monorepos
-   pydevelop-docs build-all --parallel 4
+   pydvlp-docs build-all --parallel 4
 
 Best Practices
 --------------
@@ -216,7 +216,7 @@ Best Practices
 
 4. **Test Locally**
    
-   Always test with ``pydevelop-docs build && pydevelop-docs serve`` before deploying.
+   Always test with ``pydvlp-docs build && pydvlp-docs serve`` before deploying.
 
 5. **Monitor Build Output**
    
@@ -232,7 +232,7 @@ Common Issues
    Ensure ``autoapi_own_page_level = "module"`` is set.
 
 **Missing Extensions**
-   Install with ``pip install pydevelop-docs[all]``
+   Install with ``pip install pydvlp-docs[all]``
 
 **Theme Not Loading**
    Check that Furo is installed: ``pip install furo``
@@ -247,7 +247,7 @@ Enable comprehensive debugging:
 
 .. code-block:: bash
 
-   pydevelop-docs build --debug --save-log
+   pydvlp-docs build --debug --save-log
    
    # View the log
    cat /tmp/pydevelop_build.log

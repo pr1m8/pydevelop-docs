@@ -8,8 +8,8 @@
 2. **Click "Import Manually"** (or connect your GitHub account)
 
 3. **Fill in the details**:
-   - **Name**: `pydevelop-docs`
-   - **Repository URL**: `https://github.com/pr1m8/pydevelop-docs`
+   - **Name**: `pydvlp-docs`
+   - **Repository URL**: `https://github.com/pr1m8/pydvlp-docs`
    - **Repository type**: Git
    - **Default branch**: main
 
@@ -28,7 +28,7 @@
 ## After Import:
 
 Your documentation will be available at:
-https://pydevelop-docs.readthedocs.io
+https://pydvlp-docs.readthedocs.io
 
 ## Troubleshooting:
 

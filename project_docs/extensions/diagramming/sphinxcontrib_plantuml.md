@@ -288,7 +288,7 @@ The `sphinxcontrib.plantuml` extension integrates PlantUML, the industry-standar
 
    start
 
-   :User runs pydevelop-docs init;
+   :User runs pydvlp-docs init;
 
    if (Project type?) then (Single Package)
        :Configure single package settings;

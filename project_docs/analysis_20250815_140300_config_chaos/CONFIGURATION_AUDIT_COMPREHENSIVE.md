@@ -28,7 +28,7 @@ PyDevelop-Docs has a complex configuration system with multiple sources, inconsi
 
 #### B. `/src/pydevelop_docs/cli.py` (CLI Template Generator)
 
-- **Purpose**: Generates conf.py when running `pydevelop-docs init`
+- **Purpose**: Generates conf.py when running `pydvlp-docs init`
 - **Location**: Lines 375-683 (hardcoded template)
 - **Issues**:
   - MISSING `autoapi_own_page_level = "module"` ❌
@@ -191,7 +191,7 @@ linkcode_resolve function  # ✅ GitHub links
 #### Method 1: PyDevelop-Docs Init (BROKEN PATH)
 
 ```bash
-pydevelop-docs init
+pydvlp-docs init
 # Generates conf.py from CLI template
 # Missing features, broken navigation
 ```

@@ -18,7 +18,7 @@ Haive is a monorepo with 7 packages. PyDevelop-Docs can build documentation for:
 cd /home/will/Projects/haive/backend/haive
 
 # Ensure PyDevelop-Docs is installed
-cd tools/pydevelop-docs
+cd tools/pydvlp-docs
 poetry install
 cd ../..
 ```
@@ -32,10 +32,10 @@ cd ../..
 cd /home/will/Projects/haive/backend/haive
 
 # Initialize documentation structure for monorepo
-poetry run pydevelop-docs init --project-type monorepo
+poetry run pydvlp-docs init --project-type monorepo
 
 # Build all package documentation + central hub
-poetry run pydevelop-docs build --all
+poetry run pydvlp-docs build --all
 
 # The command will:
 # 1. Build docs for each package in packages/
@@ -48,21 +48,21 @@ poetry run pydevelop-docs build --all
 ```bash
 # Build specific package documentation
 cd packages/haive-core
-poetry run pydevelop-docs init --force
-poetry run pydevelop-docs build
+poetry run pydvlp-docs init --force
+poetry run pydvlp-docs build
 
 # Or build from root with package specification
-poetry run pydevelop-docs build --package haive-core
-poetry run pydevelop-docs build --package haive-agents
-poetry run pydevelop-docs build --package haive-tools
+poetry run pydvlp-docs build --package haive-core
+poetry run pydvlp-docs build --package haive-agents
+poetry run pydvlp-docs build --package haive-tools
 ```
 
 ### Option 3: Build Central Hub Only
 
 ```bash
 # From Haive root
-poetry run pydevelop-docs init --project-type central-hub
-poetry run pydevelop-docs build --hub-only
+poetry run pydvlp-docs init --project-type central-hub
+poetry run pydvlp-docs build --hub-only
 ```
 
 ## Documentation Structure
@@ -123,29 +123,29 @@ The central hub provides navigation to all package documentation with:
 
 ```bash
 # Remove all previous build artifacts
-poetry run pydevelop-docs clean --all
-poetry run pydevelop-docs build --all --clean
+poetry run pydvlp-docs clean --all
+poetry run pydvlp-docs build --all --clean
 ```
 
 ### Parallel Building
 
 ```bash
 # Build all packages in parallel (faster)
-poetry run pydevelop-docs build --all --parallel
+poetry run pydvlp-docs build --all --parallel
 ```
 
 ### Watch Mode (Development)
 
 ```bash
 # Auto-rebuild on file changes
-poetry run pydevelop-docs build --watch
+poetry run pydvlp-docs build --watch
 ```
 
 ### Custom Configuration
 
 ```bash
 # Use custom Sphinx configuration
-poetry run pydevelop-docs build --config path/to/custom_conf.py
+poetry run pydvlp-docs build --config path/to/custom_conf.py
 ```
 
 ## Build Process Details
@@ -273,7 +273,7 @@ jobs:
       - name: Install dependencies
         run: poetry install --with docs
       - name: Build all documentation
-        run: poetry run pydevelop-docs build --all --clean
+        run: poetry run pydvlp-docs build --all --clean
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -291,4 +291,4 @@ PyDevelop-Docs handles the complexity of monorepo documentation:
 - **Unified search and navigation**
 - **Beautiful, consistent styling**
 
-Just run `poetry run pydevelop-docs build --all` and get professional documentation for your entire project!
+Just run `poetry run pydvlp-docs build --all` and get professional documentation for your entire project!

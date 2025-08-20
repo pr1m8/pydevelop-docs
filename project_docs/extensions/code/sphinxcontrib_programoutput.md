@@ -21,7 +21,7 @@ Execute any command and include output:
 
 .. program-output:: ls -la /path/to/project
 
-.. program-output:: poetry run pydevelop-docs --help
+.. program-output:: poetry run pydvlp-docs --help
 ```
 
 ### Script Execution
@@ -208,10 +208,10 @@ Package Information
 .. program-output:: bash -c "
     # Initialize documentation
     cd /tmp/test-project
-    poetry run pydevelop-docs init --force
+    poetry run pydvlp-docs init --force
 
     # Build documentation
-    poetry run pydevelop-docs build
+    poetry run pydvlp-docs build
 
     # Show results
     ls -la docs/build/
@@ -340,13 +340,13 @@ programoutput_memory_limit = "256MB"        # Memory limit per command
 Show PyDevelop-Docs in Action
 ----------------------------
 
-.. program-output:: poetry run pydevelop-docs --version
+.. program-output:: poetry run pydvlp-docs --version
     :caption: Version Information
 
-.. program-output:: poetry run pydevelop-docs init --help
+.. program-output:: poetry run pydvlp-docs init --help
     :caption: Initialization Options
 
-.. program-output:: poetry run pydevelop-docs init --dry-run --use-shared-config
+.. program-output:: poetry run pydvlp-docs init --dry-run --use-shared-config
     :caption: Dry Run Example
 ```
 
@@ -389,7 +389,7 @@ Documentation Build Process
     rm -rf docs/build
 
     echo 'Step 2: Generate configuration'
-    poetry run pydevelop-docs init --force
+    poetry run pydvlp-docs init --force
 
     echo 'Step 3: Build documentation'
     cd docs && poetry run sphinx-build -b html source build

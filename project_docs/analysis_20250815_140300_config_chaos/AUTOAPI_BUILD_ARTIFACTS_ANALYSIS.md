@@ -35,7 +35,7 @@ But our build directory has:
 
 ## The Real Issue
 
-1. **We're analyzing PyDevelop-Docs documentation** (at `/tools/pydevelop-docs/docs/build`)
+1. **We're analyzing PyDevelop-Docs documentation** (at `/tools/pydvlp-docs/docs/build`)
 2. **User is viewing haive-mcp documentation** (somewhere else)
 3. **The broken documentation is in the haive-mcp package**, not PyDevelop-Docs itself
 

@@ -47,7 +47,7 @@ Should be:
 
 ## How to Apply
 
-1. **For new projects**: Use `poetry run pydevelop-docs init` - will use updated template
+1. **For new projects**: Use `poetry run pydvlp-docs init` - will use updated template
 2. **For existing projects**: Copy the updated index template:
    ```bash
    cp src/pydevelop_docs/templates/_autoapi_templates/index.rst YOUR_PROJECT/docs/source/_autoapi_templates/

@@ -180,10 +180,10 @@ cd test-union-types
 echo "from test_union_types import TestUnions" > __init__.py
 
 # Initialize docs
-poetry run pydevelop-docs init
+poetry run pydvlp-docs init
 
 # Build and check for errors
-poetry run pydevelop-docs build 2>&1 | grep -i "unsupported"
+poetry run pydvlp-docs build 2>&1 | grep -i "unsupported"
 ```
 
 ## 🎯 Expected Outcomes

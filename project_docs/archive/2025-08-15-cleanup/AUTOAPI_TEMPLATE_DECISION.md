@@ -6,7 +6,7 @@
 
 ## Summary
 
-After analyzing the custom AutoAPI template system in pydevelop-docs, we have decided to remove all custom templates and use the default AutoAPI templates exclusively.
+After analyzing the custom AutoAPI template system in pydvlp-docs, we have decided to remove all custom templates and use the default AutoAPI templates exclusively.
 
 ## Rationale
 
@@ -77,7 +77,7 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
 
 ## Migration Notes
 
-For existing projects using pydevelop-docs:
+For existing projects using pydvlp-docs:
 
 - No action needed - custom templates were already disabled
 - The hierarchical fix continues to work

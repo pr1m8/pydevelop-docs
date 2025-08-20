@@ -8,7 +8,7 @@
 ### 1. Template Distribution ✅ IMPLEMENTED
 
 - Added `_copy_autoapi_templates()` method to cli.py
-- Templates are now successfully copied during `pydevelop-docs init`
+- Templates are now successfully copied during `pydvlp-docs init`
 - Verified templates exist at `/docs/source/_autoapi_templates/`
 
 ### 2. RST Formatting ✅ FIXED
@@ -33,7 +33,7 @@
 
 ## 🔍 Key Discovery
 
-The custom templates in pydevelop-docs are overly complex with:
+The custom templates in pydvlp-docs are overly complex with:
 
 - Multiple inheritance layers (`_base/`, `_components/`, `_macros/`)
 - Custom filters and extensions

@@ -3,7 +3,7 @@
 ## Current Status
 - ✅ **Version**: 0.1.0
 - ✅ **Built**: dist/pydevelop_docs-0.1.0-py3-none-any.whl
-- ✅ **Repository**: https://github.com/pr1m8/pydevelop-docs (PUBLIC)
+- ✅ **Repository**: https://github.com/pr1m8/pydvlp-docs (PUBLIC)
 - ✅ **Workflows**: Running (fixing deprecated actions)
 - ⏳ **PyPI**: Not published yet
 - ⏳ **Read the Docs**: Not imported yet
@@ -20,7 +20,7 @@ poetry config pypi-token.pypi pypi-YOUR_TOKEN_HERE
 poetry publish
 
 # Or use the CLI:
-poetry run pydevelop-docs publish
+poetry run pydvlp-docs publish
 ```
 
 ### Option B: Using Twine
@@ -37,7 +37,7 @@ poetry run twine upload dist/*
 
 1. Go to: https://readthedocs.org/dashboard/import/
 2. Click "Import Manually" or connect GitHub
-3. Repository URL: `https://github.com/pr1m8/pydevelop-docs`
+3. Repository URL: `https://github.com/pr1m8/pydvlp-docs`
 4. RTD will auto-detect `.readthedocs.yaml`
 
 ## 3. Verify Installation
@@ -45,11 +45,11 @@ poetry run twine upload dist/*
 After PyPI release:
 ```bash
 # Install from PyPI
-pip install pydevelop-docs
+pip install pydvlp-docs
 
 # Test it works
-pydevelop-docs --version
-pydevelop-docs --help
+pydvlp-docs --version
+pydvlp-docs --help
 ```
 
 ## 4. GitHub Release (Optional)

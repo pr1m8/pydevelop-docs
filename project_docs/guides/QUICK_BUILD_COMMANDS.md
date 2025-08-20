@@ -5,26 +5,26 @@
 ### Build Everything (Recommended)
 
 ```bash
-cd /home/will/Projects/haive/backend/haive && poetry run pydevelop-docs build --all
+cd /home/will/Projects/haive/backend/haive && poetry run pydvlp-docs build --all
 ```
 
 ### Build Individual Packages
 
 ```bash
 # Build haive-core only
-cd /home/will/Projects/haive/backend/haive/packages/haive-core && poetry run pydevelop-docs init --force && poetry run pydevelop-docs build
+cd /home/will/Projects/haive/backend/haive/packages/haive-core && poetry run pydvlp-docs init --force && poetry run pydvlp-docs build
 
 # Build haive-agents only
-cd /home/will/Projects/haive/backend/haive/packages/haive-agents && poetry run pydevelop-docs init --force && poetry run pydevelop-docs build
+cd /home/will/Projects/haive/backend/haive/packages/haive-agents && poetry run pydvlp-docs init --force && poetry run pydvlp-docs build
 
 # Build haive-tools only
-cd /home/will/Projects/haive/backend/haive/packages/haive-tools && poetry run pydevelop-docs init --force && poetry run pydevelop-docs build
+cd /home/will/Projects/haive/backend/haive/packages/haive-tools && poetry run pydvlp-docs init --force && poetry run pydvlp-docs build
 ```
 
 ### Build Central Hub Only
 
 ```bash
-cd /home/will/Projects/haive/backend/haive && poetry run pydevelop-docs init --project-type central-hub && poetry run pydevelop-docs build --hub-only
+cd /home/will/Projects/haive/backend/haive && poetry run pydvlp-docs init --project-type central-hub && poetry run pydvlp-docs build --hub-only
 ```
 
 ## 📁 Where to Find Built Documentation
@@ -68,10 +68,10 @@ xdg-open /home/will/Projects/haive/backend/haive/packages/haive-core/docs/build/
 
 ```bash
 # Clean and rebuild everything
-cd /home/will/Projects/haive/backend/haive && poetry run pydevelop-docs clean --all && poetry run pydevelop-docs build --all
+cd /home/will/Projects/haive/backend/haive && poetry run pydvlp-docs clean --all && poetry run pydvlp-docs build --all
 
 # Clean specific package
-cd /home/will/Projects/haive/backend/haive/packages/haive-core && poetry run pydevelop-docs clean && poetry run pydevelop-docs build
+cd /home/will/Projects/haive/backend/haive/packages/haive-core && poetry run pydvlp-docs clean && poetry run pydvlp-docs build
 ```
 
 ## 🔧 Advanced Options
@@ -79,19 +79,19 @@ cd /home/will/Projects/haive/backend/haive/packages/haive-core && poetry run pyd
 ### Parallel Building (faster for multiple packages)
 
 ```bash
-cd /home/will/Projects/haive/backend/haive && poetry run pydevelop-docs build --all --parallel
+cd /home/will/Projects/haive/backend/haive && poetry run pydvlp-docs build --all --parallel
 ```
 
 ### Watch Mode (auto-rebuild on changes)
 
 ```bash
-cd /home/will/Projects/haive/backend/haive && poetry run pydevelop-docs build --watch
+cd /home/will/Projects/haive/backend/haive && poetry run pydvlp-docs build --watch
 ```
 
 ### Dry Run (preview what would be built)
 
 ```bash
-cd /home/will/Projects/haive/backend/haive && poetry run pydevelop-docs build --all --dry-run
+cd /home/will/Projects/haive/backend/haive && poetry run pydvlp-docs build --all --dry-run
 ```
 
 ## 📝 Using the Build Script
@@ -100,19 +100,19 @@ We've also created a convenient build script:
 
 ```bash
 # Make it executable (only needed once)
-chmod +x /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/scripts/build-haive-docs.sh
+chmod +x /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/scripts/build-haive-docs.sh
 
 # Build everything
-/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/scripts/build-haive-docs.sh all
+/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/scripts/build-haive-docs.sh all
 
 # Build just the hub
-/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/scripts/build-haive-docs.sh hub
+/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/scripts/build-haive-docs.sh hub
 
 # Build all packages
-/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/scripts/build-haive-docs.sh packages
+/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/scripts/build-haive-docs.sh packages
 
 # Build specific package
-/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/scripts/build-haive-docs.sh haive-core
+/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/scripts/build-haive-docs.sh haive-core
 ```
 
 ## ⚡ Super Quick Test
@@ -124,7 +124,7 @@ To quickly test if everything is working:
 cd /home/will/Projects/haive/backend/haive
 
 # 2. Initialize and build
-poetry run pydevelop-docs init --project-type monorepo --force && poetry run pydevelop-docs build --all
+poetry run pydvlp-docs init --project-type monorepo --force && poetry run pydvlp-docs build --all
 
 # 3. Open documentation
 xdg-open docs/build/html/index.html

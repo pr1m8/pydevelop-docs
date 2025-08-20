@@ -44,13 +44,13 @@ class VisualTestRunner:
         """Build the documentation."""
         console.print("\n[bold blue]📚 Building documentation...[/bold blue]")
 
-        # Check if pydevelop-docs is available
-        check_cmd = ["poetry", "run", "which", "pydevelop-docs"]
+        # Check if pydvlp-docs is available
+        check_cmd = ["poetry", "run", "which", "pydvlp-docs"]
         check_result = subprocess.run(check_cmd, capture_output=True)
 
         if check_result.returncode == 0:
-            # Use pydevelop-docs
-            build_cmd = ["poetry", "run", "pydevelop-docs", "build"]
+            # Use pydvlp-docs
+            build_cmd = ["poetry", "run", "pydvlp-docs", "build"]
         else:
             # Fallback to sphinx-build
             build_cmd = [

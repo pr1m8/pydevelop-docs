@@ -19,9 +19,9 @@ Install PyDevelop-Docs using pip or poetry:
 
 .. code-block:: bash
 
-   pip install pydevelop-docs
+   pip install pydvlp-docs
    # or
-   poetry add pydevelop-docs
+   poetry add pydvlp-docs
 
 Basic Usage
 ^^^^^^^^^^^
@@ -30,19 +30,19 @@ Basic Usage
 
    .. code-block:: bash
 
-      pydevelop-docs init
+      pydvlp-docs init
 
 2. **Build the documentation:**
 
    .. code-block:: bash
 
-      pydevelop-docs build
+      pydvlp-docs build
 
 3. **View your documentation:**
 
    .. code-block:: bash
 
-      pydevelop-docs serve
+      pydvlp-docs serve
       # Open http://localhost:8000 in your browser
 
 Project Types
@@ -64,7 +64,7 @@ For a standard Python package:
    ├── pyproject.toml
    └── README.md
 
-Run ``pydevelop-docs init`` in the project root.
+Run ``pydvlp-docs init`` in the project root.
 
 Monorepo
 ^^^^^^^^
@@ -127,6 +127,6 @@ Next Steps
 Getting Help
 ------------
 
-- **Issues**: `GitHub Issues <https://github.com/pydevelop/pydevelop-docs/issues>`_
-- **Discussions**: `GitHub Discussions <https://github.com/pydevelop/pydevelop-docs/discussions>`_
+- **Issues**: `GitHub Issues <https://github.com/pydevelop/pydvlp-docs/issues>`_
+- **Discussions**: `GitHub Discussions <https://github.com/pydevelop/pydvlp-docs/discussions>`_
 - **Documentation**: You're reading it!

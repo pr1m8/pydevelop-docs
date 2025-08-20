@@ -26,7 +26,7 @@ You can choose between :itab:`Development|dev mode` or :itab:`Production|product
 Perfect for showing brief code alternatives without taking up vertical space:
 
 ```rst
-To install the package, use :itab:`pip|pip install pydevelop-docs` or :itab:`conda|conda install pydevelop-docs`.
+To install the package, use :itab:`pip|pip install pydvlp-docs` or :itab:`conda|conda install pydvlp-docs`.
 
 Configure the theme with :itab:`Python|theme="furo"` or :itab:`YAML|theme: furo`.
 ```
@@ -88,7 +88,7 @@ While sphinx_inline_tabs is not directly listed in the extensions, its functiona
 ### Platform-Specific Instructions
 
 ```rst
-Installation varies by platform: :itab:`Windows|pip install pydevelop-docs` or :itab:`macOS|brew install pydevelop-docs` or :itab:`Linux|apt install pydevelop-docs`.
+Installation varies by platform: :itab:`Windows|pip install pydvlp-docs` or :itab:`macOS|brew install pydvlp-docs` or :itab:`Linux|apt install pydvlp-docs`.
 
 Configuration location: :itab:`Windows|%APPDATA%\\pydevelop` or :itab:`Unix|~/.config/pydevelop`.
 ```
@@ -507,14 +507,14 @@ function enhanceInlineTabAccessibility() {
 ### Copy Button Integration
 
 ```rst
-Choose your installation method: :itab:`pip|pip install pydevelop-docs` or :itab:`conda|conda install -c conda-forge pydevelop-docs`.
+Choose your installation method: :itab:`pip|pip install pydvlp-docs` or :itab:`conda|conda install -c conda-forge pydvlp-docs`.
 
 .. code-block:: bash
    :class: copyable-shell
 
    # Copy the command for your preferred method:
-   # pip install pydevelop-docs
-   # conda install -c conda-forge pydevelop-docs
+   # pip install pydvlp-docs
+   # conda install -c conda-forge pydvlp-docs
 ```
 
 ### Sphinx Design Integration

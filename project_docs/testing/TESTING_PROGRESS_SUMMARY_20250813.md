@@ -62,14 +62,14 @@ body[data-theme="dark"] code.literal {
 
 ### 2. **Test Project Integration** ✅
 
-- **Location**: `/test-projects/test-haive-template/` (moved into pydevelop-docs)
+- **Location**: `/test-projects/test-haive-template/` (moved into pydvlp-docs)
 - **Structure**: Complex nested modules (testhaive.core, testhaive.agents, testhaive.tools)
-- **CLI Detection**: pydevelop-docs correctly identifies monorepo structure
+- **CLI Detection**: pydvlp-docs correctly identifies monorepo structure
 - **Package Discovery**: All 3 sub-packages detected correctly
 
 ### 3. **CSS System Validation** ✅
 
-- **File Count**: 6 CSS files in pydevelop-docs (vs 17+ in main Haive)
+- **File Count**: 6 CSS files in pydvlp-docs (vs 17+ in main Haive)
 - **Load Order**: Custom CSS loading after theme CSS (correct priority)
 - **Dark Mode**: CSS variables properly defined for light/dark themes
 - **Responsive**: Mobile-friendly CSS rules present
@@ -84,7 +84,7 @@ body[data-theme="dark"] code.literal {
 
 ### **MEDIUM PRIORITY**
 
-4. **Demo Project Setup** - Create working demo within pydevelop-docs
+4. **Demo Project Setup** - Create working demo within pydvlp-docs
 5. **Configuration Cleanup** - Fix remaining build warnings
 6. **Mobile Testing** - Responsive design validation
 
@@ -107,7 +107,7 @@ body[data-theme="dark"] code.literal {
 
 1. **✅ CSS Fix Implementation Validated** - White-on-white text fixes are live
 2. **✅ AutoAPI Hierarchical Fix Confirmed** - Configuration properly set
-3. **✅ Build System Functioning** - pydevelop-docs builds successfully
+3. **✅ Build System Functioning** - pydvlp-docs builds successfully
 4. **✅ Test Environment Created** - test-haive-template properly integrated
 5. **✅ Documentation System** - Project notes and findings properly documented
 

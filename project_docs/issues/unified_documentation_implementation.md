@@ -101,7 +101,7 @@ globals().update(config)
 2. **Central hub must be built after packages**:
 
    ```bash
-   cd tools/pydevelop-docs/docs
+   cd tools/pydvlp-docs/docs
    poetry run sphinx-build -b html source build
    ```
 
@@ -125,7 +125,7 @@ globals().update(config)
 
 ### Phase 3: Documentation and Examples
 
-1. Update pydevelop-docs README with unified docs instructions
+1. Update pydvlp-docs README with unified docs instructions
 2. Create example monorepo setup guide
 3. Add CLI commands for building unified docs
 4. Document best practices
@@ -136,8 +136,8 @@ globals().update(config)
 
    ```bash
    # Proposed commands
-   pydevelop-docs init-hub --packages-dir packages --hub-dir docs
-   pydevelop-docs build-unified --packages-dir packages --hub-dir docs
+   pydvlp-docs init-hub --packages-dir packages --hub-dir docs
+   pydvlp-docs build-unified --packages-dir packages --hub-dir docs
    ```
 
 2. **Test Current Implementation**:

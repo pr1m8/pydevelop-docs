@@ -31,7 +31,7 @@ First Steps
 
    Navigate to your Python project and run::
 
-       pydevelop-docs init
+       pydvlp-docs init
 
    This creates a ``docs/`` directory with everything configured.
 
@@ -39,11 +39,11 @@ First Steps
 
    Generate your documentation::
 
-       pydevelop-docs build
+       pydvlp-docs build
 
    Or for a clean build::
 
-       pydevelop-docs build --clean
+       pydvlp-docs build --clean
 
 3. **View Documentation**
 
@@ -111,16 +111,16 @@ Common Commands
 .. code-block:: bash
 
     # Initialize with all sections
-    pydevelop-docs init --with-examples --with-tutorials --with-guides
+    pydvlp-docs init --with-examples --with-tutorials --with-guides
     
     # Build specific package (monorepo)
-    pydevelop-docs build --package my-package
+    pydvlp-docs build --package my-package
     
     # Clean all build artifacts
-    pydevelop-docs clean
+    pydvlp-docs clean
     
     # Check for issues
-    pydevelop-docs doctor
+    pydvlp-docs doctor
 
 Troubleshooting
 ---------------
@@ -149,7 +149,7 @@ Next Steps
 Getting Help
 ------------
 
-- `Documentation <https://pydevelop-docs.readthedocs.io>`_
+- `Documentation <https://pydvlp-docs.readthedocs.io>`_
 - `GitHub Issues <https://github.com/your-org/test-haive-template/issues>`_
 - `Discussions <https://github.com/your-org/test-haive-template/discussions>`_
 

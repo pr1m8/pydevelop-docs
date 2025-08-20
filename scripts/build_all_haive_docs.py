@@ -55,7 +55,7 @@ def build_package_docs(package_path: Path, package_name: str) -> bool:
     # Initialize PyDevelop-Docs
     print(f"  Initializing PyDevelop-Docs...")
     success, output = run_command(
-        ["poetry", "run", "pydevelop-docs", "init", "--force", "--yes"],
+        ["poetry", "run", "pydvlp-docs", "init", "--force", "--yes"],
         cwd=str(package_path),
     )
 

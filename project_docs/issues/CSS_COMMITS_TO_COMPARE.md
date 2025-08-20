@@ -82,7 +82,7 @@ git show HEAD:src/pydevelop_docs/templates/static/api-docs.css | head -50
 # Checkout specific commit to test
 git checkout 3497afe
 cd test-projects/test-haive-template
-poetry run pydevelop-docs init --force
+poetry run pydvlp-docs init --force
 poetry run sphinx-build -b html docs/source docs/build
 # View results
 

@@ -31,11 +31,11 @@ def update_package(package_name: str) -> bool:
 
     print(f"\n📦 Updating {package_name}...")
 
-    # Change to package directory and run pydevelop-docs init
+    # Change to package directory and run pydvlp-docs init
     try:
-        # Run pydevelop-docs init in the package directory
+        # Run pydvlp-docs init in the package directory
         result = subprocess.run(
-            ["poetry", "run", "pydevelop-docs", "init", "--force"],
+            ["poetry", "run", "pydvlp-docs", "init", "--force"],
             cwd=str(package_path),
             capture_output=True,
             text=True,
@@ -60,8 +60,8 @@ def main():
     print("=" * 50)
 
     # Check if we're in the right directory
-    if not Path.cwd().name == "pydevelop-docs":
-        print("⚠️  Please run this script from the pydevelop-docs directory")
+    if not Path.cwd().name == "pydvlp-docs":
+        print("⚠️  Please run this script from the pydvlp-docs directory")
         return 1
 
     success_count = 0

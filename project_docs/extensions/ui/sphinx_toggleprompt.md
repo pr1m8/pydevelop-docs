@@ -169,8 +169,8 @@ Install using pip:
    :class: toggleprompt
    :caption: Standard installation
 
-   $ pip install pydevelop-docs
-   $ pydevelop-docs --version
+   $ pip install pydvlp-docs
+   $ pydvlp-docs --version
 
 Development Installation
 -----------------------
@@ -181,8 +181,8 @@ For development work:
    :class: toggleprompt
    :caption: Development setup
 
-   $ git clone https://github.com/user/pydevelop-docs.git
-   $ cd pydevelop-docs
+   $ git clone https://github.com/user/pydvlp-docs.git
+   $ cd pydvlp-docs
    $ pip install -e .[dev]
    $ pre-commit install
 
@@ -198,7 +198,7 @@ Recommended setup with virtual environment:
    $ python -m venv .venv
    $ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    $ pip install --upgrade pip
-   $ pip install pydevelop-docs
+   $ pip install pydvlp-docs
 ```
 
 ### Multi-Platform Commands

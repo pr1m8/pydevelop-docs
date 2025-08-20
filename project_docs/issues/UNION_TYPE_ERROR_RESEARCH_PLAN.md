@@ -173,8 +173,8 @@ class LegacyAgent:
 # Test single file documentation
 echo "Testing union type handling..."
 cd test-projects/union-type-test
-poetry run pydevelop-docs init
-poetry run pydevelop-docs build
+poetry run pydvlp-docs init
+poetry run pydvlp-docs build
 
 # Check for errors
 grep -i "unsupported operand" docs/build/build.log
@@ -268,4 +268,4 @@ If union type syntax cannot be supported:
 
 - [Python 3.10 Union Types (PEP 604)](https://www.python.org/dev/peps/pep-0604/)
 - [sphinx_codeautolink GitHub Issues](https://github.com/felix-hilden/sphinx-codeautolink/issues)
-- Build logs: `/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/build_output.log`
+- Build logs: `/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/build_output.log`

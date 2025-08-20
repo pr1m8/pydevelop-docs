@@ -6,11 +6,11 @@
 
 ## Discovery
 
-When pydevelop-docs generates a new conf.py file via `pydevelop-docs init`, it does NOT include the `autoapi_own_page_level = "module"` setting that was implemented in config.py:538.
+When pydvlp-docs generates a new conf.py file via `pydvlp-docs init`, it does NOT include the `autoapi_own_page_level = "module"` setting that was implemented in config.py:538.
 
 ## Root Cause
 
-The pydevelop-docs system has **two different configuration approaches**:
+The pydvlp-docs system has **two different configuration approaches**:
 
 ### 1. Direct Template Generation (CLI) ❌ Missing Fix
 
@@ -122,7 +122,7 @@ globals().update(config)
 Add a flag to choose between hierarchical and flat organization:
 
 ```bash
-pydevelop-docs init --hierarchical-api
+pydvlp-docs init --hierarchical-api
 ```
 
 ## Impact Analysis

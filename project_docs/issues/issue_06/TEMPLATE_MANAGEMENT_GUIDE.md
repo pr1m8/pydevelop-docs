@@ -48,7 +48,7 @@ These can serve as a starting point for your customizations.
 ### Step 1: Create AutoAPI Template Directory
 
 ```bash
-mkdir -p /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates/_autoapi_templates/python/
+mkdir -p /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/_autoapi_templates/python/
 ```
 
 ### Step 2: Copy Default AutoAPI Templates

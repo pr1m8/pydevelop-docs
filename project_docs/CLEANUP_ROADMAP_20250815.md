@@ -1,7 +1,7 @@
 # PyDevelop-Docs Cleanup Roadmap
 
 **Created**: 2025-08-15  
-**Purpose**: Systematic cleanup plan for pydevelop-docs package
+**Purpose**: Systematic cleanup plan for pydvlp-docs package
 **Priority**: Critical - Blocking haive-mcp documentation fixes
 
 ## 🎯 Cleanup Objectives
@@ -176,12 +176,12 @@ def test_dark_mode_css_rules():
 
 ```bash
 # Single build command
-pydevelop-docs build
+pydvlp-docs build
 
 # Clear build options
-pydevelop-docs build --clean    # Clean build
-pydevelop-docs build --watch    # Watch mode
-pydevelop-docs build --serve    # Serve locally
+pydvlp-docs build --clean    # Clean build
+pydvlp-docs build --watch    # Watch mode
+pydvlp-docs build --serve    # Serve locally
 ```
 
 ---

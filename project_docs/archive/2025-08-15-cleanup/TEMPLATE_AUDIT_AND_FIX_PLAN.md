@@ -217,7 +217,7 @@ def _copy_autoapi_templates(self):
 ```python
 # Test that templates are copied correctly
 def test_template_distribution():
-    # Run pydevelop-docs init
+    # Run pydvlp-docs init
     # Check _autoapi_templates exists
     # Verify template content matches source
 ```
@@ -290,7 +290,7 @@ autoapi_own_page_level = "module"
 ### Test 3: Full Distribution
 
 ```bash
-# Run pydevelop-docs init on new project
+# Run pydvlp-docs init on new project
 # Verify templates are copied
 # Build docs and check output
 ```

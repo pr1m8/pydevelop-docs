@@ -27,7 +27,7 @@ PyDevelop-Docs has a serious configuration management problem. There are at leas
 ### 2. `cli.py` Hardcoded Template (Lines 375-683)
 
 - **Location**: `/src/pydevelop_docs/cli.py`
-- **Purpose**: Template generated when running `pydevelop-docs init`
+- **Purpose**: Template generated when running `pydvlp-docs init`
 - **Key issue**: MISSING `autoapi_own_page_level = "module"` ❌
 - **Used by**: ALL NEW PROJECTS via CLI
 - **Status**: BROKEN - generates flat API docs
@@ -104,7 +104,7 @@ But instead generates plain text.
 
 ## The Real Build Process
 
-When you run `poetry run pydevelop-docs build`:
+When you run `poetry run pydvlp-docs build`:
 
 1. **CLI generates conf.py** from hardcoded template (BROKEN)
 2. **Sphinx reads conf.py**
@@ -142,7 +142,7 @@ From comprehensive screenshot session:
 ### For New Projects (via CLI)
 
 ```bash
-pydevelop-docs init
+pydvlp-docs init
 ```
 
 **Uses**: Hardcoded template in cli.py ❌

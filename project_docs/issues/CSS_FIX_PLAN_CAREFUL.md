@@ -113,7 +113,7 @@ app.add_css_file("css/custom.css", priority=600)
 2. **After Each Change**:
 
    ```bash
-   poetry run pydevelop-docs init --force
+   poetry run pydvlp-docs init --force
    poetry run sphinx-build -b html docs/source docs/build
    python -m http.server 8003 --directory docs/build
    # Check in browser

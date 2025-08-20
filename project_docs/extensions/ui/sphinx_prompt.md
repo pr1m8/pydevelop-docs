@@ -216,10 +216,10 @@ Install Python and PyDevelop-Docs:
    sudo apt update && sudo apt install python3 python3-pip
 
    # Install PyDevelop-Docs
-   pip install pydevelop-docs
+   pip install pydvlp-docs
 
    # Verify installation
-   pydevelop-docs --version
+   pydvlp-docs --version
 
 Windows Installation
 --------------------
@@ -228,10 +228,10 @@ Windows Installation
 
    # Install Python from Microsoft Store or python.org
    # Then install PyDevelop-Docs
-   pip install pydevelop-docs
+   pip install pydvlp-docs
 
    # Verify installation
-   pydevelop-docs --version
+   pydvlp-docs --version
 
 macOS Installation
 ------------------
@@ -242,10 +242,10 @@ macOS Installation
    brew install python3
 
    # Install PyDevelop-Docs
-   pip3 install pydevelop-docs
+   pip3 install pydvlp-docs
 
    # Verify installation
-   pydevelop-docs --version
+   pydvlp-docs --version
 ```
 
 ### Multi-Step Command Sequences
@@ -270,7 +270,7 @@ Project Initialization
 
    # Install development dependencies
    pip install --upgrade pip setuptools wheel
-   pip install pydevelop-docs[dev]
+   pip install pydvlp-docs[dev]
 
 Configuration Setup
 -------------------
@@ -279,13 +279,13 @@ Configuration Setup
    :caption: Initialize documentation
 
    # Create documentation structure
-   pydevelop-docs init
+   pydvlp-docs init
 
    # Configure for your project
-   pydevelop-docs configure --package-name "my-project"
+   pydvlp-docs configure --package-name "my-project"
 
    # Build initial documentation
-   pydevelop-docs build
+   pydvlp-docs build
 
 Testing and Validation
 ----------------------
@@ -294,10 +294,10 @@ Testing and Validation
    :caption: Validate setup
 
    # Run documentation tests
-   pydevelop-docs test
+   pydvlp-docs test
 
    # Start development server
-   pydevelop-docs serve --port 8000
+   pydvlp-docs serve --port 8000
 
    # Open in browser
    open http://localhost:8000
@@ -395,12 +395,12 @@ Database Operations
   <div class="prompt-body">
     <span class="prompt-symbol" aria-hidden="true">$</span>
     <span class="prompt-command" aria-label="Command to execute">
-      pip install pydevelop-docs
+      pip install pydvlp-docs
     </span>
   </div>
 
   <div class="prompt-output" aria-label="Command output">
-    <pre>Successfully installed pydevelop-docs-1.0.0</pre>
+    <pre>Successfully installed pydvlp-docs-1.0.0</pre>
   </div>
 </div>
 ```

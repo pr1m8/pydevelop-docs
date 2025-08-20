@@ -110,7 +110,7 @@ In `/src/pydevelop_docs/config.py`, Sphinx Design is optimized for theming:
 
       .. code-block:: bash
 
-         pip install pydevelop-docs
+         pip install pydvlp-docs
 
    .. tab-item:: Development Setup
       :class-label: sd-tab-label-secondary
@@ -125,7 +125,7 @@ In `/src/pydevelop_docs/config.py`, Sphinx Design is optimized for theming:
 
       .. code-block:: bash
 
-         docker run -it pydevelop-docs
+         docker run -it pydvlp-docs
 ```
 
 ## AutoAPI Template Integration for Issue #6

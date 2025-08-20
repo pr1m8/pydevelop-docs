@@ -2,12 +2,12 @@
 PyDevelop-Docs 📚
 =================
 
-.. image:: https://img.shields.io/pypi/v/pydevelop-docs.svg
-   :target: https://pypi.org/project/pydevelop-docs/
+.. image:: https://img.shields.io/pypi/v/pydvlp-docs.svg
+   :target: https://pypi.org/project/pydvlp-docs/
    :alt: PyPI Version
 
-.. image:: https://img.shields.io/pypi/pyversions/pydevelop-docs.svg
-   :target: https://pypi.org/project/pydevelop-docs/
+.. image:: https://img.shields.io/pypi/pyversions/pydvlp-docs.svg
+   :target: https://pypi.org/project/pydvlp-docs/
    :alt: Python Versions
 
 .. image:: https://img.shields.io/badge/License-MIT-yellow.svg
@@ -50,7 +50,7 @@ Transform any Python project into beautiful, professional documentation in minut
    .. grid-item-card:: 🚀 One Command
       :shadow: sm
       
-      ``pydevelop-docs setup-general /project`` and you're done!
+      ``pydvlp-docs setup-general /project`` and you're done!
 
 .. admonition:: ⚡ Quick Start - Any Python Project
    :class: tip
@@ -58,10 +58,10 @@ Transform any Python project into beautiful, professional documentation in minut
    .. code-block:: bash
 
       # Install
-      pip install pydevelop-docs
+      pip install pydvlp-docs
 
       # Set up docs for ANY Python project
-      pydevelop-docs setup-general /path/to/your/project
+      pydvlp-docs setup-general /path/to/your/project
 
       # Build beautiful documentation  
       cd /path/to/your/project/docs && make html
@@ -416,14 +416,14 @@ Getting Help & Contact
    .. grid-item-card:: 🐛 **Bug Reports & Features**
       :shadow: sm
       
-      `GitHub Issues <https://github.com/pr1m8/pydevelop-docs/issues>`_
+      `GitHub Issues <https://github.com/pr1m8/pydvlp-docs/issues>`_
       
       Report bugs, request features, or suggest improvements.
 
    .. grid-item-card:: 💬 **Questions & Discussion**  
       :shadow: sm
       
-      `GitHub Discussions <https://github.com/pr1m8/pydevelop-docs/discussions>`_
+      `GitHub Discussions <https://github.com/pr1m8/pydvlp-docs/discussions>`_
       
       Ask questions, share tips, and connect with the community.
 

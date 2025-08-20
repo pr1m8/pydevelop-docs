@@ -1547,7 +1547,7 @@ EOF
 
 # Initialize with PyDevelop-Docs
 echo "📝 Initializing documentation with custom templates"
-poetry run pydevelop-docs init --force --use-shared-config
+poetry run pydvlp-docs init --force --use-shared-config
 
 # Verify template installation
 echo "🔍 Verifying template installation"
@@ -1678,8 +1678,8 @@ poetry run pytest project_docs/extensions/code/test_template_integration.py
 
 # Validate with test project
 cd test-projects/test-haive-template
-poetry run pydevelop-docs init --force --with-live-examples
-poetry run pydevelop-docs build
+poetry run pydvlp-docs init --force --with-live-examples
+poetry run pydvlp-docs build
 ```
 
 ### Documentation Update
@@ -1701,10 +1701,10 @@ Update project documentation to reflect new capabilities:
 
 ```bash
 # Initialize with live examples
-pydevelop-docs init --with-live-examples
+pydvlp-docs init --with-live-examples
 
 # Build with dynamic content
-pydevelop-docs build
+pydvlp-docs build
 ```
 ````
 

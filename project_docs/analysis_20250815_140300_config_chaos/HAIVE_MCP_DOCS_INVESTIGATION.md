@@ -117,7 +117,7 @@ When viewing the documentation:
 ## Next Investigation Steps
 
 1. **Check if PyDevelop-Docs was ever used**
-   - Look for `.pydevelop-docs` markers
+   - Look for `.pydvlp-docs` markers
    - Check git history of conf.py
    - Look for PyDevelop-Docs templates
 

@@ -2,8 +2,8 @@ project:
   name: !!python/object/apply:tomlkit.items.String
     - !!python/object/apply:tomlkit.items.StringType &id001
       - '"'
-    - pydevelop-docs
-    - pydevelop-docs
+    - pydvlp-docs
+    - pydvlp-docs
     - !!python/object:tomlkit.items.Trivia
       indent: ""
       comment_ws: ""
@@ -59,8 +59,8 @@ project:
   repository: https://github.com/pr1m8/haive-docs
   homepage: !!python/object/apply:tomlkit.items.String
     - *id001
-    - https://github.com/haive-ai/pydevelop-docs
-    - https://github.com/haive-ai/pydevelop-docs
+    - https://github.com/haive-ai/pydvlp-docs
+    - https://github.com/haive-ai/pydvlp-docs
     - !!python/object:tomlkit.items.Trivia
       indent: ""
       comment_ws: ""

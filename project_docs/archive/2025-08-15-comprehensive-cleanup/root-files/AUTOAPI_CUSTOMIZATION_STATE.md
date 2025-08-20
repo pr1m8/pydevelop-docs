@@ -172,7 +172,7 @@ Module documentation for `{{ obj.name }}`
 
 # Save the updated template
 
-with open('/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates/\_au
+with open('/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/\_au
 toapi_templates/python/module.rst', 'w') as f:
 f.write(updated_module_template)
 
@@ -210,7 +210,7 @@ This page contains auto-generated API reference documentation.
 
 '''
 
-with open('/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates/\_au
+with open('/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/\_au
 toapi_templates/python/index.rst', 'w') as f:
 f.write(index_template)
 
@@ -292,7 +292,7 @@ font-size: 1.1rem;
 
 # Append to existing CSS
 
-with open('/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates/sta
+with open('/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/sta
 tic/enhanced-design.css', 'a') as f:
 f.write(additional_css)
 
@@ -477,12 +477,12 @@ Let's backtrack and understand what's actually wrong:
 
 # First, let's see what the current template is producing
 
-cat /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates/\_autoapi_t
+cat /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/\_autoapi_t
 emplates/python/module.rst | head -20
 
 # Check the index template too
 
-cat /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates/\_autoapi_t
+cat /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/\_autoapi_t
 emplates/python/index.rst | head -20
 
 # Let's look at the actual generated RST to see what AutoAPI created
@@ -530,11 +530,11 @@ reference issues.
 
 # Create the scripts directory if it doesn't exist
 
-mkdir -p /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/scripts
+mkdir -p /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/scripts
 
 # Create the screenshot script
 
-cat > /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/scripts/screenshot
+cat > /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/scripts/screenshot
 \_docs.py << 'EOF'
 #!/usr/bin/env python3
 """
@@ -642,7 +642,7 @@ EOF
 
 # Let's create a SIMPLE, WORKING module template
 
-cat > /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates/\_autoapi
+cat > /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/\_autoapi
 \_templates/python/module.rst << 'EOF'
 {% if obj.display %}
 {% if is_own_page %}
@@ -766,7 +766,7 @@ EOF
 
 3. Fix the index template to show "mcp" as top-level:
 
-cat > /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates/\_autoapi
+cat > /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/\_autoapi
 \_templates/python/index.rst << 'EOF'
 :orphan:
 
@@ -803,7 +803,7 @@ sleep 2
 # Run our screenshot script
 
 cd /home/will/Projects/haive/backend/haive/packages/haive-mcp
-python /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/scripts/screensho
+python /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/scripts/screensho
 t_docs.py \
  --url http://localhost:8080 \
  --output ./doc_screenshots \
@@ -848,7 +848,7 @@ playwright install chromium
 # Run the screenshot script
 
 cd /home/will/Projects/haive/backend/haive/packages/haive-mcp
-python /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/scripts/screensho
+python /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/scripts/screensho
 t_docs.py \
  --url http://localhost:8080 \
  --output ./doc_screenshots \
@@ -907,7 +907,7 @@ poetry run playwright install chromium
 # Run the screenshot script
 
 cd /home/will/Projects/haive/backend/haive/packages/haive-mcp
-poetry run python /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/script
+poetry run python /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/script
 s/screenshot_docs.py \
  --url http://localhost:8080 \
  --output ./doc_screenshots \
@@ -932,7 +932,7 @@ xdg-open
 
 # Update the module template with breadcrumbs
 
-cat > /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates/\_autoapi
+cat > /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/\_autoapi
 \_templates/python/module.rst << 'EOF'
 {% if obj.display %}
 {% if is_own_page %}
@@ -1078,7 +1078,7 @@ Now let's add CSS for the breadcrumbs:
 
 # Add breadcrumb CSS to enhanced-design.css
 
-cat >> /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates/static/
+cat >> /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/static/
 enhanced-design.css << 'EOF'
 
 /_ Breadcrumb Navigation _/
@@ -1161,7 +1161,7 @@ poetry run make html
 # Take new screenshots
 
 cd /home/will/Projects/haive/backend/haive/packages/haive-mcp
-poetry run python /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/script
+poetry run python /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/script
 s/screenshot_docs.py \
  --url http://localhost:8080 \
  --output ./doc_screenshots_breadcrumbs \
@@ -1233,7 +1233,7 @@ poetry run playwright install chromium --with-deps
 
 mkdir -p /home/will/Projects/haive/backend/haive/packages/haive-mcp/doc_screenshots_new
 cd /home/will/Projects/haive/backend/haive/packages/haive-mcp
-poetry run python /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/script
+poetry run python /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/script
 s/screenshot_docs.py \
  --url http://localhost:8080 \
  --output ./doc_screenshots_new \
@@ -1286,7 +1286,7 @@ poetry run playwright install chromium --with-deps
 
 mkdir -p /home/will/Projects/haive/backend/haive/packages/haive-mcp/doc_screenshots_new
 cd /home/will/Projects/haive/backend/haive/packages/haive-mcp
-poetry run python /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/script
+poetry run python /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/script
 s/screenshot_docs.py \
  --url http://localhost:8080 \
  --output ./doc_screenshots_new \
@@ -1330,7 +1330,7 @@ poetry run playwright install chromium --with-deps
 
 mkdir -p /home/will/Projects/haive/backend/haive/packages/haive-mcp/doc_screenshots_new
 cd /home/will/Projects/haive/backend/haive/packages/haive-mcp
-poetry run python /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/script
+poetry run python /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/script
 s/screenshot_docs.py \
  --url http://localhost:8080 \
  --output ./doc_screenshots_new \
@@ -1379,7 +1379,7 @@ ls -la
 > veerything sis for anyother agent to use to take off cform where you eleft off
 
 ● # Create a comprehensive documentation file
-cat > /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/AUTOAPI_CUSTOMIZATION_STATE.md <<
+cat > /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/AUTOAPI_CUSTOMIZATION_STATE.md <<
 'EOF'
 
 # AutoAPI Customization State - PyDevelop-Docs
@@ -1402,7 +1402,7 @@ appearance and navigation. The main issues being addressed:
 
 ### PyDevelop-Docs Core Files
 
-/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/
+/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/
 ├── src/pydevelop_docs/
 │ ├── config.py # Main configuration (contains linkcode_resolve)
 │ ├── templates/
@@ -1570,7 +1570,7 @@ python -m http.server 8080
 
 3. Take Screenshots
 
-poetry run python /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/script
+poetry run python /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/script
 s/screenshot_docs.py \
     --url http://localhost:8080 \
     --output ./doc_screenshots \
@@ -1632,7 +1632,7 @@ grep -A 5 "stylesheet" docs/build/index.html
 🔗 Related Files
 
 - Main project: /home/will/Projects/haive/backend/haive/
-- PyDevelop-Docs: /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/
+- PyDevelop-Docs: /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/
 - Test package: /home/will/Projects/haive/backend/haive/packages/haive-mcp/
 
 📚 Resources
@@ -1666,14 +1666,14 @@ EOF
 
 ```bash
 echo "Comprehensive documentation created at:
-/home/will/Projects/haive/backend/haive/tools/pydevelop-docs/AUTOAPI_CUSTOMIZATION_STATE.md"
+/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/AUTOAPI_CUSTOMIZATION_STATE.md"
 
 > write me more something logner and more in
 depth for this isisues and how we test adn
 dbeug and what you learned and our goals
 
 ● cat > /home/will/Projects/haive/backend/haive
-/tools/pydevelop-docs/AUTOAPI_COMPREHENSIVE_D
+/tools/pydvlp-docs/AUTOAPI_COMPREHENSIVE_D
 OCUMENTATION.md << 'EOF'
 # Comprehensive AutoAPI Template
 Customization Documentation
@@ -1796,7 +1796,7 @@ extensions installed but unused
 ### Directory Structure
 
 /home/will/Projects/haive/backend/haive/tools
-/pydevelop-docs/
+/pydvlp-docs/
 ├── src/pydevelop_docs/
 │   ├── config.py                          #
 Master configuration
@@ -2464,7 +2464,7 @@ EOF
 
 echo "Comprehensive documentation created at:
  /home/will/Projects/haive/backend/haive/tool
-s/pydevelop-docs/AUTOAPI_COMPREHENSIVE_DOCUME
+s/pydvlp-docs/AUTOAPI_COMPREHENSIVE_DOCUME
 NTATION.md"
 ````
 

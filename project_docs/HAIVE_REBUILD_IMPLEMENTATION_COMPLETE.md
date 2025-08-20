@@ -28,7 +28,7 @@ I've successfully created comprehensive utilities for rebuilding all Haive docum
    - Confirms utilities are working
 
 4. **CLI Command Integration**
-   - Added `rebuild-haive` command to pydevelop-docs CLI
+   - Added `rebuild-haive` command to pydvlp-docs CLI
    - Full option support with help text
    - Auto-detection of Haive root directory
 
@@ -37,7 +37,7 @@ I've successfully created comprehensive utilities for rebuilding all Haive docum
 ### **1. Quick Test (Recommended First)**
 
 ```bash
-cd /home/will/Projects/haive/backend/haive/tools/pydevelop-docs
+cd /home/will/Projects/haive/backend/haive/tools/pydvlp-docs
 poetry run python scripts/test_haive_utils.py
 ```
 
@@ -47,7 +47,7 @@ poetry run python scripts/test_haive_utils.py
 
 ```bash
 cd /home/will/Projects/haive/backend/haive/
-poetry run pydevelop-docs rebuild-haive --debug --save-log
+poetry run pydvlp-docs rebuild-haive --debug --save-log
 ```
 
 **This command will**:
@@ -64,16 +64,16 @@ poetry run pydevelop-docs rebuild-haive --debug --save-log
 
 ```bash
 # Specific packages only
-poetry run pydevelop-docs rebuild-haive -p haive-core -p haive-agents
+poetry run pydvlp-docs rebuild-haive -p haive-core -p haive-agents
 
 # Skip master hub (faster)
-poetry run pydevelop-docs rebuild-haive --no-master
+poetry run pydvlp-docs rebuild-haive --no-master
 
 # Quiet mode
-poetry run pydevelop-docs rebuild-haive --quiet
+poetry run pydvlp-docs rebuild-haive --quiet
 
 # Debug with logging
-poetry run pydevelop-docs rebuild-haive --debug --save-log
+poetry run pydvlp-docs rebuild-haive --debug --save-log
 ```
 
 ## 🎨 **Features Implemented**
@@ -183,7 +183,7 @@ def log_operation(self, operation: str, status: str, details: str = "", duration
 
 ## 🔧 **Integration Points**
 
-### **With Existing pydevelop-docs**
+### **With Existing pydvlp-docs**
 
 - **Uses shared config**: `get_haive_config()` for consistency
 - **Modern CSS system**: Automatically includes enhanced-design.css and breadcrumbs
@@ -259,7 +259,7 @@ The implementation is **complete and tested**. You can now run:
 
 ```bash
 cd /home/will/Projects/haive/backend/haive/
-poetry run pydevelop-docs rebuild-haive --debug --save-log
+poetry run pydvlp-docs rebuild-haive --debug --save-log
 ```
 
 This will give you:

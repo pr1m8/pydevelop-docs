@@ -41,7 +41,7 @@ poetry install --with dev
 
 ```bash
 # Using PyDevelop-Docs
-poetry run pydevelop-docs build
+poetry run pydvlp-docs build
 
 # Or directly with Sphinx
 poetry run sphinx-build -b html docs/source docs/build
@@ -134,7 +134,7 @@ class VisualFeedbackTester:
     def run_tests(self):
         """Run screenshot tests and collect results."""
         # Build docs
-        subprocess.run(["poetry", "run", "pydevelop-docs", "build"])
+        subprocess.run(["poetry", "run", "pydvlp-docs", "build"])
 
         # Start server
         server = subprocess.Popen([
@@ -367,7 +367,7 @@ class DocChangeHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if event.src_path.endswith(('.css', '.py', '.rst', '.md')):
             print(f"Change detected: {event.src_path}")
-            subprocess.run(["poetry", "run", "pydevelop-docs", "build"])
+            subprocess.run(["poetry", "run", "pydvlp-docs", "build"])
             # Run screenshot of affected page
 
 observer = Observer()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Comprehensive audit script for pydevelop-docs package.
+"""Comprehensive audit script for pydvlp-docs package.
 
 This script audits the package functionality, tests new features,
 and generates detailed reports about capabilities and issues.
@@ -20,7 +20,7 @@ from rich.table import Table
 
 
 class PackageAuditor:
-    """Comprehensive auditor for pydevelop-docs package."""
+    """Comprehensive auditor for pydvlp-docs package."""
 
     def __init__(self, debug: bool = False):
         self.console = Console()
@@ -88,7 +88,7 @@ class PackageAuditor:
         self.console.print("\n🔍 Testing Basic Functionality", style="bold cyan")
 
         # Test help command
-        result = self.run_command(["poetry", "run", "pydevelop-docs", "--help"])
+        result = self.run_command(["poetry", "run", "pydvlp-docs", "--help"])
         self.log_test(
             "CLI Help", result["success"], "Help command accessible", result["duration"]
         )
@@ -117,7 +117,7 @@ class PackageAuditor:
         # Test subcommands
         for cmd in ["init", "doctor", "build", "clean"]:
             result = self.run_command(
-                ["poetry", "run", "pydevelop-docs", cmd, "--help"]
+                ["poetry", "run", "pydvlp-docs", cmd, "--help"]
             )
             self.log_test(
                 f"Command: {cmd}",
@@ -132,7 +132,7 @@ class PackageAuditor:
 
         # Test dry-run on Haive project
         result = self.run_command(
-            ["poetry", "run", "pydevelop-docs", "init", "--dry-run", "--debug"]
+            ["poetry", "run", "pydvlp-docs", "init", "--dry-run", "--debug"]
         )
 
         success = result["success"] and "dry-run" in result["stdout"].lower()
@@ -163,7 +163,7 @@ class PackageAuditor:
             [
                 "poetry",
                 "run",
-                "pydevelop-docs",
+                "pydvlp-docs",
                 "init",
                 "--dry-run",
                 "--debug",
@@ -194,7 +194,7 @@ class PackageAuditor:
         self.console.print("\n🔧 Testing Dependency Analysis Fix", style="bold cyan")
 
         # Test that dependency analysis no longer flags legitimate TOML
-        result = self.run_command(["poetry", "run", "pydevelop-docs", "doctor"])
+        result = self.run_command(["poetry", "run", "pydvlp-docs", "doctor"])
 
         # Should show valid dependencies now
         valid_deps = (
@@ -354,7 +354,7 @@ class PackageAuditor:
 
         # Test invalid command
         result = self.run_command(
-            ["poetry", "run", "pydevelop-docs", "nonexistent-command"]
+            ["poetry", "run", "pydvlp-docs", "nonexistent-command"]
         )
         self.log_test(
             "Invalid Command Handling",
@@ -368,7 +368,7 @@ class PackageAuditor:
         temp_dir.mkdir(exist_ok=True)
 
         result = self.run_command(
-            ["poetry", "run", "pydevelop-docs", "init", "--dry-run"], timeout=30
+            ["poetry", "run", "pydvlp-docs", "init", "--dry-run"], timeout=30
         )
 
         # Should handle missing pyproject.toml gracefully
@@ -505,7 +505,7 @@ class PackageAuditor:
 @click.option("--save-report", type=click.Path(), help="Save audit report to file")
 @click.option("--quiet", is_flag=True, help="Minimal output")
 def main(debug, save_report, quiet):
-    """Run comprehensive audit of pydevelop-docs package."""
+    """Run comprehensive audit of pydvlp-docs package."""
     if not quiet:
         console = Console()
         console.print("🔍 PyDevelop-Docs Package Audit", style="bold blue")

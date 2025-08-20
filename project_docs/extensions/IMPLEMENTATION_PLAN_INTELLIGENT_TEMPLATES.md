@@ -9,7 +9,7 @@
 ### Step 1: Create Template Directory Structure (15 minutes)
 
 ```bash
-cd /home/will/Projects/haive/backend/haive/tools/pydevelop-docs/src/pydevelop_docs/templates
+cd /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates
 
 # Create the intelligent template structure
 mkdir -p _autoapi_templates/python/{_base,_components,_filters,_macros}
