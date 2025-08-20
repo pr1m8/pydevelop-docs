@@ -1,0 +1,48 @@
+# Example conf.py override
+# Rename to conf.py to use this instead of the generated version
+
+# This example shows how to extend the generated configuration
+# while keeping PyDevelop-Docs features
+
+# First, import the base configuration
+from pydevelop_docs.config import get_haive_config
+config = get_haive_config(__name__, project_root="../..")
+
+# Apply base configuration
+for key, value in config.items():
+    globals()[key] = value
+
+# Now add your customizations
+# =============================
+
+# Custom theme options
+html_theme_options.update({
+    "announcement": "📢 Custom announcement here!",
+    "custom_option": True,
+})
+
+# Add custom extensions
+extensions.append("my_custom_extension")
+
+# Custom static files
+html_static_path.append("_custom_static")
+
+# Custom templates
+templates_path.insert(0, "_custom_templates")
+
+# Advanced customization
+def setup(app):
+    """Sphinx setup hook for advanced customization."""
+    # Add custom CSS
+    app.add_css_file("css/my-custom.css")
+    
+    # Add custom JavaScript
+    app.add_js_file("js/my-custom.js")
+    
+    # Connect to Sphinx events
+    app.connect("doctree-resolved", my_custom_processor)
+    
+def my_custom_processor(app, doctree, docname):
+    """Process the doctree after it's resolved."""
+    # Your custom processing here
+    pass

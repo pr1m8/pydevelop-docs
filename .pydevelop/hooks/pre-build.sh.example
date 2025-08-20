@@ -1,0 +1,14 @@
+#!/bin/bash
+# Example pre-build hook
+# This runs before documentation is built
+
+echo "🔨 Running pre-build checks..."
+
+# Example: Check for missing docstrings
+echo "Checking for missing docstrings..."
+find src -name "*.py" -exec grep -L '"""' {} \; | head -5
+
+# Example: Update version number
+# sed -i 's/version = ".*"/version = "'$(git describe --tags)'"/' docs/source/conf.py
+
+echo "✅ Pre-build checks complete"

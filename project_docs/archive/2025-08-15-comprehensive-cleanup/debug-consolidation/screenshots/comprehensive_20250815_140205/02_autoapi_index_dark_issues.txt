@@ -1,0 +1,4 @@
+❌ No navigation sidebar found
+✅ TOC tree found: 1 elements
+📊 CSS files loaded: 28
+✅ Source links found: 5

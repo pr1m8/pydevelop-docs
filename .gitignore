@@ -48,6 +48,24 @@ Thumbs.db
 .env.local
 .env.development.local
 .env.test.local
+
+# Testing and monitoring
+build_monitoring/
+doc_test_results_*/
+test_results_*/
+smart_docs_build/
+single_package_test/
+haive_tools_test/
+
+# Temporary files
+nohup.out
+*.log
+test_*.py
+monitor_*.sh
+monitor_*.py
+check_*.py
+fix_*.py
+preview_*.py
 .env.production.local
 
 # MyPy
@@ -71,3 +89,10 @@ logs/
 *.temp
 *.bak
 poetry.lock
+
+# PyDevelop-Docs
+.pydevelop/cache/
+.pydevelop/hooks/*.log
+.pydevelop/templates/_build/
+debug/screenshots/
+archive/

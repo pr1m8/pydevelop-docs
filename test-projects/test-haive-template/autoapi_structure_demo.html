@@ -1,0 +1,216 @@
+<!doctype html>
+<html>
+  <head>
+    <title>AutoAPI Structure Demo - Flat vs Hierarchical</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .container {
+        display: flex;
+        gap: 40px;
+      }
+      .column {
+        flex: 1;
+      }
+      .bad {
+        border: 2px solid #ff4444;
+        border-radius: 8px;
+        padding: 20px;
+      }
+      .good {
+        border: 2px solid #44ff44;
+        border-radius: 8px;
+        padding: 20px;
+      }
+      .bad h2 {
+        color: #cc0000;
+      }
+      .good h2 {
+        color: #006600;
+      }
+      ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+      li {
+        margin: 5px 0;
+        padding: 5px;
+        background: #f5f5f5;
+        border-radius: 3px;
+      }
+      .nested {
+        margin-left: 20px;
+      }
+      .package {
+        font-weight: bold;
+        color: #0066cc;
+        background: #e6f2ff;
+      }
+      .module {
+        font-weight: bold;
+        color: #cc6600;
+        background: #fff2e6;
+      }
+      .class {
+        color: #333;
+        background: #f9f9f9;
+      }
+      .stats {
+        background: #ffffcc;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🧪 AutoAPI Structure Issue Demonstration</h1>
+    <p>
+      <strong>Test Project:</strong> test-haive-template (mimics Haive's complex
+      structure)
+    </p>
+
+    <div class="container">
+      <div class="column">
+        <div class="bad">
+          <h2>🔴 Current AutoAPI Structure (FLAT - BAD)</h2>
+          <p>All classes in alphabetical order - no organization:</p>
+
+          <ul>
+            <li class="class">📄 ActionPlan</li>
+            <li class="class">📄 ActionType</li>
+            <li class="class">📄 AgentState</li>
+            <li class="class">📄 BaseSchema</li>
+            <li class="class">📄 BaseTool</li>
+            <li class="class">📄 EngineMode</li>
+            <li class="class">📄 ExecutionContext</li>
+            <li class="class">📄 ExecutionStatus</li>
+            <li class="class">📄 ReactAgent</li>
+            <li class="class">📄 ReactConfig</li>
+            <li class="class">📄 SimpleAgent</li>
+            <li class="class">📄 TestLLMConfig</li>
+            <li class="class">📄 ThoughtProcess</li>
+            <li class="class">📄 ValidationMixin</li>
+            <li class="class">📄 WorkflowState</li>
+          </ul>
+
+          <div class="stats">
+            <strong>📊 Problems:</strong><br />
+            • 15+ classes in flat alphabetical list<br />
+            • No logical grouping<br />
+            • No architectural context<br />
+            • Impossible to navigate<br />
+            • Lost package relationships
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="good">
+          <h2>✅ Desired Hierarchical Structure (ORGANIZED - GOOD)</h2>
+          <p>Logical package and module organization:</p>
+
+          <ul>
+            <li class="package">📦 testhaive.core</li>
+            <ul class="nested">
+              <li class="module">📁 engine</li>
+              <ul class="nested">
+                <li class="class">📄 TestLLMConfig</li>
+                <li class="class">📄 EngineMode</li>
+              </ul>
+              <li class="module">📁 schema.base</li>
+              <ul class="nested">
+                <li class="class">📄 BaseSchema</li>
+                <li class="class">📄 StateSchema</li>
+                <li class="class">📄 ValidationMixin</li>
+              </ul>
+              <li class="module">📁 schema.state</li>
+              <ul class="nested">
+                <li class="class">📄 AgentState</li>
+                <li class="class">📄 WorkflowState</li>
+                <li class="class">📄 ExecutionContext</li>
+              </ul>
+              <li class="module">📁 tools</li>
+              <ul class="nested">
+                <li class="class">📄 BaseTool</li>
+              </ul>
+            </ul>
+
+            <li class="package">📦 testhaive.agents</li>
+            <ul class="nested">
+              <li class="module">📁 simple</li>
+              <ul class="nested">
+                <li class="class">📄 SimpleAgent</li>
+              </ul>
+              <li class="module">📁 react</li>
+              <ul class="nested">
+                <li class="class">📄 ReactAgent</li>
+                <li class="class">📄 ReactConfig</li>
+                <li class="class">📄 ThoughtProcess</li>
+                <li class="class">📄 ActionPlan</li>
+              </ul>
+            </ul>
+          </ul>
+
+          <div class="stats">
+            <strong>📊 Benefits:</strong><br />
+            • Same 15+ classes, but organized<br />
+            • Logical package grouping<br />
+            • Clear module hierarchy<br />
+            • Easy to find related items<br />
+            • Maintains architectural context
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>🎯 The Solution</h2>
+    <p>
+      Our <strong>AutoAPI Hierarchical Organization Analysis</strong> document
+      provides the complete fix:
+    </p>
+    <ol>
+      <li>
+        <strong>Configuration Change:</strong> Set
+        <code>autoapi_own_page_level = "module"</code>
+      </li>
+      <li>
+        <strong>Custom Templates:</strong> Modify AutoAPI templates for
+        package-based organization
+      </li>
+      <li>
+        <strong>Furo Theme Config:</strong> Set
+        <code>navigation_depth = 4</code> and
+        <code>collapse_navigation = False</code>
+      </li>
+      <li>
+        <strong>Template Customization:</strong> Override
+        <code>python/index.rst</code> to group by package
+      </li>
+    </ol>
+
+    <h2>📁 Current File Structure Created</h2>
+    <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px">
+docs/source/autoapi/
+├── index.rst                    (main API index - shows flat problem)
+├── ActionPlan/index.rst         (individual class pages)
+├── ActionType/index.rst
+├── AgentState/index.rst
+├── BaseSchema/index.rst
+├── ReactAgent/index.rst
+├── ReactConfig/index.rst
+├── SimpleAgent/index.rst
+├── TestLLMConfig/index.rst
+└── ... (8+ more individual class pages)
+    </pre>
+
+    <p>
+      <strong
+        >This HTML page demonstrates exactly what would be generated and why
+        it's problematic for navigation.</strong
+      >
+    </p>
+  </body>
+</html>

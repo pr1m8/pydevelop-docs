@@ -10,7 +10,7 @@ autoapi_extension = "autoapi.extension"
 # AutoAPI Configuration
 autoapi_type = "python"
 autoapi_dirs = ["../../../src"]
-autoapi_template_dir = "_autoapi_templates"
+# autoapi_template_dir = "_autoapi_templates"  # Using default templates
 autoapi_add_toctree_entry = True
 autoapi_generate_api_docs = True
 autoapi_keep_files = True

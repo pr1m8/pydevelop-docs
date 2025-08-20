@@ -88,6 +88,49 @@ body[data-theme="dark"] .sig-paren {
   color: #e2e8f0 !important;
 }
 
+/* COMPREHENSIVE SIGNATURE ELEMENT FIXES - Fix **kwargs and all signature elements */
+/* Dark mode signature visibility - covers all elements in function signatures */
+body[data-theme="dark"] .sig .o,      /* Operators like ** in **kwargs */
+body[data-theme="dark"] .sig .p,      /* Punctuation in signatures */
+body[data-theme="dark"] .sig .n,      /* Names in signatures */
+body[data-theme="dark"] .descname,    /* Description names */
+body[data-theme="dark"] .sig em,      /* Emphasized elements */
+body[data-theme="dark"] .sig .pre,    /* Preformatted signature text */
+body[data-theme="dark"] .sig .nb,     /* Built-ins in signatures (Dict, str, Any) */
+body[data-theme="dark"] .sig .k {
+  /* Keywords in signatures */
+  color: #e2e8f0 !important;
+}
+
+/* Light mode signature visibility - ensure good contrast */
+body[data-theme="light"] .sig-paren,
+body[data-theme="light"] .sig .o,      /* Operators like ** in **kwargs */
+body[data-theme="light"] .sig .p,      /* Punctuation in signatures */
+body[data-theme="light"] .sig .n,      /* Names in signatures */
+body[data-theme="light"] .descname,    /* Description names */
+body[data-theme="light"] .sig em,      /* Emphasized elements */
+body[data-theme="light"] .sig .pre,    /* Preformatted signature text */
+body[data-theme="light"] .sig .nb,     /* Built-ins in signatures */
+body[data-theme="light"] .sig .k {
+  /* Keywords in signatures */
+  color: #1f2937 !important;
+}
+
+/* Universal fallback for light gray inline styles */
+[data-theme="dark"] *[style*="color:#999"],
+[data-theme="dark"] *[style*="color:#aaa"],
+[data-theme="dark"] *[style*="color:#ccc"],
+[data-theme="dark"] *[style*="color:#ddd"] {
+  color: #e2e8f0 !important;
+}
+
+/* Force visibility for any remaining light elements */
+[data-theme="light"] *[style*="color:#999"],
+[data-theme="light"] *[style*="color:#aaa"],
+[data-theme="light"] *[style*="color:#ccc"] {
+  color: #1f2937 !important;
+}
+
 /* API REFERENCE ENHANCEMENTS */
 /* Hide repetitive View Source Code links */
 .viewcode-link:nth-of-type(n + 2) {
@@ -182,6 +225,51 @@ body[data-pagename="autoapi/index"] .section > ul > li a {
 
 body[data-pagename="autoapi/index"] .section > ul > li a:hover {
   color: var(--color-brand-content) !important;
+}
+
+/* AUTOAPI MODULE CONTENTS DARK MODE FIX */
+/* Fix for white-on-white text in Module Contents sections */
+body[data-theme="dark"] .section,
+body[data-theme="dark"] .rst-content {
+  background-color: var(--color-background-primary) !important;
+  color: var(--color-foreground-primary) !important;
+}
+
+/* AutoAPI generated content boxes */
+body[data-theme="dark"] .py,
+body[data-theme="dark"] .py-class,
+body[data-theme="dark"] .py-method,
+body[data-theme="dark"] .py-function,
+body[data-theme="dark"] .py-attribute,
+body[data-theme="dark"] .py-module {
+  background-color: var(--color-background-secondary) !important;
+  color: var(--color-foreground-primary) !important;
+  border: 1px solid var(--color-background-border) !important;
+}
+
+/* Module Contents and other AutoAPI sections */
+body[data-theme="dark"] .section .highlight-default,
+body[data-theme="dark"] .section pre,
+body[data-theme="dark"] .section .highlight {
+  background-color: var(--color-code-background) !important;
+  color: var(--color-code-foreground) !important;
+}
+
+/* AutoAPI docstring content */
+body[data-theme="dark"] .py .docstring,
+body[data-theme="dark"] .py dd,
+body[data-theme="dark"] .py dt {
+  color: var(--color-foreground-primary) !important;
+  background-color: transparent !important;
+}
+
+/* Fix for any remaining white content boxes */
+body[data-theme="dark"] .content,
+body[data-theme="dark"] .document,
+body[data-theme="dark"] .documentwrapper,
+body[data-theme="dark"] .bodywrapper {
+  background-color: var(--color-background-primary) !important;
+  color: var(--color-foreground-primary) !important;
 }
 
 /* API Module Cards Enhancement */
@@ -428,24 +516,14 @@ body[data-pagename="autoapi/index"] .section > ul > li a:hover {
   border-radius: 6px !important;
 }
 
-/* Admonition Enhancements */
+/* Admonition Enhancements - Furo-friendly */
 .admonition {
-  border-radius: 8px !important;
-  border: none !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-  margin: 1.5rem 0 !important;
+  border-radius: 6px; /* Subtle rounding without !important */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Gentle shadow */
 }
 
 .admonition-title {
-  font-weight: 700 !important;
-  padding: 1rem 1.5rem !important;
-  margin: 0 !important;
-  border-radius: 8px 8px 0 0 !important;
-}
-
-.admonition > p,
-.admonition > .last {
-  padding: 0 1.5rem 1.5rem 1.5rem !important;
+  font-weight: 600; /* Slightly bolder but not forced */
 }
 
 /* Pydantic Model Styling */

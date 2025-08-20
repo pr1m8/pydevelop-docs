@@ -1,0 +1,428 @@
+{
+  "session": "comprehensive_20250817_184958",
+  "timestamp": "2025-08-17T18:53:50.027478",
+  "total_pages": 20,
+  "total_issues": 160,
+  "critical_issues": [
+    "Missing navigation on 04_agents",
+    "Missing navigation on 06_config",
+    "Missing navigation on 14_manager",
+    "Missing navigation on 11_installers",
+    "Missing navigation on 17_tools",
+    "Missing navigation on 12_integration",
+    "Missing navigation on 10_downloader_config",
+    "Missing navigation on 09_downloader",
+    "Missing navigation on 02_autoapi_index",
+    "Missing navigation on 18_utils",
+    "Missing navigation on 05_cli",
+    "Missing navigation on 19_mcp_agent",
+    "Missing navigation on 15_mixins",
+    "Missing navigation on 03_mcp_module",
+    "Missing navigation on 20_mcp_manager",
+    "Missing navigation on 16_servers",
+    "Missing navigation on 07_discovery",
+    "Missing navigation on 08_documentation",
+    "Missing navigation on 13_launcher",
+    "Missing navigation on 01_index"
+  ],
+  "navigation_issues": [
+    {
+      "page": "02_autoapi_index",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "01_index",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "04_agents",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "04_agents",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "05_cli",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "05_cli",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "06_config",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "06_config",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "04_agents",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "04_agents",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "12_integration",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "12_integration",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "17_tools",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "17_tools",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "19_mcp_agent",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "19_mcp_agent",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "14_manager",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "14_manager",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "11_installers",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "11_installers",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "10_downloader_config",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "10_downloader_config",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "17_tools",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "17_tools",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "06_config",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "06_config",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "08_documentation",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "08_documentation",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "12_integration",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "12_integration",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "10_downloader_config",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "10_downloader_config",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "09_downloader",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "09_downloader",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "02_autoapi_index",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "18_utils",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "18_utils",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "15_mixins",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "15_mixins",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "05_cli",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "05_cli",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "19_mcp_agent",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "19_mcp_agent",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "18_utils",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "18_utils",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "15_mixins",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "15_mixins",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "14_manager",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "14_manager",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "03_mcp_module",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "03_mcp_module",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "20_mcp_manager",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "20_mcp_manager",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "20_mcp_manager",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "20_mcp_manager",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "09_downloader",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "09_downloader",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "11_installers",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "11_installers",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "16_servers",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "16_servers",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "07_discovery",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "07_discovery",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "08_documentation",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "08_documentation",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "16_servers",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "16_servers",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "13_launcher",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "13_launcher",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "07_discovery",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "07_discovery",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "13_launcher",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "13_launcher",
+      "theme": "light",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    },
+    {
+      "page": "01_index",
+      "theme": "light",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "03_mcp_module",
+      "theme": "dark",
+      "issue": "\u274c No navigation sidebar found"
+    },
+    {
+      "page": "03_mcp_module",
+      "theme": "dark",
+      "issue": "\u26a0\ufe0f No TOC tree found"
+    }
+  ],
+  "404_errors": [],
+  "css_issues": [],
+  "recommendations": [
+    {
+      "severity": "critical",
+      "category": "navigation",
+      "title": "Missing Navigation Sidebar",
+      "description": "Navigation sidebar is missing on 20 pages",
+      "fix": "\n1. Check Furo theme configuration in conf.py:\n   ```python\n   html_theme_options = {\n       \"sidebar_hide_name\": False,\n       \"navigation_with_keys\": True,\n   }\n   ```\n\n2. Verify toctree directives in index.rst\n\n3. Ensure _static/css files aren't hiding the sidebar\n"
+    },
+    {
+      "severity": "info",
+      "category": "css",
+      "title": "CSS Configuration Check",
+      "description": "Verify CSS files after recent simplification",
+      "fix": "\n1. Ensure these CSS files were removed:\n   - enhanced-design.css (marketing style)\n   - api-docs.css (aggressive badges)\n   - furo-intense.css (dark mode overrides)\n\n2. Verify minimal CSS set is active:\n   - breadcrumb-navigation.css\n   - mermaid-custom.css\n   - tippy-enhancements.css\n   - css/custom.css\n\n3. Run `pydevelop-docs init --force` to update configuration\n"
+    }
+  ]
+}

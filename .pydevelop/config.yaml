@@ -1,0 +1,78 @@
+project:
+  name: !!python/object/apply:tomlkit.items.String
+    - !!python/object/apply:tomlkit.items.StringType &id001
+      - '"'
+    - pydevelop-docs
+    - pydevelop-docs
+    - !!python/object:tomlkit.items.Trivia
+      indent: ""
+      comment_ws: ""
+      comment: ""
+      trail: "
+
+        "
+  version: !!python/object/apply:tomlkit.items.String
+    - *id001
+    - 0.1.0
+    - 0.1.0
+    - !!python/object:tomlkit.items.Trivia
+      indent: ""
+      comment_ws: ""
+      comment: ""
+      trail: "
+
+        "
+  description: !!python/object/apply:tomlkit.items.String
+    - *id001
+    - Universal Python documentation generator with 40+ Sphinx extensions pre-configured.
+      Zero-configuration setup for beautiful, professional documentation.
+    - Universal Python documentation generator with 40+ Sphinx extensions pre-configured.
+      Zero-configuration setup for beautiful, professional documentation.
+    - !!python/object:tomlkit.items.Trivia
+      indent: ""
+      comment_ws: ""
+      comment: ""
+      trail: "
+
+        "
+  authors: !!python/object/apply:tomlkit.items.Array
+    - - !!python/object/apply:tomlkit.items.String
+        - *id001
+        - Haive Team <team@haive.ai>
+        - Haive Team <team@haive.ai>
+        - !!python/object:tomlkit.items.Trivia
+          indent: ""
+          comment_ws: ""
+          comment: ""
+          trail: "
+
+            "
+    - !!python/object:tomlkit.items.Trivia
+      indent: ""
+      comment_ws: ""
+      comment: ""
+      trail: "
+
+        "
+    - false
+  license: null
+  repository: https://github.com/pr1m8/haive-docs
+  homepage: !!python/object/apply:tomlkit.items.String
+    - *id001
+    - https://github.com/haive-ai/pydevelop-docs
+    - https://github.com/haive-ai/pydevelop-docs
+    - !!python/object:tomlkit.items.Trivia
+      indent: ""
+      comment_ws: ""
+      comment: ""
+      trail: "
+
+        "
+discovery:
+  auto_detect: true
+  sources:
+    - pyproject.toml
+    - package.json
+    - setup.py
+    - git
+    - pypi

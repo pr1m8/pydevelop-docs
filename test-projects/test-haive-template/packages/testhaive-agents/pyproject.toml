@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "testhaive-agents"
+version = "0.1.0"
+description = "Agent implementations (mimics haive-agents structure)"
+authors = ["Test <test@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pydantic = "^2.0.0"
+testhaive-core = { path = "../testhaive-core", develop = true }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.packages]
+packages = [{ include = "testhaive", from = "src" }]

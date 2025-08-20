@@ -1,0 +1,30 @@
+.. Custom Index Template
+   ====================
+
+Welcome to {{ project }} documentation!
+=======================================
+
+.. note::
+   This is a custom index template from .pydevelop/templates/
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   getting-started
+   api/index
+   examples/index
+   changelog
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
+.. raw:: html
+
+   <div class="custom-footer">
+   This documentation was built with PyDevelop-Docs
+   </div>
