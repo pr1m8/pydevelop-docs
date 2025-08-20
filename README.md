@@ -1,389 +1,417 @@
-# PyDevelop Documentation Tools
+# PyDevelop-Docs
 
-**🚀 Universal Python documentation generator with 40+ Sphinx extensions pre-configured**
+> **Universal Python documentation generator with 40+ Sphinx extensions pre-configured**
 
-Turn any Python project into beautiful documentation with one command. No configuration needed.
+[![PyPI version](https://badge.fury.io/py/pydevelop-docs.svg)](https://badge.fury.io/py/pydevelop-docs)
+[![Python Support](https://img.shields.io/pypi/pyversions/pydevelop-docs.svg)](https://pypi.org/project/pydevelop-docs/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Transform any Python project into beautiful, professional documentation with **zero configuration**. PyDevelop-Docs automatically detects your project structure and generates a complete Sphinx documentation setup with modern themes, extensive features, and intelligent API documentation.
 
 ## ✨ Features
 
-- **🎯 Zero Configuration**: Works out-of-the-box with any Python project
-- **📦 Universal Support**: Single packages, monorepos, any structure
-- **🎨 Beautiful Themes**: Pre-configured Furo theme with dark mode
-- **🔧 40+ Extensions**: Full PyAutoDoc configuration included
-- **⚡ Smart Detection**: Automatically detects project structure
-- **🚀 Interactive CLI**: Guided setup with rich terminal UI
+### 🎯 **Zero Configuration**
+- **Works immediately** with any Python project structure
+- **Automatic detection** of monorepos, single packages, src layouts, flat layouts
+- **Smart path configuration** for AutoAPI and asset management
+- **Intelligent metadata extraction** from pyproject.toml, setup.py
+
+### 📦 **Universal Project Support**
+- **Monorepos**: `packages/package-name/` structures
+- **Src Layout**: `src/package_name/` organization  
+- **Flat Layout**: Package in project root
+- **Simple Projects**: Basic Python files
+
+### 🎨 **Professional Appearance**
+- **Beautiful Furo theme** with dark mode support
+- **Responsive design** for all devices
+- **Custom CSS enhancements** for better readability
+- **Professional navigation** with hierarchical organization
+
+### 🔧 **40+ Pre-configured Extensions**
+- **AutoAPI** with hierarchical organization (not flat alphabetical!)
+- **Syntax highlighting** with copy buttons
+- **Mermaid diagrams** and PlantUML support
+- **Interactive elements** with sphinx-design
+- **SEO optimization** with sitemaps and OpenGraph
+- **And much more!** See [complete extension list](#included-extensions)
+
+### ⚡ **Smart CLI Commands**
+- **`setup-general`**: Analyze and set up any Python project
+- **`copy-setup`**: Transfer documentation between projects  
+- **Interactive and non-interactive** modes available
+- **Dry-run capability** for previewing actions
 
 ## 🚀 Quick Start
 
-### 1. Install
-
+### Installation
 ```bash
-# With pip
 pip install pydevelop-docs
-
-# With Poetry (recommended)
-poetry add --group docs pydevelop-docs
 ```
 
-### 2. Initialize Documentation
-
+### One-Command Setup
 ```bash
-# Interactive mode (recommended)
-pydevelop-docs
+# Set up documentation for any Python project
+pydevelop-docs setup-general /path/to/your/project
 
-# Or command line
-pydevelop-docs init
+# Navigate and build
+cd /path/to/your/project/docs
+make html
+
+# Your documentation is ready at build/html/index.html! 🎉
 ```
 
-### 3. Build Documentation
+That's it! PyDevelop-Docs automatically:
+- ✅ Detects your project type and structure
+- ✅ Configures 40+ Sphinx extensions
+- ✅ Sets up AutoAPI with proper paths
+- ✅ Creates professional homepage and navigation
+- ✅ Installs beautiful theme with custom styling
 
-```bash
-pydevelop-docs build
-```
+## 📋 Project Types Supported
 
-Your documentation is now available at `docs/build/html/index.html`!
-
-## 📋 What You Get
-
-- **Complete Sphinx Setup**: Ready-to-use configuration with 40+ extensions
-- **API Documentation**: Automatic API docs from your code
-- **Beautiful Theme**: Professional Furo theme with customizations
-- **Code Examples**: Syntax highlighting and copy buttons
-- **Diagrams**: Mermaid, PlantUML, and more diagram support
-- **Search**: Full-text search functionality
-- **Mobile Friendly**: Responsive design for all devices
-
-## 🎯 Use Cases
-
-### Single Package
-
-Perfect for individual Python packages:
-
-```
-my-package/
-├── src/my_package/
-├── tests/
-├── pyproject.toml
-└── docs/              # ← Created by pydevelop-docs
-    ├── source/
-    │   ├── conf.py    # ← Pre-configured with 40+ extensions
-    │   └── index.rst  # ← Main documentation page
-    └── build/         # ← Generated HTML
-```
-
-### Monorepo
-
-Great for multi-package repositories:
-
+### Monorepo Structure
 ```
 my-monorepo/
 ├── packages/
 │   ├── package-a/
-│   │   └── docs/      # ← Individual package docs
-│   └── package-b/
-│       └── docs/      # ← Individual package docs
-├── tools/
-└── docs/              # ← Central documentation hub
+│   │   └── src/package_a/
+│   ├── package-b/ 
+│   │   └── src/package_b/
+│   └── package-c/
+│       └── src/package_c/
+└── pyproject.toml
 ```
+**Detection**: ✅ Monorepo | **AutoAPI**: `['../packages']`
 
-## 🔧 Commands
+### Src Layout
+```
+my-package/
+├── src/
+│   └── my_package/
+├── tests/
+├── docs/  # ← Created here
+└── pyproject.toml
+```
+**Detection**: ✅ Single Package | **AutoAPI**: `['../../src']`
 
-### `pydevelop-docs`
+### Flat Layout  
+```
+my-package/
+├── my_package/
+├── tests/
+├── docs/  # ← Created here
+└── pyproject.toml
+```
+**Detection**: ✅ Single Package | **AutoAPI**: `['../my_package']`
 
-Launch interactive CLI (recommended for beginners)
+### Simple Project
+```
+my-scripts/
+├── main.py
+├── utils.py
+├── docs/  # ← Created here
+└── requirements.txt
+```
+**Detection**: ✅ Simple Project | **AutoAPI**: `['..']`
 
-### `pydevelop-docs init`
+## 🛠️ Usage Examples
 
-Initialize documentation structure
-
-**Options:**
-
-- `--packages-dir, -d`: Directories to scan for packages
-- `--include-root, -r`: Include root-level documentation
-- `--packages, -p`: Specific packages to initialize
-- `--dry-run, -n`: Preview changes without making them
-- `--force, -f`: Overwrite existing documentation
-
-**Examples:**
+### Command Line Interface
 
 ```bash
-# Single package
-pydevelop-docs init
+# Interactive setup with project analysis
+pydevelop-docs setup-general /path/to/project
 
-# Monorepo with multiple package directories
-pydevelop-docs init -d packages -d tools --include-root
+# Non-interactive setup
+pydevelop-docs setup-general /path/to/project --non-interactive --force
 
-# Specific packages only
-pydevelop-docs init -p my-package -p my-other-package
+# Preview what will be created
+pydevelop-docs setup-general /path/to/project --dry-run
+
+# Custom documentation directory
+pydevelop-docs setup-general /path/to/project --target-dir /custom/docs/path
+
+# Copy documentation setup between projects
+pydevelop-docs copy-setup /source/project /destination/project --include-config
 ```
 
-### `pydevelop-docs build`
-
-Build documentation
-
-**Options:**
-
-- `--clean, -c`: Clean before building
-- `--package, -p`: Build specific package
-- `--no-parallel`: Disable parallel building
-
-**Examples:**
-
-```bash
-# Build all documentation
-pydevelop-docs build
-
-# Clean build
-pydevelop-docs build --clean
-
-# Build specific package
-pydevelop-docs build --package my-package
-```
-
-### `pydevelop-docs clean`
-
-Remove all build artifacts
-
-### `pydevelop-docs sync`
-
-Sync documentation between packages
-
-```bash
-pydevelop-docs sync source-package target-package
-```
-
-## ⚙️ Configuration
-
-Create `.pydevelop-docs.yaml` in your project root for custom settings:
-
-```yaml
-# Project structure
-settings:
-  packages_dir:
-    - packages
-    - tools
-  include_root: true
-
-# Build options
-build:
-  central_hub: true
-  parallel: true
-  clean_before_build: false
-
-# Paths
-paths:
-  docs_folder: "docs"
-  source_folder: "source"
-  build_folder: "build"
-
-# Theme customization
-theme:
-  name: "furo"
-  dark_mode: true
-  sidebar_hide_name: false
-
-# Extensions
-extensions:
-  autoapi: true
-  mermaid: true
-  copybutton: true
-  # Add any additional extensions here
-```
-
-## 📚 Included Extensions
-
-All 40+ extensions are pre-configured and optimized:
-
-### Core Documentation
-
-- `sphinx.ext.autodoc` - Automatic documentation from docstrings
-- `sphinx.ext.napoleon` - Google/NumPy style docstrings
-- `sphinx.ext.viewcode` - Source code links
-- `sphinx.ext.intersphinx` - Cross-project references
-
-### API Documentation
-
-- `autoapi.extension` - Automatic API documentation
-- `sphinx_autodoc_typehints` - Type hint support
-- `sphinxcontrib.autodoc_pydantic` - Pydantic model docs
-
-### Content & Design
-
-- `myst_parser` - Markdown support
-- `sphinx_design` - Bootstrap-style components
-- `sphinx_togglebutton` - Collapsible sections
-- `sphinx_copybutton` - Copy code buttons
-- `sphinx_tabs.tabs` - Tabbed content
-
-### Diagrams & Visualization
-
-- `sphinxcontrib.mermaid` - Mermaid diagrams
-- `sphinxcontrib.plantuml` - PlantUML diagrams
-- `sphinx.ext.graphviz` - Graphviz diagrams
-
-### Advanced Features
-
-- `sphinx_sitemap` - SEO sitemap generation
-- `sphinx_codeautolink` - Automatic code linking
-- `sphinx_tippy` - Rich hover tooltips
-- `sphinx_last_updated_by_git` - Git-based update tracking
-- `sphinx_changelog` - Changelog generation
-- `sphinx_issues` - GitHub issue integration
-
-### Utilities
-
-- `sphinx_favicon` - Favicon support
-- `notfound.extension` - Custom 404 pages
-- `sphinxext.opengraph` - Social media previews
-- `sphinx_tags` - Content tagging
-
-[See complete list of 40+ extensions →](https://github.com/haive-ai/pydevelop-docs/blob/main/docs/EXTENSIONS.md)
-
-## 🎨 Customization
-
-### Custom CSS
-
-Add custom styles by creating `docs/source/_static/css/custom.css`:
-
-```css
-/* Your custom styles */
-.bd-main .bd-content .bd-article-container {
-  max-width: 100rem;
-}
-```
-
-### Custom Templates
-
-Override templates by creating files in `docs/source/_templates/`:
-
-```
-docs/source/_templates/
-├── layout.html
-├── sidebar.html
-└── ...
-```
-
-### Theme Options
-
-Customize the Furo theme in your `conf.py`:
+### Python API
 
 ```python
-html_theme_options = {
-    "light_css_variables": {
-        "color-brand-primary": "#2563eb",
-        "color-brand-content": "#1d4ed8",
-    },
-    "dark_css_variables": {
-        "color-brand-primary": "#60a5fa",
-        "color-brand-content": "#3b82f6",
-    },
-}
+from pydevelop_docs import setup_project_docs
+
+# One-line setup
+result = setup_project_docs("/path/to/project")
+print(f"Documentation created at: {result['target_dir']}")
+
+# Non-interactive with custom options
+result = setup_project_docs(
+    "/path/to/project",
+    target_dir="/custom/location",
+    force=True,
+    interactive=False
+)
+
+# Preview without executing
+plan = setup_project_docs("/path/to/project", dry_run=True)
+for action in plan['actions']:
+    print(f"Would create: {action}")
 ```
 
-## 🔄 Integration Examples
+### Advanced Configuration
 
-### With GitHub Actions
+```python
+from pydevelop_docs.config import get_haive_config
 
-```yaml
-name: Documentation
+# Get pre-configured Sphinx configuration
+config = get_haive_config(
+    package_name="my-package",
+    package_path="/path/to/package"
+)
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.12"
-
-      - name: Install dependencies
-        run: |
-          pip install poetry
-          poetry install --with docs
-
-      - name: Build documentation
-        run: poetry run pydevelop-docs build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/build/html
+# Use in your docs/source/conf.py
+globals().update(config)
 ```
 
-### With Pre-commit
+### Project Analysis
 
-```yaml
-# .pre-commit-config.yaml
-repos:
-  - repo: local
-    hooks:
-      - id: docs-build
-        name: Build documentation
-        entry: poetry run pydevelop-docs build
-        language: system
-        pass_filenames: false
-        always_run: true
+```python
+from pydevelop_docs.general_setup import ProjectDetector
+from pathlib import Path
+
+# Analyze any Python project
+detector = ProjectDetector(Path("/path/to/project"))
+info = detector.detect_project_type()
+
+print(f"Project type: {info['type']}")  # monorepo, single_package, etc.
+print(f"Package manager: {info['package_manager']}")  # poetry, setuptools, etc.
+print(f"Found {len(info['packages'])} packages")
+print(f"Structure: {info['structure']['pattern']}")
 ```
 
-## 🛠️ Development
+## 📖 Generated Documentation Structure
 
-### Contributing
+PyDevelop-Docs creates a complete documentation setup:
 
+```
+docs/
+├── Makefile                    # Build automation
+├── requirements.txt            # Documentation dependencies  
+├── source/
+│   ├── conf.py                # Complete Sphinx configuration
+│   ├── index.rst              # Professional homepage
+│   ├── _static/               # CSS, JavaScript, assets
+│   │   ├── css/
+│   │   │   ├── custom.css     # Custom styling
+│   │   │   └── furo-intense.css # Dark mode fixes
+│   │   └── js/
+│   │       └── api-enhancements.js
+│   ├── _templates/            # Custom Jinja2 templates
+│   └── autoapi/               # Auto-generated API docs
+│       └── index.rst          # API reference (hierarchical!)
+└── build/
+    └── html/                  # Built documentation
+        └── index.html         # Your beautiful docs! 🎉
+```
+
+## 🎨 Theme and Styling
+
+### Furo Theme with Enhancements
+- **Modern responsive design** that works on all devices
+- **Dark/light mode toggle** with proper contrast
+- **Smooth animations** and professional typography
+- **Enhanced navigation** with improved sidebar
+- **Custom color scheme** optimized for readability
+
+### Key Styling Features
+- **Hierarchical API navigation** (not flat alphabetical lists!)
+- **Improved code block styling** with copy buttons
+- **Better table and admonition styling**
+- **Enhanced mobile experience**
+- **Professional color scheme** with accessibility focus
+
+## 🔧 Included Extensions
+
+PyDevelop-Docs includes 40+ carefully selected and pre-configured Sphinx extensions:
+
+### Core Documentation
+- `sphinx.ext.autodoc` - Automatic API documentation
+- `sphinx.ext.napoleon` - Google/NumPy docstring support
+- `sphinx.ext.viewcode` - Source code links
+- `sphinx.ext.intersphinx` - Cross-project linking
+
+### API Documentation  
+- `autoapi.extension` - Automatic API reference (with hierarchical fix!)
+- `sphinx_autodoc_typehints` - Type hint documentation
+- `sphinxcontrib.autodoc_pydantic` - Pydantic model documentation
+
+### Enhanced Features
+- `myst_parser` - Markdown support
+- `sphinx_copybutton` - Copy code buttons
+- `sphinx_design` - Modern UI components
+- `sphinx_tabs` - Tabbed content
+- `sphinxcontrib.mermaid` - Diagram support
+
+### SEO and Discovery
+- `sphinx_sitemap` - SEO sitemaps
+- `sphinxext.opengraph` - Social media previews
+- `sphinx_favicon` - Custom favicons
+
+### And Many More!
+See the [complete extension list](docs/extensions.md) with configuration details.
+
+## ⚙️ Configuration Details
+
+### AutoAPI Hierarchical Organization
+
+**The Problem**: Default AutoAPI creates flat, alphabetical lists of 200+ classes that are impossible to navigate.
+
+**Our Solution**: Hierarchical organization that follows your project structure:
+
+```python
+# Key configuration in generated conf.py
+autoapi_own_page_level = "module"  # Keep classes with their modules!
+autoapi_options = [
+    "members",
+    "undoc-members", 
+    "show-inheritance",
+    "show-module-summary",  # Enables hierarchical grouping
+]
+```
+
+**Result**: Beautiful organized navigation like:
+```
+📦 my_package
+├── 📁 core
+│   ├── 📄 engine (3 classes)
+│   └── 📄 schema (5 classes)  
+└── 📁 utils
+    └── 📄 helpers (2 functions)
+```
+
+Instead of:
+```
+❌ All Classes (A-Z)
+├── AgentConfig
+├── BaseModel
+├── Calculator
+├── [197 more in flat list...]
+```
+
+### Smart Path Detection
+
+PyDevelop-Docs automatically configures AutoAPI directories based on your project structure:
+
+- **Monorepo**: `autoapi_dirs = ['../packages']`
+- **Src Layout**: `autoapi_dirs = ['../../src']`  
+- **Flat Layout**: `autoapi_dirs = ['../package_name']`
+- **Simple Project**: `autoapi_dirs = ['..']`
+
+No manual configuration needed! 🎯
+
+## 🚧 Development
+
+### Setting up for Development
 ```bash
-# Clone repository
-git clone https://github.com/haive-ai/pydevelop-docs
+git clone https://github.com/your-org/pydevelop-docs.git
 cd pydevelop-docs
 
-# Install in development mode
-poetry install --with dev
+# Install with development dependencies
+poetry install --with dev,docs
 
 # Run tests
 poetry run pytest
 
 # Build documentation
-poetry run pydevelop-docs build
-
-# Run pre-commit hooks
-pre-commit run --all-files
+cd docs && make html
 ```
 
-### Project Structure
+### Running Tests
+```bash
+# Full test suite
+poetry run pytest
 
-```
-pydevelop-docs/
-├── src/pydevelop_docs/
-│   ├── __init__.py       # Main exports
-│   ├── cli.py            # Command-line interface
-│   ├── config.py         # Sphinx configuration
-│   ├── interactive.py    # Interactive CLI
-│   ├── builders.py       # Documentation builders
-│   ├── autofix.py        # Automatic fixes
-│   └── templates/        # File templates
-├── docs/                 # Documentation
-├── tests/                # Test suite
-└── scripts/              # Example scripts
+# Test with coverage
+poetry run pytest --cov=pydevelop_docs
+
+# Test specific functionality
+poetry run pytest tests/test_general_setup.py -v
 ```
 
-## 📄 License
+### Building Documentation
+```bash
+# Build your own docs (meta!)
+cd docs
+make html
+
+# Or use the tool on itself
+pydevelop-docs setup-general . --force
+cd docs && make html
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Quick Contribution Setup
+```bash
+# Fork and clone
+git clone https://github.com/your-username/pydevelop-docs.git
+cd pydevelop-docs
+
+# Install development dependencies  
+poetry install --with dev,docs,test
+
+# Create feature branch
+git checkout -b feature/your-feature-name
+
+# Make changes and test
+poetry run pytest
+poetry run ruff check
+poetry run mypy
+
+# Submit pull request! 🎉
+```
+
+## 📊 Comparison
+
+| Feature | PyDevelop-Docs | Manual Sphinx | Other Tools |
+|---------|----------------|---------------|-------------|
+| **Setup Time** | < 1 minute | Hours | Minutes |
+| **Project Detection** | ✅ Automatic | ❌ Manual | ⚠️ Limited |
+| **Extension Count** | 40+ | 0 | 5-10 |
+| **Theme Quality** | ✅ Professional | ⚠️ Basic | ⚠️ Varies |
+| **AutoAPI Hierarchy** | ✅ Fixed | ❌ Flat | ❌ Flat |
+| **Mobile Responsive** | ✅ Yes | ❌ No | ⚠️ Sometimes |
+| **Dark Mode** | ✅ Yes | ❌ No | ⚠️ Sometimes |
+| **SEO Ready** | ✅ Yes | ❌ No | ❌ No |
+
+## 📜 License
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 🙏 Acknowledgments
 
-- **Documentation**: [Read the full docs →](https://pydevelop-docs.readthedocs.io)
-- **Issues**: [Report bugs →](https://github.com/haive-ai/pydevelop-docs/issues)
-- **Discussions**: [Ask questions →](https://github.com/haive-ai/pydevelop-docs/discussions)
-- **Email**: [team@haive.ai](mailto:team@haive.ai)
+- **Sphinx Team** - For the amazing documentation framework
+- **Furo Theme** - For the beautiful modern theme
+- **AutoAPI** - For automatic API documentation
+- **All Extension Authors** - For creating the tools that make this possible
+
+## 👨‍💻 Author
+
+**William R. Astley**
+- Website: [will.astley.dev](https://will.astley.dev)
+- GitHub: [@pr1m8](https://github.com/pr1m8)
+
+## 📞 Support
+
+- **Documentation**: [Full Documentation](https://pydevelop-docs.readthedocs.io/)
+- **Issues**: [GitHub Issues](https://github.com/pr1m8/pydevelop-docs/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/pr1m8/pydevelop-docs/discussions)
 
 ---
 
-**Made with ❤️ by the Haive Team**
+**🚀 From zero to professional documentation in under a minute!**
 
-Transform your Python documentation from zero to hero in minutes, not hours.
+*Made with ❤️ for the Python community*

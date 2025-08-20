@@ -2,9 +2,9 @@
 name = "pydevelop-docs"
 version = "0.1.0"
 description = "Universal Python documentation generator with 40+ Sphinx extensions pre-configured. Zero-configuration setup for beautiful, professional documentation."
-authors = ["Haive Team <team@haive.ai>"]
-homepage = "https://github.com/haive-ai/pydevelop-docs"
-repository = "https://github.com/haive-ai/pydevelop-docs"
+authors = ["William R. Astley"]
+homepage = "https://will.astley.dev"
+repository = "https://github.com/pr1m8/pydevelop-docs"
 documentation = "https://pydevelop-docs.readthedocs.io"
 keywords = ["documentation", "sphinx", "python", "docs", "api", "autodoc"]
 classifiers = [
@@ -201,6 +201,13 @@ rich = "^14.1.0"
 [tool.poetry.group.web.dependencies]
 playwright = "^1.54.0"
 
+[tool.poetry.group.test.dependencies]
+pytest = "^8.0.0"
+pytest-cov = "^6.0.0"
+pytest-mock = "^3.14.0"
+pytest-xdist = "^3.8.0"
+pytest-asyncio = "^0.25.0"
+
 [tool.towncrier]
 package_dir = "."
 filename = "CHANGELOG.md"
@@ -276,6 +283,54 @@ showcontent = true
 directory = "misc"
 name = "🔀 Miscellaneous"
 showcontent = true
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=pydevelop_docs",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/site-packages/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

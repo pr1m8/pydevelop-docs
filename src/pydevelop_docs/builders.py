@@ -1,4 +1,57 @@
-"""Documentation builders for different project types."""
+"""Advanced documentation builders for different Python project structures.
+
+This module provides a comprehensive builder system for generating Sphinx documentation
+across various Python project types. The builders handle the complete documentation
+generation process including cleaning, building, templating, and hook management.
+
+Key Features:
+    - Support for monorepos, single packages, and custom configurations
+    - Comprehensive build logging and error reporting
+    - Template override and customization system
+    - Pre/post build hook management for custom workflows
+    - Parallel building support for faster documentation generation
+    - Automatic dependency detection and configuration
+    - Integration with popular build tools and CI/CD systems
+
+Builder Types:
+    - BaseDocumentationBuilder: Core builder with common functionality
+    - SinglePackageBuilder: Optimized for individual Python packages
+    - MonorepoBuilder: Specialized for multi-package repository structures
+    - CustomConfigBuilder: Flexible builder for custom project configurations
+
+Examples:
+    Build documentation for a single package:
+    
+    >>> from pathlib import Path
+    >>> from pydevelop_docs.builders import SinglePackageBuilder
+    >>> 
+    >>> builder = SinglePackageBuilder(
+    ...     project_path=Path("/path/to/project"),
+    ...     config={"name": "my-package"}
+    ... )
+    >>> builder.build(clean=True, parallel=True)
+    
+    Build all packages in a monorepo:
+    
+    >>> builder = MonorepoBuilder(
+    ...     project_path=Path("/path/to/monorepo"),
+    ...     config={"packages": ["pkg-a", "pkg-b"]}
+    ... )
+    >>> builder.build_all(ignore_errors=False)
+
+Classes:
+    BaseDocumentationBuilder: Core builder with shared functionality
+    SinglePackageBuilder: Builder for individual packages
+    MonorepoBuilder: Builder for multi-package repositories
+    CustomConfigBuilder: Flexible builder for custom configurations
+
+Functions:
+    get_builder: Factory function to get appropriate builder for project type
+
+Note:
+    All builders support hooks, templates, and comprehensive logging.
+    Build logs are automatically saved to docs/logs/ for debugging.
+"""
 
 import logging
 import shutil
@@ -16,17 +69,91 @@ from .hooks import HookManager, TemplateOverrideManager
 
 
 class BaseDocumentationBuilder:
-    """Base class for documentation builders."""
+    """Core documentation builder with shared functionality for all project types.
+    
+    This is the foundation class that provides essential documentation building
+    capabilities including cleaning, building, logging, hook management, and
+    template customization. All specialized builders inherit from this class.
+    
+    Features:
+        - Comprehensive build logging with timestamped log files
+        - Pre/post build hook system for custom workflows
+        - Template override management for customization
+        - Build artifact cleaning and management
+        - Support for multiple Sphinx builders (html, pdf, epub, etc.)
+        - Parallel building support for improved performance
+        - Error handling and reporting
+        
+    Attributes:
+        project_path (Path): Absolute path to the project root directory
+        config (Dict[str, Any]): Builder configuration including project metadata
+        docs_path (Path): Path to the documentation directory (project_path/docs)
+        hooks (HookManager): Manager for pre/post build hooks
+        templates (TemplateOverrideManager): Manager for template customization
+        
+    Examples:
+        Basic usage with manual configuration:
+        
+        >>> builder = BaseDocumentationBuilder(
+        ...     project_path=Path("/path/to/project"),
+        ...     config={"name": "my-project", "version": "1.0.0"}
+        ... )
+        >>> builder.clean()
+        >>> builder.build(builder="html", clean=False)
+        
+        Build with custom options:
+        
+        >>> builder.build(
+        ...     builder="html",
+        ...     clean=True,
+        ...     parallel=True,
+        ...     warnings_as_errors=False
+        ... )
+        
+        Access build logs:
+        
+        >>> log_dir = builder.docs_path / "logs"
+        >>> latest_log = sorted(log_dir.glob("build_*.log"))[-1]
+        >>> print(f"Latest build log: {latest_log}")
+    """
 
     def __init__(self, project_path: Path, config: Dict[str, Any]):
-        self.project_path = project_path
+        """Initialize the documentation builder.
+        
+        Args:
+            project_path: Absolute path to the project root directory where
+                         documentation will be built. Must contain or will create
+                         a docs/ subdirectory.
+            config: Configuration dictionary containing project metadata such as
+                   name, version, and other build parameters.
+        """
+        self.project_path = project_path.resolve()
         self.config = config
         self.docs_path = project_path / "docs"
         self.hooks = HookManager(project_path)
         self.templates = TemplateOverrideManager(project_path)
 
     def clean(self):
-        """Clean build artifacts."""
+        """Clean all documentation build artifacts and generated files.
+        
+        Removes the build directory and auto-generated API documentation
+        to ensure a clean build environment. This is useful when documentation
+        structure has changed or when troubleshooting build issues.
+        
+        Directories Cleaned:
+            - docs/build/: All built documentation output (HTML, PDF, etc.)
+            - docs/source/autoapi/: Auto-generated API documentation files
+            
+        Examples:
+            Clean before building:
+            
+            >>> builder.clean()
+            >>> builder.build()  # Fresh build
+            
+        Note:
+            This operation is destructive - all built documentation will be removed.
+            Source files (conf.py, index.rst, etc.) are never affected.
+        """
         build_path = self.docs_path / "build"
         autoapi_path = self.docs_path / "source" / "autoapi"
 
@@ -45,7 +172,55 @@ class BaseDocumentationBuilder:
         parallel: bool = True,
         warnings_as_errors: bool = True,
     ):
-        """Build documentation with comprehensive logging."""
+        """Build documentation with comprehensive logging and error handling.
+        
+        Executes the complete documentation build process using Sphinx with
+        advanced logging, hook management, and error reporting. Supports
+        multiple output formats and build optimization options.
+        
+        Args:
+            builder: Sphinx builder type to use for output generation.
+                    Common options: 'html', 'pdf', 'epub', 'latex', 'linkcheck'
+            clean: Whether to clean build artifacts before building.
+                  Recommended for major changes or troubleshooting.
+            parallel: Enable parallel processing for faster builds.
+                     Automatically detects CPU count for optimal performance.
+            warnings_as_errors: Treat Sphinx warnings as errors that stop the build.
+                               Recommended for production builds to ensure quality.
+                               
+        Returns:
+            bool: True if build succeeded, False if build failed.
+            
+        Raises:
+            subprocess.CalledProcessError: If Sphinx build command fails and
+                                         error handling doesn't catch it.
+                                         
+        Examples:
+            Basic HTML build:
+            
+            >>> success = builder.build()
+            >>> if success:
+            ...     print("Documentation built successfully!")
+            
+            Clean build with custom options:
+            
+            >>> success = builder.build(
+            ...     builder="html",
+            ...     clean=True,
+            ...     parallel=False,
+            ...     warnings_as_errors=False
+            ... )
+            
+            Build multiple formats:
+            
+            >>> for fmt in ["html", "epub", "pdf"]:
+            ...     builder.build(builder=fmt)
+            
+        Note:
+            Build logs are automatically saved to docs/logs/build_TIMESTAMP.log
+            for debugging and analysis. Pre/post build hooks are executed
+            automatically if configured.
+        """
         # Setup logging
         log_dir = self.docs_path / "logs"
         log_dir.mkdir(exist_ok=True)

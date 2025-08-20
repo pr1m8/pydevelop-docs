@@ -14,8 +14,8 @@ sys.path.insert(0, os.path.abspath("../../src"))
 
 # -- Project information -----------------------------------------------------
 project = "pydevelop-docs"
-copyright = f"{date.today().year}, pydevelop-docs Team"
-author = "pydevelop-docs Team"
+copyright = f"{date.today().year}, William R. Astley"
+author = "William R. Astley"
 release = "0.1.0"
 
 # -- Import shared configuration from pydevelop_docs -------------------------

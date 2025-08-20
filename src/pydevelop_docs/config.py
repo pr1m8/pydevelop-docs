@@ -92,8 +92,8 @@ def get_haive_config(
         "project": (
             f"Haive {display_name}" if package_name != "haive-docs" else display_name
         ),
-        "author": "Haive Team",
-        "copyright": "2025, Haive Team",
+        "author": "William R. Astley",
+        "copyright": "2025, William R. Astley",
         "release": "0.1.0",
         # Extensions - Complete 40+ extension system with optimal configurations
         "extensions": _get_complete_extensions(

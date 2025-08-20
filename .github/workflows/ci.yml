@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, feat/* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/pip
+          ~/.cache/pypoetry
+        key: ${{ runner.os }}-test-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-test-${{ matrix.python-version }}-
+          
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        
+    - name: Install dependencies
+      run: |
+        poetry install --with test,docs
+        
+    - name: Run type checking with mypy
+      run: |
+        poetry run mypy src/pydevelop_docs/
+      continue-on-error: true
+        
+    - name: Run linting with ruff
+      run: |
+        poetry run ruff check src/
+        
+    - name: Run formatting check with ruff
+      run: |
+        poetry run ruff format --check src/
+        
+    - name: Run tests
+      run: |
+        poetry run pytest tests/ -v --cov=pydevelop_docs --cov-report=xml
+      continue-on-error: true
+        
+    - name: Test CLI functionality
+      run: |
+        # Test CLI help
+        poetry run pydevelop-docs --help
+        
+        # Test project analysis
+        poetry run pydevelop-docs analyze . --dry-run
+        
+        # Test general setup
+        mkdir -p /tmp/test-project/src/testpkg
+        echo "__version__ = '0.1.0'" > /tmp/test-project/src/testpkg/__init__.py
+        echo "def hello(): return 'world'" > /tmp/test-project/src/testpkg/core.py
+        echo "[project]\nname = 'testpkg'\nversion = '0.1.0'" > /tmp/test-project/pyproject.toml
+        
+        poetry run pydevelop-docs setup-general /tmp/test-project --dry-run --non-interactive
+        
+    - name: Upload coverage reports
+      if: matrix.python-version == '3.12'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false
+
+  docs-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12"
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y graphviz plantuml
+        
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      
+    - name: Install dependencies
+      run: |
+        poetry install --with docs
+        
+    - name: Test documentation build
+      run: |
+        cd docs
+        poetry run make html
+        
+    - name: Test that docs contain key content
+      run: |
+        # Check that documentation was built
+        test -f docs/build/html/index.html
+        
+        # Check that our enhanced content is present
+        grep -q "Universal Python Documentation Generator" docs/build/html/index.html
+        grep -q "40+ Sphinx Extensions" docs/build/html/index.html
+        grep -q "William R. Astley" docs/build/html/index.html

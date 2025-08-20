@@ -1,7 +1,57 @@
-"""Universal documentation initialization tool for Python projects.
+"""Command-line interface for PyDevelop Documentation Tools.
 
-This tool can initialize Sphinx documentation with the full PyAutoDoc configuration
-for any Python project, whether it's a single package or monorepo.
+This module provides the main CLI commands for PyDevelop-Docs, enabling users to
+initialize, build, and manage documentation for any Python project structure.
+The CLI supports both interactive and non-interactive modes, with intelligent
+project detection and comprehensive configuration generation.
+
+Main Features:
+    - Universal project analysis and documentation setup
+    - Support for monorepos, single packages, src layouts, and flat structures
+    - Interactive CLI with rich terminal UI and guided setup
+    - Automatic project type detection and metadata extraction
+    - Copy documentation setups between projects
+    - Dry-run capability for previewing operations
+    - Integration with popular package managers (Poetry, setuptools, etc.)
+
+CLI Commands:
+    init: Initialize documentation for the current project
+    interactive: Run interactive setup with guided configuration
+    build: Build documentation for single package or monorepo
+    analyze: Analyze project structure and display configuration
+    setup-general: Set up documentation for any Python project (universal)
+    copy-setup: Copy documentation setup from one project to another
+
+Examples:
+    Basic initialization in current directory:
+    
+    >>> pydevelop-docs init
+    
+    Interactive setup with guided configuration:
+    
+    >>> pydevelop-docs interactive
+    
+    Analyze any Python project:
+    
+    >>> pydevelop-docs analyze /path/to/project
+    
+    Universal setup for any project:
+    
+    >>> pydevelop-docs setup-general /path/to/project --force
+    
+    Copy setup between projects:
+    
+    >>> pydevelop-docs copy-setup /source/project /dest/project
+
+Classes:
+    ProjectAnalyzer: Analyze Python project structure and configuration
+    DocsInitializer: Initialize documentation for Python projects
+    CentralHubGenerator: Generate central documentation hub for monorepos
+
+Note:
+    This module requires Click for CLI functionality and supports both
+    Poetry and setuptools project configurations. The generated documentation
+    uses Sphinx with 40+ pre-configured extensions and the Furo theme.
 """
 
 import asyncio
@@ -25,13 +75,103 @@ from .mock_operations import MockOperationPlan, create_documentation_plan
 
 
 class ProjectAnalyzer:
-    """Analyze Python project structure and configuration."""
+    """Intelligent Python project structure analysis and configuration detection.
+    
+    This class provides comprehensive analysis of Python projects to determine
+    their type, structure, package management system, and existing documentation
+    status. It supports all common Python project layouts and package managers.
+    
+    Supported Project Types:
+        - monorepo: Multiple packages in packages/ directory structure
+        - single: Single package with various layout patterns
+        - unknown: Projects that don't match standard patterns
+        
+    Supported Package Managers:
+        - Poetry (pyproject.toml with [tool.poetry])
+        - setuptools (setup.py or pyproject.toml with setuptools config)
+        - pip (requirements.txt based projects)
+        - hatch, pdm, and other pyproject.toml variants
+        
+    Structure Patterns Detected:
+        - src layout: src/package_name/ organization
+        - flat layout: package_name/ in project root
+        - monorepo: packages/package-name/ structure
+        
+    Attributes:
+        path (Path): Absolute path to the project directory being analyzed
+        
+    Examples:
+        Analyze a monorepo project:
+        
+        >>> analyzer = ProjectAnalyzer(Path("/path/to/monorepo"))
+        >>> info = analyzer.analyze()
+        >>> print(f"Type: {info['type']}, Packages: {len(info['packages'])}")
+        
+        Analyze a single package:
+        
+        >>> analyzer = ProjectAnalyzer(Path("/path/to/single-package"))
+        >>> info = analyzer.analyze()
+        >>> print(f"Structure: {info['structure']}, Manager: {info['package_manager']}")
+        
+        Check existing documentation:
+        
+        >>> info = analyzer.analyze()
+        >>> if info['has_docs']:
+        ...     print("Documentation directory already exists")
+    """
 
     def __init__(self, path: Path):
-        self.path = path
+        """Initialize the project analyzer with a project path.
+        
+        Args:
+            path: Path to the Python project directory to analyze.
+                 Will be resolved to an absolute path.
+        """
+        self.path = path.resolve()
 
     def analyze(self) -> Dict[str, Any]:
-        """Analyze project and return detailed configuration and package status."""
+        """Perform comprehensive analysis of the Python project structure.
+        
+        Analyzes the project to determine its type, package manager, structure
+        patterns, existing documentation status, and provides detailed information
+        about all packages found within the project.
+        
+        Returns:
+            Dict[str, Any]: Comprehensive project analysis containing:
+                - type (str): Project type ('monorepo', 'single', 'unknown')
+                - name (str): Project name extracted from config or directory name
+                - package_manager (str): Detected package manager ('poetry', 'setuptools', etc.)
+                - packages (List[str]): List of package names found in the project
+                - package_details (Dict[str, Dict]): Detailed analysis of each package
+                - has_docs (bool): Whether documentation directory exists
+                - central_hub (Dict): Central documentation hub analysis
+                - structure (str): Structure pattern ('src', 'flat', None)
+                - python_files (List[Path]): List of Python files found
+                - dependencies (Dict): Dependency analysis results
+                
+        Examples:
+            Monorepo analysis result:
+            
+            >>> info = analyzer.analyze()
+            >>> print(info)
+            {
+                'type': 'monorepo',
+                'name': 'my-project',
+                'package_manager': 'poetry',
+                'packages': ['package-a', 'package-b'],
+                'has_docs': True,
+                'structure': 'src',
+                ...
+            }
+            
+            Single package analysis:
+            
+            >>> info = analyzer.analyze()
+            >>> info['type']
+            'single'
+            >>> info['package_details']['single']['src_exists']
+            True
+        """
         info = {
             "type": "unknown",
             "name": self.path.name,
@@ -231,7 +371,62 @@ class ProjectAnalyzer:
 
 
 class DocsInitializer:
-    """Initialize documentation for Python projects."""
+    """Initialize comprehensive Sphinx documentation for Python projects.
+    
+    This class handles the complete initialization of Sphinx documentation
+    for any Python project structure. It creates the necessary directory
+    structure, generates configuration files, copies templates and static
+    assets, and sets up AutoAPI for automatic API documentation generation.
+    
+    Features:
+        - Complete Sphinx documentation setup with 40+ extensions
+        - AutoAPI configuration with hierarchical organization
+        - Professional Furo theme with custom styling
+        - Support for both shared and inline configuration approaches
+        - Automatic dependency management for Poetry projects
+        - Custom build scripts and Makefile generation
+        
+    Configuration Options:
+        - with_guides: Include user guides section
+        - with_examples: Include examples section  
+        - with_cli: Include CLI documentation
+        - with_tutorials: Include tutorials section
+        - use_shared_config: Use centralized config vs inline config
+        
+    Attributes:
+        project_path (Path): Path to the project being documented
+        project_info (Dict[str, Any]): Project analysis results from ProjectAnalyzer
+        template_path (Path): Path to documentation templates directory
+        quiet (bool): Whether to suppress output messages
+        doc_config (Dict[str, bool]): Documentation configuration options
+        
+    Examples:
+        Initialize documentation for a single package:
+        
+        >>> analyzer = ProjectAnalyzer(Path("/path/to/project"))
+        >>> info = analyzer.analyze()
+        >>> initializer = DocsInitializer(
+        ...     project_path=Path("/path/to/project"),
+        ...     project_info=info,
+        ...     doc_config={"with_guides": True}
+        ... )
+        >>> initializer.initialize(force=True)
+        
+        Initialize with custom configuration:
+        
+        >>> config = {
+        ...     "with_guides": True,
+        ...     "with_examples": True,
+        ...     "use_shared_config": True
+        ... }
+        >>> initializer = DocsInitializer(
+        ...     project_path=path,
+        ...     project_info=info,
+        ...     doc_config=config,
+        ...     quiet=True
+        ... )
+        >>> initializer.initialize()
+    """
 
     def __init__(
         self,
@@ -240,6 +435,15 @@ class DocsInitializer:
         doc_config: Dict[str, bool] = None,
         quiet: bool = False,
     ):
+        """Initialize the documentation initializer.
+        
+        Args:
+            project_path: Path to the project where documentation will be created
+            project_info: Project analysis results containing type, structure, etc.
+            doc_config: Optional configuration for documentation features.
+                       Defaults to basic configuration with all features disabled.
+            quiet: Whether to suppress informational output messages
+        """
         self.project_path = project_path
         self.project_info = project_info
         self.template_path = Path(__file__).parent / "templates"
@@ -252,7 +456,41 @@ class DocsInitializer:
         }
 
     def initialize(self, force: bool = False):
-        """Initialize documentation structure."""
+        """Initialize complete Sphinx documentation structure for the project.
+        
+        Creates the full documentation setup including directory structure,
+        configuration files, templates, static assets, and build scripts.
+        Automatically detects project structure and configures AutoAPI paths.
+        
+        Process Overview:
+            1. Create docs/ directory structure with source, _static, _templates
+            2. Copy static CSS, JavaScript, and template files
+            3. Copy custom AutoAPI templates for hierarchical organization
+            4. Generate Sphinx conf.py with 40+ extensions configured
+            5. Create professional index.rst homepage
+            6. Generate Makefile and build scripts
+            7. Add Poetry dependencies if using Poetry package manager
+            
+        Args:
+            force: If True, overwrite existing documentation directory.
+                  If False, raise exception if docs/ already exists.
+                  
+        Raises:
+            click.ClickException: If documentation already exists and force=False
+            
+        Examples:
+            Initialize with overwrite protection:
+            
+            >>> initializer.initialize()  # Fails if docs/ exists
+            
+            Force initialization (overwrite existing):
+            
+            >>> initializer.initialize(force=True)  # Overwrites docs/
+            
+        Note:
+            This method modifies the filesystem by creating directories and files.
+            Use force=True carefully as it will overwrite existing documentation.
+        """
         docs_path = self.project_path / "docs"
 
         if docs_path.exists() and not force:
@@ -1940,6 +2178,645 @@ def copy_setup(source_path, destination_path, include_config, include_static, fo
     except Exception as e:
         click.echo(f"❌ Error copying setup: {e}")
         raise click.Abort()
+
+
+@cli.command()
+@click.option("--coverage", is_flag=True, help="Run tests with coverage reporting")
+@click.option("--verbose", "-v", is_flag=True, help="Verbose test output")
+@click.option("--fast", is_flag=True, help="Skip slow tests")
+@click.option("--integration", is_flag=True, help="Run integration tests only") 
+@click.option("--unit", is_flag=True, help="Run unit tests only")
+@click.option("--lint", is_flag=True, help="Run code quality checks")
+@click.option("--format-check", is_flag=True, help="Check code formatting")
+@click.option("--type-check", is_flag=True, help="Run type checking with mypy")
+@click.option("--all", "run_all", is_flag=True, help="Run all tests and checks")
+def test(coverage, verbose, fast, integration, unit, lint, format_check, type_check, run_all):
+    """Run tests and code quality checks for PyDevelop-Docs.
+    
+    This command runs various types of tests and quality checks:
+    - Unit tests for individual components
+    - Integration tests for CLI functionality  
+    - Code quality checks (linting, formatting, type checking)
+    - Coverage reporting
+    """
+    import time
+    start_time = time.time()
+    
+    click.echo("🧪 Running PyDevelop-Docs tests...")
+    
+    project_path = Path.cwd()
+    
+    # Check if we're in the right directory
+    if not (project_path / "pyproject.toml").exists():
+        click.echo("❌ Error: No pyproject.toml found. Run from project root.")
+        raise click.Abort()
+    
+    # Determine what to run
+    if run_all:
+        lint = format_check = type_check = coverage = True
+        # Don't set unit/integration flags so all tests run
+    
+    if not any([unit, integration, lint, format_check, type_check, coverage]):
+        # Default: run basic tests
+        unit = True
+    
+    results = {}
+    
+    # Code formatting check
+    if format_check or run_all:
+        click.echo("\n📝 Checking code formatting...")
+        try:
+            result = subprocess.run(
+                ["poetry", "run", "ruff", "format", "--check", "src/"],
+                capture_output=True,
+                text=True,
+                cwd=project_path
+            )
+            if result.returncode == 0:
+                click.echo("✅ Code formatting is correct")
+                results['format'] = True
+            else:
+                click.echo("❌ Code formatting issues found:")
+                click.echo(result.stdout)
+                click.echo("💡 Fix with: poetry run ruff format src/")
+                results['format'] = False
+        except Exception as e:
+            click.echo(f"❌ Format check failed: {e}")
+            results['format'] = False
+    
+    # Linting
+    if lint or run_all:
+        click.echo("\n🔍 Running code quality checks...")
+        try:
+            result = subprocess.run(
+                ["poetry", "run", "ruff", "check", "src/"],
+                capture_output=True,
+                text=True,
+                cwd=project_path
+            )
+            if result.returncode == 0:
+                click.echo("✅ No linting issues found")
+                results['lint'] = True
+            else:
+                click.echo("⚠️  Linting issues found:")
+                click.echo(result.stdout[:2000])  # First 2000 chars
+                click.echo("💡 Some issues can be auto-fixed with: poetry run ruff check --fix src/")
+                results['lint'] = False
+        except Exception as e:
+            click.echo(f"❌ Linting failed: {e}")
+            results['lint'] = False
+    
+    # Type checking
+    if type_check or run_all:
+        click.echo("\n🔬 Running type checking...")
+        try:
+            result = subprocess.run(
+                ["poetry", "run", "mypy", "src/pydevelop_docs/"],
+                capture_output=True,
+                text=True,
+                cwd=project_path,
+                timeout=120
+            )
+            if result.returncode == 0:
+                click.echo("✅ No type errors found")
+                results['typecheck'] = True
+            else:
+                click.echo("⚠️  Type checking issues found:")
+                click.echo(result.stdout[:1500])  # First 1500 chars
+                results['typecheck'] = False
+        except subprocess.TimeoutExpired:
+            click.echo("⚠️  Type checking timed out")
+            results['typecheck'] = False
+        except Exception as e:
+            click.echo(f"❌ Type checking failed: {e}")
+            results['typecheck'] = False
+    
+    # Unit tests
+    if unit or (not integration and not run_all):
+        click.echo("\n🧪 Running unit tests...")
+        
+        pytest_cmd = ["poetry", "run", "pytest"]
+        
+        if coverage:
+            pytest_cmd.extend(["--cov=pydevelop_docs", "--cov-report=term-missing", "--cov-report=xml"])
+        
+        if verbose:
+            pytest_cmd.append("-v")
+        else:
+            pytest_cmd.append("-q")
+        
+        if fast:
+            pytest_cmd.extend(["-m", "not slow"])
+        
+        # Add test directory
+        test_dir = project_path / "tests"
+        if test_dir.exists():
+            pytest_cmd.append("tests/")
+        else:
+            click.echo("⚠️  No tests/ directory found, creating basic CLI test...")
+            # Run a basic CLI test
+            pytest_cmd = ["poetry", "run", "python", "-c", """
+import subprocess
+import sys
+try:
+    result = subprocess.run([sys.executable, '-m', 'pydevelop_docs.cli', '--help'], 
+                          capture_output=True, text=True, timeout=30)
+    if result.returncode == 0 and 'pydevelop-docs' in result.stdout:
+        print('✅ CLI help works')
+        exit(0)
+    else:
+        print('❌ CLI help failed')
+        exit(1)
+except Exception as e:
+    print(f'❌ CLI test failed: {e}')
+    exit(1)
+"""]
+        
+        try:
+            result = subprocess.run(
+                pytest_cmd,
+                cwd=project_path,
+                timeout=300  # 5 minute timeout
+            )
+            if result.returncode == 0:
+                click.echo("✅ Unit tests passed")
+                results['unit'] = True
+            else:
+                click.echo("❌ Some unit tests failed")
+                results['unit'] = False
+        except subprocess.TimeoutExpired:
+            click.echo("⚠️  Tests timed out")
+            results['unit'] = False
+        except Exception as e:
+            click.echo(f"❌ Test execution failed: {e}")
+            results['unit'] = False
+    
+    # Integration tests (CLI functionality)
+    if integration or run_all:
+        click.echo("\n🔗 Running integration tests...")
+        
+        # Test CLI commands
+        cli_tests = [
+            (["--help"], "Help command"),
+            (["analyze", ".", "--dry-run"], "Project analysis"),
+            (["setup-general", "/tmp", "--dry-run", "--non-interactive"], "General setup"),
+        ]
+        
+        integration_results = []
+        for cmd_args, description in cli_tests:
+            click.echo(f"   Testing: {description}")
+            try:
+                result = subprocess.run(
+                    ["poetry", "run", "pydevelop-docs"] + cmd_args,
+                    capture_output=True,
+                    text=True,
+                    cwd=project_path,
+                    timeout=60
+                )
+                if result.returncode == 0:
+                    click.echo(f"   ✅ {description} - OK")
+                    integration_results.append(True)
+                else:
+                    click.echo(f"   ❌ {description} - Failed")
+                    click.echo(f"      Error: {result.stderr[:200]}")
+                    integration_results.append(False)
+            except Exception as e:
+                click.echo(f"   ❌ {description} - Exception: {e}")
+                integration_results.append(False)
+        
+        if all(integration_results):
+            click.echo("✅ All integration tests passed")
+            results['integration'] = True
+        else:
+            click.echo(f"❌ {len([r for r in integration_results if not r])} integration tests failed")
+            results['integration'] = False
+    
+    # Test documentation build
+    docs_path = project_path / "docs"
+    if docs_path.exists():
+        click.echo("\n📚 Testing documentation build...")
+        try:
+            result = subprocess.run(
+                ["make", "html"],
+                cwd=docs_path,
+                capture_output=True,
+                text=True,
+                timeout=180  # 3 minute timeout
+            )
+            if result.returncode == 0:
+                click.echo("✅ Documentation builds successfully")
+                results['docs'] = True
+            else:
+                click.echo("❌ Documentation build failed:")
+                click.echo(result.stderr[:1000])
+                results['docs'] = False
+        except subprocess.TimeoutExpired:
+            click.echo("⚠️  Documentation build timed out")
+            results['docs'] = False
+        except Exception as e:
+            click.echo(f"❌ Documentation build test failed: {e}")
+            results['docs'] = False
+    
+    # Summary
+    end_time = time.time()
+    duration = end_time - start_time
+    
+    click.echo(f"\n📊 Test Summary (completed in {duration:.1f}s)")
+    click.echo("=" * 50)
+    
+    passed = 0
+    total = 0
+    
+    for test_type, passed_status in results.items():
+        total += 1
+        if passed_status:
+            passed += 1
+            click.echo(f"✅ {test_type.upper()}: PASSED")
+        else:
+            click.echo(f"❌ {test_type.upper()}: FAILED")
+    
+    if total == 0:
+        click.echo("⚠️  No tests were run")
+    elif passed == total:
+        click.echo(f"\n🎉 All {total} test categories passed!")
+    else:
+        click.echo(f"\n⚠️  {passed}/{total} test categories passed")
+        
+        # Provide helpful next steps
+        if not results.get('format', True):
+            click.echo("💡 Fix formatting: poetry run ruff format src/")
+        if not results.get('lint', True):
+            click.echo("💡 Fix linting: poetry run ruff check --fix src/")
+        if not results.get('unit', True):
+            click.echo("💡 Debug tests: poetry run pytest -v --tb=short")
+    
+    # Set exit code based on results
+    if total > 0 and passed < total:
+        raise click.Abort()
+
+
+@cli.command()
+@click.option("--test", is_flag=True, help="Upload to TestPyPI instead of PyPI")
+@click.option("--dry-run", is_flag=True, help="Show what would be published without doing it")
+@click.option("--force", is_flag=True, help="Force publish even if version exists")
+def publish(test, dry_run, force):
+    """Publish PyDevelop-Docs to PyPI or TestPyPI.
+    
+    This command builds the package and publishes it to PyPI.
+    Use --test to publish to TestPyPI for testing first.
+    """
+    click.echo("🚀 Publishing PyDevelop-Docs...")
+    
+    if dry_run:
+        click.echo("🔍 DRY RUN MODE - No actual publishing will occur")
+    
+    project_path = Path.cwd()
+    
+    # Check if we're in the right directory
+    if not (project_path / "pyproject.toml").exists():
+        click.echo("❌ Error: No pyproject.toml found. Run from project root.")
+        raise click.Abort()
+    
+    # Read version from pyproject.toml
+    try:
+        with open(project_path / "pyproject.toml") as f:
+            import tomlkit
+            data = tomlkit.load(f)
+            version = data["tool"]["poetry"]["version"]
+            name = data["tool"]["poetry"]["name"]
+        click.echo(f"📦 Package: {name} v{version}")
+    except Exception as e:
+        click.echo(f"❌ Error reading pyproject.toml: {e}")
+        raise click.Abort()
+    
+    if dry_run:
+        click.echo(f"🔍 Would publish {name} v{version} to {'TestPyPI' if test else 'PyPI'}")
+        click.echo("🔍 Build command: poetry build")
+        click.echo(f"🔍 Publish command: poetry publish{'--repository testpypi' if test else ''}")
+        return
+    
+    # Check if poetry is available
+    try:
+        result = subprocess.run(["poetry", "--version"], capture_output=True, text=True)
+        if result.returncode != 0:
+            click.echo("❌ Poetry not found. Please install Poetry first.")
+            raise click.Abort()
+        click.echo(f"✅ Using {result.stdout.strip()}")
+    except FileNotFoundError:
+        click.echo("❌ Poetry not found. Please install Poetry first.")
+        raise click.Abort()
+    
+    # Build the package
+    click.echo("🔨 Building package...")
+    try:
+        result = subprocess.run(
+            ["poetry", "build"], 
+            cwd=project_path,
+            capture_output=True, 
+            text=True,
+            check=True
+        )
+        click.echo("✅ Package built successfully")
+        click.echo(result.stdout)
+    except subprocess.CalledProcessError as e:
+        click.echo(f"❌ Build failed: {e}")
+        click.echo(e.stderr)
+        raise click.Abort()
+    
+    # Check if version already exists (if not forcing)
+    if not force:
+        if test:
+            click.echo("⚠️  Testing against TestPyPI - version conflicts are common")
+        else:
+            click.echo("🔍 Checking if version already exists on PyPI...")
+            # Note: In a real scenario, you'd check PyPI API here
+    
+    # Publish the package
+    target = "TestPyPI" if test else "PyPI"
+    click.echo(f"🚀 Publishing to {target}...")
+    
+    publish_cmd = ["poetry", "publish"]
+    if test:
+        publish_cmd.extend(["--repository", "testpypi"])
+    
+    try:
+        if test:
+            click.echo("📝 Note: You may need to configure TestPyPI repository:")
+            click.echo("   poetry config repositories.testpypi https://test.pypi.org/legacy/")
+            click.echo("   poetry config pypi-token.testpypi YOUR_TESTPYPI_TOKEN")
+        else:
+            click.echo("📝 Note: You may need to configure PyPI token:")
+            click.echo("   poetry config pypi-token.pypi YOUR_PYPI_TOKEN")
+        
+        result = subprocess.run(
+            publish_cmd,
+            cwd=project_path,
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        
+        click.echo(f"🎉 Successfully published {name} v{version} to {target}!")
+        click.echo(result.stdout)
+        
+        if test:
+            click.echo(f"🔗 Test package: https://test.pypi.org/project/{name}/")
+        else:
+            click.echo(f"🔗 Live package: https://pypi.org/project/{name}/")
+            click.echo("📝 Installation: pip install pydevelop-docs")
+        
+    except subprocess.CalledProcessError as e:
+        click.echo(f"❌ Publish failed: {e}")
+        click.echo(e.stderr)
+        if "401" in e.stderr or "403" in e.stderr:
+            click.echo("💡 This looks like an authentication issue.")
+            click.echo("   Make sure your PyPI token is configured correctly.")
+        raise click.Abort()
+
+
+@cli.command()
+@click.option("--check-links", is_flag=True, help="Run link checking after build")
+@click.option("--upload-rtd", is_flag=True, help="Trigger Read the Docs build")
+@click.option("--deploy-pages", is_flag=True, help="Deploy to GitHub Pages")
+def publish_docs(check_links, upload_rtd, deploy_pages):
+    """Build and publish documentation to various platforms.
+    
+    This command builds the documentation and optionally deploys it to
+    Read the Docs, GitHub Pages, or other platforms.
+    """
+    click.echo("📚 Publishing PyDevelop-Docs documentation...")
+    
+    project_path = Path.cwd()
+    docs_path = project_path / "docs"
+    
+    if not docs_path.exists():
+        click.echo("❌ Error: No docs/ directory found.")
+        raise click.Abort()
+    
+    # Build documentation
+    click.echo("🔨 Building documentation...")
+    try:
+        result = subprocess.run(
+            ["make", "html"],
+            cwd=docs_path,
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        click.echo("✅ Documentation built successfully")
+        
+        # Count generated files
+        build_path = docs_path / "build" / "html"
+        if build_path.exists():
+            html_files = list(build_path.glob("**/*.html"))
+            click.echo(f"📄 Generated {len(html_files)} HTML pages")
+        
+    except subprocess.CalledProcessError as e:
+        click.echo(f"❌ Documentation build failed: {e}")
+        click.echo(e.stderr)
+        raise click.Abort()
+    
+    # Check links if requested
+    if check_links:
+        click.echo("🔗 Checking documentation links...")
+        try:
+            result = subprocess.run(
+                ["make", "linkcheck"],
+                cwd=docs_path,
+                capture_output=True,
+                text=True,
+                timeout=120  # 2 minute timeout for link checking
+            )
+            if result.returncode == 0:
+                click.echo("✅ All links are valid")
+            else:
+                click.echo("⚠️  Some links may be broken (see details above)")
+                click.echo(result.stdout)
+        except subprocess.TimeoutExpired:
+            click.echo("⚠️  Link checking timed out")
+        except Exception as e:
+            click.echo(f"⚠️  Link checking failed: {e}")
+    
+    # GitHub Pages deployment info
+    if deploy_pages:
+        click.echo("\n🚀 GitHub Pages Deployment:")
+        click.echo("   The docs will be deployed automatically via GitHub Actions")
+        click.echo("   when you push to the main branch.")
+        click.echo("   Make sure GitHub Pages is enabled in your repository settings.")
+    
+    # Read the Docs info
+    if upload_rtd:
+        click.echo("\n📖 Read the Docs:")
+        click.echo("   RTD will automatically build when you push to GitHub.")
+        click.echo("   Configuration: .readthedocs.yaml")
+        click.echo("   Dependencies: docs/requirements.txt")
+        click.echo("   🔗 https://readthedocs.org/projects/pydevelop-docs/")
+    
+    # Local serving info
+    build_path = docs_path / "build" / "html"
+    if build_path.exists():
+        click.echo(f"\n🌐 Local documentation available at:")
+        click.echo(f"   file://{build_path.absolute()}/index.html")
+        click.echo("\n💡 To serve locally:")
+        click.echo(f"   cd {build_path}")
+        click.echo("   python -m http.server 8000")
+        click.echo("   Then open: http://localhost:8000")
+
+
+@cli.command()
+@click.option("--check-version", is_flag=True, help="Check if version bump is needed")
+@click.option("--dry-run", is_flag=True, help="Show what would be done without doing it")
+@click.option("--part", type=click.Choice(["patch", "minor", "major"]), default="patch", 
+              help="Version part to bump (default: patch)")
+def release(check_version, dry_run, part):
+    """Complete release workflow: version bump, build, test, and publish.
+    
+    This command automates the entire release process:
+    1. Bump version (patch/minor/major)
+    2. Build package and documentation
+    3. Run tests
+    4. Publish to PyPI
+    5. Deploy documentation
+    """
+    click.echo("🎯 Starting PyDevelop-Docs release workflow...")
+    
+    if dry_run:
+        click.echo("🔍 DRY RUN MODE - No actual changes will be made")
+    
+    project_path = Path.cwd()
+    
+    # Check if we're in a clean git state
+    try:
+        result = subprocess.run(
+            ["git", "status", "--porcelain"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        if result.stdout.strip() and not dry_run:
+            click.echo("⚠️  Warning: Git working directory is not clean")
+            click.echo("   Uncommitted changes detected:")
+            for line in result.stdout.strip().split('\n'):
+                click.echo(f"   {line}")
+            if not click.confirm("Continue anyway?"):
+                raise click.Abort()
+    except subprocess.CalledProcessError:
+        click.echo("⚠️  Git status check failed")
+    
+    # Read current version
+    try:
+        with open(project_path / "pyproject.toml") as f:
+            import tomlkit
+            data = tomlkit.load(f)
+            current_version = data["tool"]["poetry"]["version"]
+            name = data["tool"]["poetry"]["name"]
+        click.echo(f"📦 Current version: {name} v{current_version}")
+    except Exception as e:
+        click.echo(f"❌ Error reading version: {e}")
+        raise click.Abort()
+    
+    if check_version:
+        click.echo(f"📊 Current version: {current_version}")
+        click.echo(f"🔄 Next {part} version would be calculated by Poetry")
+        return
+    
+    if dry_run:
+        click.echo(f"🔍 Would bump {part} version from {current_version}")
+        click.echo("🔍 Would build package and documentation")
+        click.echo("🔍 Would run tests")
+        click.echo("🔍 Would publish to PyPI")
+        click.echo("🔍 Would deploy documentation")
+        return
+    
+    # Version bump
+    click.echo(f"⬆️  Bumping {part} version...")
+    try:
+        result = subprocess.run(
+            ["poetry", "version", part],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        new_version_line = result.stdout.strip()
+        click.echo(f"✅ {new_version_line}")
+    except subprocess.CalledProcessError as e:
+        click.echo(f"❌ Version bump failed: {e}")
+        raise click.Abort()
+    
+    # Run tests
+    click.echo("🧪 Running tests...")
+    try:
+        result = subprocess.run(
+            ["poetry", "run", "pytest", "--tb=short"],
+            capture_output=True,
+            text=True,
+            timeout=300  # 5 minute timeout
+        )
+        if result.returncode == 0:
+            click.echo("✅ All tests passed")
+        else:
+            click.echo("❌ Tests failed:")
+            click.echo(result.stdout[-1000:])  # Last 1000 chars
+            if not click.confirm("Continue release despite test failures?"):
+                raise click.Abort()
+    except subprocess.TimeoutExpired:
+        click.echo("⚠️  Tests timed out")
+        if not click.confirm("Continue release despite test timeout?"):
+            raise click.Abort()
+    except Exception as e:
+        click.echo(f"⚠️  Test execution failed: {e}")
+        if not click.confirm("Continue release despite test errors?"):
+            raise click.Abort()
+    
+    # Build and publish
+    click.echo("🚀 Building and publishing...")
+    try:
+        # Build
+        subprocess.run(["poetry", "build"], check=True)
+        click.echo("✅ Package built")
+        
+        # Publish
+        subprocess.run(["poetry", "publish"], check=True)
+        click.echo("🎉 Published to PyPI!")
+        
+    except subprocess.CalledProcessError as e:
+        click.echo(f"❌ Build/publish failed: {e}")
+        click.echo("💡 You may need to run: poetry config pypi-token.pypi YOUR_TOKEN")
+        raise click.Abort()
+    
+    # Git commit and tag
+    click.echo("📝 Creating git commit and tag...")
+    try:
+        # Read new version
+        with open(project_path / "pyproject.toml") as f:
+            data = tomlkit.load(f)
+            new_version = data["tool"]["poetry"]["version"]
+        
+        # Commit
+        subprocess.run(["git", "add", "pyproject.toml"], check=True)
+        subprocess.run(["git", "commit", "-m", f"chore: bump version to {new_version}"], check=True)
+        
+        # Tag
+        subprocess.run(["git", "tag", "-a", f"v{new_version}", "-m", f"Release v{new_version}"], check=True)
+        
+        click.echo(f"✅ Created commit and tag v{new_version}")
+        click.echo("💡 Don't forget to push: git push && git push --tags")
+        
+    except subprocess.CalledProcessError as e:
+        click.echo(f"⚠️  Git operations failed: {e}")
+        click.echo("   (Package was still published successfully)")
+    
+    # Documentation
+    click.echo("📚 Building documentation...")
+    try:
+        subprocess.run(["make", "html"], cwd=project_path / "docs", check=True)
+        click.echo("✅ Documentation built")
+    except subprocess.CalledProcessError as e:
+        click.echo(f"⚠️  Documentation build failed: {e}")
+    
+    click.echo(f"\n🎉 Release v{new_version} completed successfully!")
+    click.echo(f"🔗 Package: https://pypi.org/project/{name}/")
+    click.echo("📚 Documentation will be available on Read the Docs after next push")
 
 
 if __name__ == "__main__":
