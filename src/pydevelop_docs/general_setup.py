@@ -137,6 +137,10 @@ class ProjectDetector:
                     "venv", ".venv", "node_modules", ".git", ".tox", ".pytest_cache"
                 }:
                     continue
+                
+                # Skip the packages directory itself when we're searching from project root
+                if search_dir == self.project_path and item.name == "packages":
+                    continue
 
                 # Check if it's a Python package
                 package_info = self._analyze_package(item, search_dir)
@@ -145,17 +149,32 @@ class ProjectDetector:
 
         return packages
 
+    def _has_python_packages_recursive(self, directory: Path, max_depth: int = 3) -> bool:
+        """Check if directory contains Python packages recursively up to max_depth."""
+        if max_depth <= 0:
+            return False
+            
+        for item in directory.iterdir():
+            if not item.is_dir():
+                continue
+                
+            # Check if this directory has __init__.py
+            if (item / "__init__.py").exists():
+                return True
+                
+            # Check recursively
+            if self._has_python_packages_recursive(item, max_depth - 1):
+                return True
+                
+        return False
+
     def _analyze_package(self, package_path: Path, root_dir: Path) -> Optional[Dict[str, Any]]:
         """Analyze a potential package directory."""
         # Check if it has __init__.py
         init_file = package_path / "__init__.py"
         if not init_file.exists():
-            # Check if it contains subdirectories with __init__.py
-            has_python_packages = any(
-                (subdir / "__init__.py").exists()
-                for subdir in package_path.iterdir()
-                if subdir.is_dir()
-            )
+            # Check if it contains subdirectories with __init__.py (recursively)
+            has_python_packages = self._has_python_packages_recursive(package_path)
             if not has_python_packages:
                 return None
 
@@ -421,8 +440,7 @@ class GeneralDocumentationSetup:
         # Get base configuration
         config = get_haive_config(
             package_name=project_info['name'],
-            package_dir=str(self.project_path),
-            base_dir=str(self.project_path)
+            package_path=str(self.project_path)
         )
         
         # Customize based on project info
