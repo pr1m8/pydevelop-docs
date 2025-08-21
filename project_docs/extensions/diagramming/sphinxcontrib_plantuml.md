@@ -2,7 +2,7 @@
 
 **Extension**: `sphinxcontrib.plantuml`  
 **Purpose**: Professional UML diagrams with PlantUML integration  
-**Status**: ✅ Active in PyDevelop-Docs  
+**Status**: ✅ Active in Pydvlppy  
 **Priority**: High - Enterprise-grade diagram generation  
 **Issue #6 Relevance**: Essential for complex architectural diagrams
 
@@ -216,12 +216,12 @@ The `sphinxcontrib.plantuml` extension integrates PlantUML, the industry-standar
 
 ```rst
 .. uml::
-   :caption: PyDevelop-Docs Extension Architecture
+   :caption: Pydvlppy Extension Architecture
 
    @startuml
    !theme blueprint
 
-   package "PyDevelop-Docs Core" {
+   package "Pydvlppy Core" {
        component [CLI Interface] as CLI
        component [Configuration Manager] as Config
        component [Template Engine] as Template
@@ -281,14 +281,14 @@ The `sphinxcontrib.plantuml` extension integrates PlantUML, the industry-standar
 
 ```rst
 .. uml::
-   :caption: PyDevelop-Docs Build Workflow
+   :caption: Pydvlppy Build Workflow
 
    @startuml
    !theme carbon
 
    start
 
-   :User runs pydvlp-docs init;
+   :User runs pydvlppy init;
 
    if (Project type?) then (Single Package)
        :Configure single package settings;
@@ -416,7 +416,7 @@ The `sphinxcontrib.plantuml` extension integrates PlantUML, the industry-standar
 
 ## Configuration Options
 
-### Current PyDevelop-Docs Configuration
+### Current Pydvlppy Configuration
 
 ```python
 # In config.py - Lines 472, 198-199

@@ -1,4 +1,4 @@
-# PyDevelop-Docs Template Organization Audit
+# Pydvlppy Template Organization Audit
 
 **Date**: 2025-01-15
 **Purpose**: Complete audit of template organization and fix plan
@@ -30,7 +30,7 @@ templates/
 
 **Contents**:
 
-- Custom Sphinx templates for PyDevelop-Docs own documentation
+- Custom Sphinx templates for Pydvlppy own documentation
 - NOT distributed to projects
 
 ### 3. Referenced Template Directory
@@ -49,7 +49,7 @@ templates/
 
 ### Issue 1: Template Distribution Not Implemented
 
-**Problem**: Templates are NOT copied during `pydvlp-docs init`
+**Problem**: Templates are NOT copied during `pydvlppy init`
 
 **Evidence**: In `cli.py`:
 
@@ -107,14 +107,14 @@ Submodules
 
 ### Intended Flow (Not Working)
 
-1. PyDevelop-Docs has master templates
+1. Pydvlppy has master templates
 2. `init` command copies templates to project
 3. Project uses local `_autoapi_templates/`
 4. AutoAPI uses custom templates for generation
 
 ### Actual Flow (Current)
 
-1. PyDevelop-Docs has templates (incomplete)
+1. Pydvlppy has templates (incomplete)
 2. `init` does NOT copy templates ❌
 3. Projects reference non-existent templates ❌
 4. AutoAPI falls back to defaults (broken output) ❌
@@ -126,7 +126,7 @@ Submodules
 **In each package's conf.py**, add directly:
 
 ```python
-# Bypass pydvlp-docs temporarily
+# Bypass pydvlppy temporarily
 extensions = [
     "autoapi.extension",  # Must be first
     # ... other extensions
@@ -146,7 +146,7 @@ autoapi_options = [
 
 ### Phase 2: Fix Template Distribution
 
-**In pydvlp-docs cli.py**:
+**In pydvlppy cli.py**:
 
 ```python
 def init_command(...):
@@ -207,7 +207,7 @@ rm -rf source/_templates/autoapi
 ### Test 3: Full Integration
 
 ```bash
-# Use pydvlp-docs init
+# Use pydvlppy init
 # Verify templates are copied
 # Build docs and check structure
 ```
@@ -232,4 +232,4 @@ The template system is preventing the AutoAPI hierarchical fix from working. Eve
 
 ---
 
-**Root Cause**: PyDevelop-Docs has templates but doesn't distribute them, causing projects to reference non-existent templates and breaking AutoAPI output.
+**Root Cause**: Pydvlppy has templates but doesn't distribute them, causing projects to reference non-existent templates and breaking AutoAPI output.

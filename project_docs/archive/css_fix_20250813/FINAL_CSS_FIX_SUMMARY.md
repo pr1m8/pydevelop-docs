@@ -87,7 +87,7 @@ The following should now be visible in dark mode:
 
 To verify the fix works:
 
-1. Open: `file:///home/will/Projects/haive/backend/haive/tools/pydvlp-docs/test-projects/test-haive-template/docs/build/autoapi/testhaive/agents/react/index.html`
+1. Open: `file:///home/will/Projects/haive/backend/haive/tools/pydvlppy/test-projects/test-haive-template/docs/build/autoapi/testhaive/agents/react/index.html`
 2. Toggle to dark mode using the theme switcher
 3. Check that all code blocks and API documentation are clearly visible
 4. Look for any remaining white-on-white text issues

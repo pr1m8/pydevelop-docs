@@ -16,7 +16,7 @@ Features:
 Example:
     Basic usage for a single package:
 
-    >>> from pydvlp_docs.config import get_haive_config
+    >>> from pydvlppy.config import get_haive_config
     >>> config = get_haive_config(
     ...     package_name="my-package",
     ...     package_path="../src"
@@ -69,7 +69,7 @@ def get_haive_config(
     Example:
         In your package's docs/source/conf.py:
 
-        >>> from pydvlp_docs.config import get_haive_config
+        >>> from pydvlppy.config import get_haive_config
         >>>
         >>> # Configure for this package
         >>> config = get_haive_config(
@@ -648,7 +648,7 @@ def _get_complete_theme_options(package_name: str, is_central_hub: bool) -> dict
         # Repository integration
         "source_repository": "https://github.com/haive-ai/haive/",
         "source_branch": "main",
-        "source_directory": (f"packages/{package_name}/docs/" if not is_central_hub else "tools/pydvlp-docs/docs/"),
+        "source_directory": (f"packages/{package_name}/docs/" if not is_central_hub else "tools/pydvlppy/docs/"),
         # Announcements
         "announcement": (
             "🚀 <strong>Haive AI Agent Framework</strong> - Complete monorepo documentation system!"

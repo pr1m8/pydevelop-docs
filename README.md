@@ -1,12 +1,12 @@
-# PyDevelop-Docs
+# Pydvlppy
 
 > **Universal Python documentation generator with 40+ Sphinx extensions pre-configured**
 
-[![PyPI version](https://badge.fury.io/py/pydvlp-docs.svg)](https://badge.fury.io/py/pydvlp-docs)
-[![Python Support](https://img.shields.io/pypi/pyversions/pydvlp-docs.svg)](https://pypi.org/project/pydvlp-docs/)
+[![PyPI version](https://badge.fury.io/py/pydvlppy.svg)](https://badge.fury.io/py/pydvlppy)
+[![Python Support](https://img.shields.io/pypi/pyversions/pydvlppy.svg)](https://pypi.org/project/pydvlppy/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Transform any Python project into beautiful, professional documentation with **zero configuration**. PyDevelop-Docs automatically detects your project structure and generates a complete Sphinx documentation setup with modern themes, extensive features, and intelligent API documentation.
+Transform any Python project into beautiful, professional documentation with **zero configuration**. Pydvlppy automatically detects your project structure and generates a complete Sphinx documentation setup with modern themes, extensive features, and intelligent API documentation.
 
 ## ✨ Features
 
@@ -46,13 +46,13 @@ Transform any Python project into beautiful, professional documentation with **z
 
 ### Installation
 ```bash
-pip install pydvlp-docs
+pip install pydvlppy
 ```
 
 ### One-Command Setup
 ```bash
 # Set up documentation for any Python project
-pydvlp-docs setup-general /path/to/your/project
+pydvlppy setup-general /path/to/your/project
 
 # Navigate and build
 cd /path/to/your/project/docs
@@ -61,7 +61,7 @@ make html
 # Your documentation is ready at build/html/index.html! 🎉
 ```
 
-That's it! PyDevelop-Docs automatically:
+That's it! Pydvlppy automatically:
 - ✅ Detects your project type and structure
 - ✅ Configures 40+ Sphinx extensions
 - ✅ Sets up AutoAPI with proper paths
@@ -121,19 +121,19 @@ my-scripts/
 
 ```bash
 # Interactive setup with project analysis
-pydvlp-docs setup-general /path/to/project
+pydvlppy setup-general /path/to/project
 
 # Non-interactive setup
-pydvlp-docs setup-general /path/to/project --non-interactive --force
+pydvlppy setup-general /path/to/project --non-interactive --force
 
 # Preview what will be created
-pydvlp-docs setup-general /path/to/project --dry-run
+pydvlppy setup-general /path/to/project --dry-run
 
 # Custom documentation directory
-pydvlp-docs setup-general /path/to/project --target-dir /custom/docs/path
+pydvlppy setup-general /path/to/project --target-dir /custom/docs/path
 
 # Copy documentation setup between projects
-pydvlp-docs copy-setup /source/project /destination/project --include-config
+pydvlppy copy-setup /source/project /destination/project --include-config
 ```
 
 ### Python API
@@ -192,7 +192,7 @@ print(f"Structure: {info['structure']['pattern']}")
 
 ## 📖 Generated Documentation Structure
 
-PyDevelop-Docs creates a complete documentation setup:
+Pydvlppy creates a complete documentation setup:
 
 ```
 docs/
@@ -233,7 +233,7 @@ docs/
 
 ## 🔧 Included Extensions
 
-PyDevelop-Docs includes 40+ carefully selected and pre-configured Sphinx extensions:
+Pydvlppy includes 40+ carefully selected and pre-configured Sphinx extensions:
 
 ### Core Documentation
 - `sphinx.ext.autodoc` - Automatic API documentation
@@ -301,7 +301,7 @@ Instead of:
 
 ### Smart Path Detection
 
-PyDevelop-Docs automatically configures AutoAPI directories based on your project structure:
+Pydvlppy automatically configures AutoAPI directories based on your project structure:
 
 - **Monorepo**: `autoapi_dirs = ['../packages']`
 - **Src Layout**: `autoapi_dirs = ['../../src']`  
@@ -314,8 +314,8 @@ No manual configuration needed! 🎯
 
 ### Setting up for Development
 ```bash
-git clone https://github.com/your-org/pydvlp-docs.git
-cd pydvlp-docs
+git clone https://github.com/your-org/pydvlppy.git
+cd pydvlppy
 
 # Install with development dependencies
 poetry install --with dev,docs
@@ -346,7 +346,7 @@ cd docs
 make html
 
 # Or use the tool on itself
-pydvlp-docs setup-general . --force
+pydvlppy setup-general . --force
 cd docs && make html
 ```
 
@@ -357,8 +357,8 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ### Quick Contribution Setup
 ```bash
 # Fork and clone
-git clone https://github.com/your-username/pydvlp-docs.git
-cd pydvlp-docs
+git clone https://github.com/your-username/pydvlppy.git
+cd pydvlppy
 
 # Install development dependencies  
 poetry install --with dev,docs,test
@@ -376,7 +376,7 @@ poetry run mypy
 
 ## 📊 Comparison
 
-| Feature | PyDevelop-Docs | Manual Sphinx | Other Tools |
+| Feature | Pydvlppy | Manual Sphinx | Other Tools |
 |---------|----------------|---------------|-------------|
 | **Setup Time** | < 1 minute | Hours | Minutes |
 | **Project Detection** | ✅ Automatic | ❌ Manual | ⚠️ Limited |
@@ -406,9 +406,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 📞 Support
 
-- **Documentation**: [Full Documentation](https://pydvlp-docs.readthedocs.io/)
-- **Issues**: [GitHub Issues](https://github.com/pr1m8/pydvlp-docs/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/pr1m8/pydvlp-docs/discussions)
+- **Documentation**: [Full Documentation](https://pydvlppy.readthedocs.io/)
+- **Issues**: [GitHub Issues](https://github.com/pr1m8/pydvlppy/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/pr1m8/pydvlppy/discussions)
 
 ---
 

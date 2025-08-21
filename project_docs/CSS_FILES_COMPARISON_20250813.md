@@ -1,10 +1,10 @@
-# CSS Files Comparison - pydvlp-docs vs Haive
+# CSS Files Comparison - pydvlppy vs Haive
 
 **Date**: 2025-08-13
-**Purpose**: Document CSS file differences between pydvlp-docs and main Haive project
+**Purpose**: Document CSS file differences between pydvlppy and main Haive project
 **Context**: User noted we don't have 16 CSS files like Haive's old docs
 
-## CSS Files in pydvlp-docs
+## CSS Files in pydvlppy
 
 **Location**: `/docs/source/_static/`
 **Count**: 6 CSS files
@@ -33,7 +33,7 @@
 - Potential conflicts and redundancy
 - Legacy accumulation over time
 
-**pydvlp-docs approach**:
+**pydvlppy approach**:
 
 - Consolidated to 6 focused CSS files
 - Each file has a specific purpose
@@ -45,17 +45,17 @@
 ### Organization
 
 - **Haive**: Multiple scattered CSS files, some duplicating functionality
-- **pydvlp-docs**: Organized by purpose (api, theme, diagrams, etc.)
+- **pydvlppy**: Organized by purpose (api, theme, diagrams, etc.)
 
 ### Dark Mode Handling
 
 - **Haive**: Multiple files trying to fix dark mode issues
-- **pydvlp-docs**: Single `furo-intense.css` with comprehensive dark mode fixes
+- **pydvlppy**: Single `furo-intense.css` with comprehensive dark mode fixes
 
 ### Maintainability
 
 - **Haive**: 17+ files make it hard to find and fix issues
-- **pydvlp-docs**: 6 files with clear responsibilities
+- **pydvlppy**: 6 files with clear responsibilities
 
 ## Why Fewer Files is Better
 
@@ -66,7 +66,7 @@
 
 ## Migration Note
 
-When migrating documentation from Haive to pydvlp-docs:
+When migrating documentation from Haive to pydvlppy:
 
 - Don't copy all 17+ CSS files
 - Review what styling is actually needed
@@ -79,4 +79,4 @@ The white-on-white text issue (Issue #2) has been resolved with our consolidated
 
 ## Recommendation
 
-Keep the current 6-file CSS structure in pydvlp-docs. It's cleaner, more maintainable, and achieves all the styling needs without the complexity of Haive's legacy CSS accumulation.
+Keep the current 6-file CSS structure in pydvlppy. It's cleaner, more maintainable, and achieves all the styling needs without the complexity of Haive's legacy CSS accumulation.

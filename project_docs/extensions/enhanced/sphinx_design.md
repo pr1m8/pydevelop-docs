@@ -2,12 +2,12 @@
 
 **Extension Name**: `sphinx_design`  
 **Official Documentation**: https://sphinx-design.readthedocs.io/  
-**PyDevelop-Docs Status**: ✅ **FULLY CONFIGURED**  
+**Pydvlppy Status**: ✅ **FULLY CONFIGURED**  
 **Progressive Disclosure Impact**: 🔥 **CRITICAL** - Primary UI framework for modern layouts
 
 ## Overview
 
-Sphinx Design is the cornerstone of PyDevelop-Docs' modern UI system, providing a comprehensive set of responsive components based on Bootstrap 5. It enables the creation of beautiful, interactive documentation with advanced layout capabilities that are essential for Issue #6's progressive disclosure and mobile optimization goals.
+Sphinx Design is the cornerstone of Pydvlppy' modern UI system, providing a comprehensive set of responsive components based on Bootstrap 5. It enables the creation of beautiful, interactive documentation with advanced layout capabilities that are essential for Issue #6's progressive disclosure and mobile optimization goals.
 
 ## Core UI/UX Capabilities
 
@@ -59,7 +59,7 @@ Cards provide excellent content organization with visual hierarchy:
       Advanced implementation details hidden by default but easily accessible.
 ```
 
-## Current PyDevelop-Docs Configuration
+## Current Pydvlppy Configuration
 
 In `/src/pydevelop_docs/config.py`, Sphinx Design is optimized for theming:
 
@@ -110,7 +110,7 @@ In `/src/pydevelop_docs/config.py`, Sphinx Design is optimized for theming:
 
       .. code-block:: bash
 
-         pip install pydvlp-docs
+         pip install pydvlppy
 
    .. tab-item:: Development Setup
       :class-label: sd-tab-label-secondary
@@ -125,7 +125,7 @@ In `/src/pydevelop_docs/config.py`, Sphinx Design is optimized for theming:
 
       .. code-block:: bash
 
-         docker run -it pydvlp-docs
+         docker run -it pydvlppy
 ```
 
 ## AutoAPI Template Integration for Issue #6
@@ -638,7 +638,7 @@ In `/src/pydevelop_docs/config.py`, Sphinx Design is optimized for theming:
    {% endfor %}
 ```
 
-## Best Practices for PyDevelop-Docs
+## Best Practices for Pydvlppy
 
 1. **Use semantic grid layouts** - Structure content logically with responsive breakpoints
 2. **Implement progressive disclosure** - Hide complexity behind cards and dropdowns
@@ -647,4 +647,4 @@ In `/src/pydevelop_docs/config.py`, Sphinx Design is optimized for theming:
 5. **Ensure accessibility** - Include proper ARIA labels and keyboard navigation
 6. **Test interactive elements** - Verify all dropdowns, tabs, and hovers work correctly
 
-Sphinx Design provides the comprehensive component system that makes PyDevelop-Docs' progressive disclosure vision possible, enabling beautiful, functional documentation that scales from mobile to desktop while maintaining accessibility and performance.
+Sphinx Design provides the comprehensive component system that makes Pydvlppy' progressive disclosure vision possible, enabling beautiful, functional documentation that scales from mobile to desktop while maintaining accessibility and performance.

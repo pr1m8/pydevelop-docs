@@ -23,7 +23,7 @@
 ### Project Goals
 
 1. **Transform AutoAPI documentation** from ugly, hard-to-navigate pages into modern, beautiful, and intuitive documentation
-2. **Maximize utilization** of 40+ installed Sphinx extensions in PyDevelop-Docs
+2. **Maximize utilization** of 40+ installed Sphinx extensions in Pydvlppy
 3. **Create reusable templates** that work across all Haive packages
 4. **Implement missing features**: breadcrumbs, source links, dark mode support
 5. **Simplify navigation** with clean TOC structure and module names
@@ -86,7 +86,7 @@
 ### Directory Structure
 
 ```
-/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/
+/home/will/Projects/haive/backend/haive/tools/pydvlppy/
 ├── src/pydevelop_docs/
 │   ├── config.py                          # Master configuration
 │   │   ├── linkcode_resolve()             # GitHub source link resolver

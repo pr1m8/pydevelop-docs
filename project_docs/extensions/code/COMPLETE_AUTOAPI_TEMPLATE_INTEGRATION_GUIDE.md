@@ -21,7 +21,7 @@
 
 ### Current Status
 
-PyDevelop-Docs provides 40+ Sphinx extensions with advanced AutoAPI configuration, but Issue #6 requires custom Jinja2 templates for AutoAPI with integrated code execution extensions. This creates dynamic, live documentation where examples are always current and tested.
+Pydvlppy provides 40+ Sphinx extensions with advanced AutoAPI configuration, but Issue #6 requires custom Jinja2 templates for AutoAPI with integrated code execution extensions. This creates dynamic, live documentation where examples are always current and tested.
 
 ### Architecture Vision
 
@@ -199,7 +199,7 @@ src/pydevelop_docs/templates/_autoapi_templates/
 
 ### Current CSS Architecture
 
-PyDevelop-Docs consolidates CSS from 17+ files to 6 optimized files:
+Pydvlppy consolidates CSS from 17+ files to 6 optimized files:
 
 ```
 docs/source/_static/css/
@@ -1545,9 +1545,9 @@ def test_function(arg: str) -> str:
     return f"Function result: {arg}"
 EOF
 
-# Initialize with PyDevelop-Docs
+# Initialize with Pydvlppy
 echo "📝 Initializing documentation with custom templates"
-poetry run pydvlp-docs init --force --use-shared-config
+poetry run pydvlppy init --force --use-shared-config
 
 # Verify template installation
 echo "🔍 Verifying template installation"
@@ -1608,7 +1608,7 @@ echo "🎉 Complete integration validation finished"
 
 ### Production Deployment
 
-1. **Update PyDevelop-Docs Configuration**
+1. **Update Pydvlppy Configuration**
 
 ```python
 # In src/pydevelop_docs/config.py - Add template integration
@@ -1649,7 +1649,7 @@ def get_haive_config(package_name, is_central_hub=False):
 2. **Install Template Files**
 
 ```bash
-# Copy templates to PyDevelop-Docs
+# Copy templates to Pydvlppy
 cp -r project_docs/extensions/code/templates/* src/pydevelop_docs/templates/
 
 # Copy CSS files
@@ -1678,8 +1678,8 @@ poetry run pytest project_docs/extensions/code/test_template_integration.py
 
 # Validate with test project
 cd test-projects/test-haive-template
-poetry run pydvlp-docs init --force --with-live-examples
-poetry run pydvlp-docs build
+poetry run pydvlppy init --force --with-live-examples
+poetry run pydvlppy build
 ```
 
 ### Documentation Update
@@ -1687,7 +1687,7 @@ poetry run pydvlp-docs build
 Update project documentation to reflect new capabilities:
 
 ````markdown
-# PyDevelop-Docs v2.0 - Live Documentation
+# Pydvlppy v2.0 - Live Documentation
 
 ## New Features
 
@@ -1701,10 +1701,10 @@ Update project documentation to reflect new capabilities:
 
 ```bash
 # Initialize with live examples
-pydvlp-docs init --with-live-examples
+pydvlppy init --with-live-examples
 
 # Build with dynamic content
-pydvlp-docs build
+pydvlppy build
 ```
 ````
 
@@ -1720,5 +1720,5 @@ codeautolink_enabled = True
 
 ```
 
-This complete implementation transforms PyDevelop-Docs from a static documentation generator into a dynamic, live documentation system where examples are always current, tested, and beautifully presented. The integration of code execution extensions with custom AutoAPI templates creates documentation that developers can trust and rely on for accurate, up-to-date examples.
+This complete implementation transforms Pydvlppy from a static documentation generator into a dynamic, live documentation system where examples are always current, tested, and beautifully presented. The integration of code execution extensions with custom AutoAPI templates creates documentation that developers can trust and rely on for accurate, up-to-date examples.
 ```

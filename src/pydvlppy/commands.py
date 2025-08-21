@@ -1,4 +1,4 @@
-"""Simplified command implementations for pydvlp-docs."""
+"""Simplified command implementations for pydvlppy."""
 
 from pathlib import Path
 import shutil
@@ -155,7 +155,7 @@ class InitCommand(DocsCommand):
 
         conf_content = f'''"""Sphinx configuration for {name}.
 
-This configuration uses pydvlp-docs shared configuration system
+This configuration uses pydvlppy shared configuration system
 with 43+ Sphinx extensions from PyAutoDoc.
 """
 
@@ -165,9 +165,9 @@ import sys
 # Add source to path
 sys.path.insert(0, os.path.abspath("../.."))
 
-# Import the complete 600+ line shared configuration from pydvlp-docs
+# Import the complete 600+ line shared configuration from pydvlppy
 try:
-    from pydvlp_docs.config import get_haive_config
+    from pydvlppy.config import get_haive_config
     
     # Get the full configuration with all 43+ extensions
     config = get_haive_config(
@@ -185,9 +185,9 @@ try:
     # html_theme_options["announcement"] = "Custom announcement"
     
 except ImportError:
-    # Fallback if pydvlp-docs is not installed
-    print("Warning: pydvlp-docs not found. Using minimal configuration.")
-    print("Install with: pip install pydvlp-docs")
+    # Fallback if pydvlppy is not installed
+    print("Warning: pydvlppy not found. Using minimal configuration.")
+    print("Install with: pip install pydvlppy")
     
     # Minimal fallback configuration
     project = "{name}"
@@ -337,8 +337,8 @@ livehtml:
 
         # Add haive-docs if this is a haive package
         if self._is_haive_package(package_path):
-            deps["pydvlp-docs"] = {
-                "path": "../../tools/pydvlp-docs",
+            deps["pydvlppy"] = {
+                "path": "../../tools/pydvlppy",
                 "develop": True,
             }
 

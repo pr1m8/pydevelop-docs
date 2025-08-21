@@ -1,7 +1,7 @@
 Configuration
 =============
 
-PyDevelop-Docs provides extensive configuration options while maintaining zero-configuration defaults.
+Pydvlppy provides extensive configuration options while maintaining zero-configuration defaults.
 
 .. contents:: Table of Contents
    :local:
@@ -10,11 +10,11 @@ PyDevelop-Docs provides extensive configuration options while maintaining zero-c
 Configuration Methods
 ---------------------
 
-There are three ways to configure PyDevelop-Docs:
+There are three ways to configure Pydvlppy:
 
 1. **Zero Configuration** (Default)
    
-   Just run ``pydvlp-docs init`` and it works out of the box.
+   Just run ``pydvlppy init`` and it works out of the box.
 
 2. **Shared Configuration** (Recommended)
    
@@ -174,7 +174,7 @@ Add custom styling and scripts:
 Environment Variables
 ---------------------
 
-PyDevelop-Docs respects these environment variables:
+Pydvlppy respects these environment variables:
 
 - ``PYDEVELOP_DOCS_THEME``: Override default theme
 - ``PYDEVELOP_DOCS_DEBUG``: Enable debug output
@@ -188,16 +188,16 @@ Configuration via CLI flags:
 .. code-block:: bash
 
    # Force regeneration
-   pydvlp-docs build --force
+   pydvlppy build --force
    
    # Use specific config file
-   pydvlp-docs build --config myconfig.yaml
+   pydvlppy build --config myconfig.yaml
    
    # Enable debug mode
-   pydvlp-docs build --debug
+   pydvlppy build --debug
    
    # Parallel builds for monorepos
-   pydvlp-docs build-all --parallel 4
+   pydvlppy build-all --parallel 4
 
 Best Practices
 --------------
@@ -216,7 +216,7 @@ Best Practices
 
 4. **Test Locally**
    
-   Always test with ``pydvlp-docs build && pydvlp-docs serve`` before deploying.
+   Always test with ``pydvlppy build && pydvlppy serve`` before deploying.
 
 5. **Monitor Build Output**
    
@@ -232,7 +232,7 @@ Common Issues
    Ensure ``autoapi_own_page_level = "module"`` is set.
 
 **Missing Extensions**
-   Install with ``pip install pydvlp-docs[all]``
+   Install with ``pip install pydvlppy[all]``
 
 **Theme Not Loading**
    Check that Furo is installed: ``pip install furo``
@@ -247,7 +247,7 @@ Enable comprehensive debugging:
 
 .. code-block:: bash
 
-   pydvlp-docs build --debug --save-log
+   pydvlppy build --debug --save-log
    
    # View the log
    cat /tmp/pydevelop_build.log

@@ -1,6 +1,6 @@
-"""Pytest configuration and fixtures for pydvlp-docs tests.
+"""Pytest configuration and fixtures for pydvlppy tests.
 
-This module provides common fixtures and configuration for all PyDevelop-Docs tests.
+This module provides common fixtures and configuration for all Pydvlppy tests.
 """
 
 import tempfile
@@ -25,7 +25,7 @@ def sample_project_info() -> Dict[str, Any]:
     """Provide sample project information for testing."""
     return {
         "name": "Test Project",
-        "description": "A test project for PyDevelop-Docs validation",
+        "description": "A test project for Pydvlppy validation",
         "author": "Test Author",
         "version": "1.0.0",
         "python_requires": ">=3.12",
@@ -138,7 +138,7 @@ class TestCore:
     """Main test class with comprehensive docstrings.
     
     This class demonstrates proper Google-style docstrings
-    for PyDevelop-Docs testing.
+    for Pydvlppy testing.
     
     Attributes:
         name: The name of the test instance
@@ -344,7 +344,7 @@ def test_empty_name_raises():
     (project_dir / "pyproject.toml").write_text('''[tool.poetry]
 name = "test-package"
 version = "1.0.0"
-description = "A test package for PyDevelop-Docs"
+description = "A test package for Pydvlppy"
 authors = ["Test Author <test@example.com>"]
 packages = [{include = "test_package", from = "src"}]
 
@@ -362,7 +362,7 @@ build-backend = "poetry.core.masonry.api"
     # Create README
     (project_dir / "README.md").write_text('''# Test Package
 
-A test package for PyDevelop-Docs validation.
+A test package for Pydvlppy validation.
 
 ## Installation
 

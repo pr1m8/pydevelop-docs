@@ -1,6 +1,6 @@
-# PyDevelop-Docs Test Suite
+# Pydvlppy Test Suite
 
-This directory contains a comprehensive test suite for PyDevelop-Docs, ensuring all functionality works correctly without mocks.
+This directory contains a comprehensive test suite for Pydvlppy, ensuring all functionality works correctly without mocks.
 
 ## 🧪 Test Files Overview
 
@@ -48,16 +48,16 @@ poetry run pytest -m "not slow"    # Skip slow tests
 
 ```bash
 # Run all tests with coverage
-poetry run pydvlp-docs test
+poetry run pydvlppy test
 
 # Run unit tests only
-poetry run pydvlp-docs test --unit
+poetry run pydvlppy test --unit
 
 # Run with linting and type checking
-poetry run pydvlp-docs test --lint --type-check
+poetry run pydvlppy test --lint --type-check
 
 # Fast tests only (skip slow integration tests)
-poetry run pydvlp-docs test --fast
+poetry run pydvlppy test --fast
 ```
 
 ### Using the Standalone Runner
@@ -204,7 +204,7 @@ poetry run pytest tests/ --pdb
 
 ```bash
 # Full test suite before commit
-poetry run pydvlp-docs test --coverage --lint --type-check
+poetry run pydvlppy test --coverage --lint --type-check
 
 # Quick validation
 poetry run pytest tests/ -x --failed-first

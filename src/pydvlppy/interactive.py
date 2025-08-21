@@ -1,4 +1,4 @@
-"""Interactive CLI for pydvlp-docs."""
+"""Interactive CLI for pydvlppy."""
 
 from pathlib import Path
 from typing import Any
@@ -16,7 +16,7 @@ console = Console()
 
 
 class InteractiveCLI:
-    """Interactive command-line interface for pydvlp-docs."""
+    """Interactive command-line interface for pydvlppy."""
 
     def __init__(self):
         self.console = console
@@ -265,11 +265,11 @@ class InteractiveCLI:
             self._update_dependencies()
 
     def configure_settings(self):
-        """Configure pydvlp-docs settings."""
+        """Configure pydvlppy settings."""
         self.console.print("\n[bold]Configuration Settings[/bold]\n")
 
         # Check for existing config
-        config_file = self.project_path / ".pydvlp-docs.yaml"
+        config_file = self.project_path / ".pydvlppy.yaml"
 
         if config_file.exists():
             if questionary.confirm("Configuration file exists. Load it?").ask():
@@ -417,7 +417,7 @@ class InteractiveCLI:
         """Show next steps after initialization."""
         self.console.print("\n[bold]Next Steps:[/bold]")
         self.console.print("1. Install dependencies: [cyan]poetry install --with docs[/cyan]")
-        self.console.print("2. Build documentation: [cyan]pydvlp-docs build[/cyan]")
+        self.console.print("2. Build documentation: [cyan]pydvlppy build[/cyan]")
         self.console.print("3. View documentation: [cyan]open docs/build/html/index.html[/cyan]")
 
     def _find_documented_packages(self) -> list[Path]:

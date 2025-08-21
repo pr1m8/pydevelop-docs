@@ -1,7 +1,7 @@
-# PyDevelop-Docs Cleanup Roadmap
+# Pydvlppy Cleanup Roadmap
 
 **Created**: 2025-08-15  
-**Purpose**: Systematic cleanup plan for pydvlp-docs package
+**Purpose**: Systematic cleanup plan for pydvlppy package
 **Priority**: Critical - Blocking haive-mcp documentation fixes
 
 ## 🎯 Cleanup Objectives
@@ -176,12 +176,12 @@ def test_dark_mode_css_rules():
 
 ```bash
 # Single build command
-pydvlp-docs build
+pydvlppy build
 
 # Clear build options
-pydvlp-docs build --clean    # Clean build
-pydvlp-docs build --watch    # Watch mode
-pydvlp-docs build --serve    # Serve locally
+pydvlppy build --clean    # Clean build
+pydvlppy build --watch    # Watch mode
+pydvlppy build --serve    # Serve locally
 ```
 
 ---

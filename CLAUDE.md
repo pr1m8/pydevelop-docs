@@ -1,6 +1,6 @@
-# PyDevelop-Docs - Development Memory Hub
+# Pydvlppy - Development Memory Hub
 
-**Project**: PyDevelop Documentation Tools
+**Project**: Pydvlppy
 **Purpose**: Universal Python documentation generator with 40+ Sphinx extensions pre-configured
 **Status**: Standalone Package Ready for Isolation
 **Created**: 2025-01-08
@@ -8,7 +8,7 @@
 
 ## 🎯 Project Overview
 
-PyDevelop-Docs is a comprehensive documentation generation tool that transforms any Python project into beautiful documentation with zero configuration. It provides a pre-configured setup with 40+ Sphinx extensions and supports single packages, monorepos, and complex project structures.
+Pydvlppy is a comprehensive documentation generation tool that transforms any Python project into beautiful documentation with zero configuration. It provides a pre-configured setup with 40+ Sphinx extensions and supports single packages, monorepos, and complex project structures.
 
 ## 🚀 **QUICK START - HOW TO USE EVERYTHING**
 
@@ -18,13 +18,13 @@ PyDevelop-Docs is a comprehensive documentation generation tool that transforms 
 
 ```bash
 # Build documentation for any Python project
-poetry run pydvlp-docs build --clean
+poetry run pydvlppy build --clean
 
 # Build all packages in a monorepo
-poetry run pydvlp-docs build-all --clean
+poetry run pydvlppy build-all --clean
 
 # Interactive initialization
-poetry run pydvlp-docs init
+poetry run pydvlppy init
 
 # Visual testing (after building and serving docs)  
 poetry run python scripts/debug/comprehensive_screenshot.py 8003
@@ -43,7 +43,7 @@ python src/pydevelop_docs/smart_builder.py
 ## 🏗️ Project Structure
 
 ```
-pydvlp-docs/
+pydvlppy/
 ├── src/pydevelop_docs/          # Core source code
 │   ├── __init__.py              # Main exports and version info
 │   ├── cli.py                   # Command-line interface (main entry point)
@@ -61,7 +61,7 @@ pydvlp-docs/
 │       ├── central_hub_conf.py  # Central hub configuration
 │       ├── changelog.rst        # Changelog template
 │       └── static/              # Static asset templates
-├── docs/                        # PyDevelop-Docs own documentation
+├── docs/                        # Pydvlppy own documentation
 │   ├── source/                  # Sphinx source files
 │   │   ├── conf.py             # Main Sphinx configuration
 │   │   ├── conf_modules/       # Modular configuration system
@@ -109,7 +109,7 @@ pydvlp-docs/
 **Primary Command for Haive:**
 
 ```bash
-poetry run pydvlp-docs rebuild-haive --debug --save-log
+poetry run pydvlppy rebuild-haive --debug --save-log
 ```
 
 **Visual Testing:**
@@ -173,14 +173,14 @@ poetry run python scripts/debug/comprehensive_screenshot.py 8003
 ### For Haive Documentation (Recommended Workflow)
 
 ```bash
-# 1. Navigate to pydvlp-docs
-cd /home/will/Projects/haive/backend/haive/tools/pydvlp-docs
+# 1. Navigate to pydvlppy
+cd /home/will/Projects/haive/backend/haive/tools/pydvlppy
 
 # 2. Install dependencies
 poetry install --with dev,docs,web
 
 # 3. Run enhanced build (BEST for Haive)
-poetry run pydvlp-docs rebuild-haive --debug --save-log
+poetry run pydvlppy rebuild-haive --debug --save-log
 
 # 4. Monitor progress (from another terminal)
 tail -f /tmp/haive_rebuild_enhanced.log
@@ -196,10 +196,10 @@ find /home/will/Projects/haive/backend/haive/packages/*/docs/build/html -name "i
 cd /home/will/Projects/haive/backend/haive/packages/haive-core
 
 # Build just this package
-poetry run --directory=../../tools/pydvlp-docs pydvlp-docs build --clean
+poetry run --directory=../../tools/pydvlppy pydvlppy build --clean
 
 # Watch for changes during development
-poetry run --directory=../../tools/pydvlp-docs pydvlp-docs watch
+poetry run --directory=../../tools/pydvlppy pydvlppy watch
 ```
 
 ### For New Projects
@@ -207,10 +207,10 @@ poetry run --directory=../../tools/pydvlp-docs pydvlp-docs watch
 ```bash
 # Initialize documentation for any Python project
 cd your-project/
-poetry run pydvlp-docs init
+poetry run pydvlppy init
 
 # Build documentation
-poetry run pydvlp-docs build
+poetry run pydvlppy build
 
 # Serve locally for development
 cd docs && python -m http.server 8000
@@ -220,7 +220,7 @@ cd docs && python -m http.server 8000
 
 ```bash
 # For large monorepos - run in background with nohup
-nohup poetry run pydvlp-docs rebuild-haive --debug > /tmp/build.log 2>&1 &
+nohup poetry run pydvlppy rebuild-haive --debug > /tmp/build.log 2>&1 &
 
 # Monitor with
 tail -f /tmp/build.log
@@ -241,10 +241,10 @@ ps aux | grep rebuild-haive
 
 ```bash
 # Always test with shared config (default)
-poetry run pydvlp-docs init --use-shared-config
+poetry run pydvlppy init --use-shared-config
 
 # Never use inline config unless specifically debugging
-poetry run pydvlp-docs init --use-inline-config  # AVOID
+poetry run pydvlppy init --use-inline-config  # AVOID
 ```
 
 ### 3. Documentation Organization
@@ -268,13 +268,13 @@ poetry run pydvlp-docs init --use-inline-config  # AVOID
 
 ```bash
 # Full enhanced rebuild with monitoring and error classification
-poetry run pydvlp-docs rebuild-haive --debug --save-log
+poetry run pydvlppy rebuild-haive --debug --save-log
 
 # Rebuild specific packages only
-poetry run pydvlp-docs rebuild-haive -p haive-core -p haive-agents
+poetry run pydvlppy rebuild-haive -p haive-core -p haive-agents
 
 # Quick rebuild without master hub
-poetry run pydvlp-docs rebuild-haive --no-master
+poetry run pydvlppy rebuild-haive --no-master
 ```
 
 **Features:**
@@ -311,10 +311,10 @@ python src/pydevelop_docs/smart_builder.py
 
 ```bash
 # Build single package (from package directory)
-poetry run pydvlp-docs build --clean --ignore-warnings
+poetry run pydvlppy build --clean --ignore-warnings
 
 # Build all packages (basic, from monorepo root)
-poetry run pydvlp-docs build-all --clean --ignore-warnings
+poetry run pydvlppy build-all --clean --ignore-warnings
 ```
 
 ### 4. Configuration System (`config.py`)
@@ -385,24 +385,24 @@ globals().update(config)
 ```bash
 # Development
 poetry install --with dev
-poetry run pydvlp-docs --help
+poetry run pydvlppy --help
 
 # Testing with Shared Config (ALWAYS USE THIS)
 cd test-projects/test-haive-template
-poetry run pydvlp-docs init --force
+poetry run pydvlppy init --force
 poetry run sphinx-build -b html docs/source docs/build
 
 # Quick Test Commands
 poetry run pytest
-poetry run pydvlp-docs init --dry-run
+poetry run pydvlppy init --dry-run
 
-# Build PyDevelop-Docs own docs
+# Build Pydvlppy own docs
 cd docs && make html
 
 # Full test cycle
 cd test-projects/test-haive-template
-poetry run pydvlp-docs init --force
-poetry run pydvlp-docs build
+poetry run pydvlppy init --force
+poetry run pydvlppy build
 python -m http.server 8003 --directory docs/build
 # Open http://localhost:8003
 ```
@@ -411,7 +411,7 @@ python -m http.server 8003 --directory docs/build
 
 ### Overview
 
-PyDevelop-Docs includes powerful screenshot utilities for visual documentation testing and debugging. These tools help identify rendering issues, theme problems, and navigation failures.
+Pydvlppy includes powerful screenshot utilities for visual documentation testing and debugging. These tools help identify rendering issues, theme problems, and navigation failures.
 
 ### Available Scripts
 
@@ -557,8 +557,8 @@ poetry run sphinx-build -b html docs/source docs/build
 # Serve
 python -m http.server 8003 --directory docs/build
 
-# Run screenshots (from pydvlp-docs)
-cd /home/will/Projects/haive/backend/haive/tools/pydvlp-docs
+# Run screenshots (from pydvlppy)
+cd /home/will/Projects/haive/backend/haive/tools/pydvlppy
 poetry run python scripts/debug/comprehensive_screenshot.py
 ```
 
@@ -592,7 +592,7 @@ extensions = [
 
 - `/src/pydevelop_docs/config.py` - Main configuration generator (SINGLE SOURCE OF TRUTH)
 - `/src/pydevelop_docs/cli.py` - CLI interface (now uses config.py via consolidation)
-- `/docs/source/conf.py` - PyDevelop-Docs own Sphinx config
+- `/docs/source/conf.py` - Pydvlppy own Sphinx config
 
 ### Documentation Hub
 

@@ -190,8 +190,8 @@ class HaivePackageHandler(PackageHandler):
         # Add Haive-specific dependencies
         deps.update(
             {
-                "pydvlp-docs": {
-                    "path": "../../tools/pydvlp-docs",
+                "pydvlppy": {
+                    "path": "../../tools/pydvlppy",
                     "develop": True,
                 },
                 "sphinxcontrib-mermaid": "^1.0.0",

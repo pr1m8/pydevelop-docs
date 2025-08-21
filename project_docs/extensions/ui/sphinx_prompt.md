@@ -32,7 +32,7 @@ Sphinx Prompt elevates code documentation by providing sophisticated styling and
 - **Consistent Styling**: Unified appearance across different environments
 - **Accessibility**: High contrast and readable formatting
 
-## Current PyDevelop-Docs Configuration
+## Current Pydvlppy Configuration
 
 ```python
 # Sphinx-prompt configuration - Professional shell styling
@@ -208,18 +208,18 @@ Advanced Examples
 Python Installation
 -------------------
 
-Install Python and PyDevelop-Docs:
+Install Python and Pydvlppy:
 
 .. prompt:: bash $
 
    # Install Python (if not already installed)
    sudo apt update && sudo apt install python3 python3-pip
 
-   # Install PyDevelop-Docs
-   pip install pydvlp-docs
+   # Install Pydvlppy
+   pip install pydvlppy
 
    # Verify installation
-   pydvlp-docs --version
+   pydvlppy --version
 
 Windows Installation
 --------------------
@@ -227,11 +227,11 @@ Windows Installation
 .. prompt:: powershell PS>
 
    # Install Python from Microsoft Store or python.org
-   # Then install PyDevelop-Docs
-   pip install pydvlp-docs
+   # Then install Pydvlppy
+   pip install pydvlppy
 
    # Verify installation
-   pydvlp-docs --version
+   pydvlppy --version
 
 macOS Installation
 ------------------
@@ -241,11 +241,11 @@ macOS Installation
    # Install using Homebrew
    brew install python3
 
-   # Install PyDevelop-Docs
-   pip3 install pydvlp-docs
+   # Install Pydvlppy
+   pip3 install pydvlppy
 
    # Verify installation
-   pydvlp-docs --version
+   pydvlppy --version
 ```
 
 ### Multi-Step Command Sequences
@@ -270,7 +270,7 @@ Project Initialization
 
    # Install development dependencies
    pip install --upgrade pip setuptools wheel
-   pip install pydvlp-docs[dev]
+   pip install pydvlppy[dev]
 
 Configuration Setup
 -------------------
@@ -279,13 +279,13 @@ Configuration Setup
    :caption: Initialize documentation
 
    # Create documentation structure
-   pydvlp-docs init
+   pydvlppy init
 
    # Configure for your project
-   pydvlp-docs configure --package-name "my-project"
+   pydvlppy configure --package-name "my-project"
 
    # Build initial documentation
-   pydvlp-docs build
+   pydvlppy build
 
 Testing and Validation
 ----------------------
@@ -294,10 +294,10 @@ Testing and Validation
    :caption: Validate setup
 
    # Run documentation tests
-   pydvlp-docs test
+   pydvlppy test
 
    # Start development server
-   pydvlp-docs serve --port 8000
+   pydvlppy serve --port 8000
 
    # Open in browser
    open http://localhost:8000
@@ -395,12 +395,12 @@ Database Operations
   <div class="prompt-body">
     <span class="prompt-symbol" aria-hidden="true">$</span>
     <span class="prompt-command" aria-label="Command to execute">
-      pip install pydvlp-docs
+      pip install pydvlppy
     </span>
   </div>
 
   <div class="prompt-output" aria-label="Command output">
-    <pre>Successfully installed pydvlp-docs-1.0.0</pre>
+    <pre>Successfully installed pydvlppy-1.0.0</pre>
   </div>
 </div>
 ```

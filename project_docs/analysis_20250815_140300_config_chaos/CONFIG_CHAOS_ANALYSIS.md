@@ -1,4 +1,4 @@
-# PyDevelop-Docs Configuration Chaos Analysis
+# Pydvlppy Configuration Chaos Analysis
 
 **Date**: 2025-08-15 14:03:00
 **Analyst**: Claude
@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-PyDevelop-Docs has a serious configuration management problem. There are at least 3 different configuration sources, and they're not consistent with each other. This is causing:
+Pydvlppy has a serious configuration management problem. There are at least 3 different configuration sources, and they're not consistent with each other. This is causing:
 
 1. **Missing navigation sidebar** - All pages lack navigation
 2. **Broken links** - AutoAPI links don't work
@@ -27,7 +27,7 @@ PyDevelop-Docs has a serious configuration management problem. There are at leas
 ### 2. `cli.py` Hardcoded Template (Lines 375-683)
 
 - **Location**: `/src/pydevelop_docs/cli.py`
-- **Purpose**: Template generated when running `pydvlp-docs init`
+- **Purpose**: Template generated when running `pydvlppy init`
 - **Key issue**: MISSING `autoapi_own_page_level = "module"` ❌
 - **Used by**: ALL NEW PROJECTS via CLI
 - **Status**: BROKEN - generates flat API docs
@@ -35,7 +35,7 @@ PyDevelop-Docs has a serious configuration management problem. There are at leas
 ### 3. Build System's Own Configuration
 
 - **Location**: `/docs/source/conf.py`
-- **Purpose**: PyDevelop-Docs' own documentation
+- **Purpose**: Pydvlppy' own documentation
 - **Method**: Imports from `pydevelop_docs.config`
 - **Status**: Should work but has issues
 
@@ -104,7 +104,7 @@ But instead generates plain text.
 
 ## The Real Build Process
 
-When you run `poetry run pydvlp-docs build`:
+When you run `poetry run pydvlppy build`:
 
 1. **CLI generates conf.py** from hardcoded template (BROKEN)
 2. **Sphinx reads conf.py**
@@ -142,7 +142,7 @@ From comprehensive screenshot session:
 ### For New Projects (via CLI)
 
 ```bash
-pydvlp-docs init
+pydvlppy init
 ```
 
 **Uses**: Hardcoded template in cli.py ❌
@@ -155,7 +155,7 @@ from pydevelop_docs.config import get_haive_config
 
 **Uses**: config.py module ✅
 
-### For PyDevelop-Docs Itself
+### For Pydvlppy Itself
 
 **Uses**: Imports from config.py ✅ (but still has issues)
 

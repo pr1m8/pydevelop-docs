@@ -1,4 +1,4 @@
-# PyDevelop-Docs Template Audit and Fix Plan
+# Pydvlppy Template Audit and Fix Plan
 
 **Created**: 2025-08-15
 **Purpose**: Comprehensive audit of all template systems and fix plan
@@ -6,7 +6,7 @@
 
 ## 🔍 Executive Summary
 
-PyDevelop-Docs has multiple template systems that are conflicting and causing documentation generation issues. Despite having the correct AutoAPI hierarchical fix (`autoapi_own_page_level = "module"`), the templates are not being properly distributed or applied.
+Pydvlppy has multiple template systems that are conflicting and causing documentation generation issues. Despite having the correct AutoAPI hierarchical fix (`autoapi_own_page_level = "module"`), the templates are not being properly distributed or applied.
 
 ## 📁 Template Locations Audit
 
@@ -83,7 +83,7 @@ docs/source/
 
 - Duplicate AutoAPI templates with different content
 - Mixed .rst and .jinja extensions
-- Used for PyDevelop-Docs own docs, not distributed
+- Used for Pydvlppy own docs, not distributed
 
 ### 3. **Hidden Config Templates** (`/.pydevelop/templates/`)
 
@@ -217,7 +217,7 @@ def _copy_autoapi_templates(self):
 ```python
 # Test that templates are copied correctly
 def test_template_distribution():
-    # Run pydvlp-docs init
+    # Run pydvlppy init
     # Check _autoapi_templates exists
     # Verify template content matches source
 ```
@@ -290,7 +290,7 @@ autoapi_own_page_level = "module"
 ### Test 3: Full Distribution
 
 ```bash
-# Run pydvlp-docs init on new project
+# Run pydvlppy init on new project
 # Verify templates are copied
 # Build docs and check output
 ```

@@ -221,7 +221,7 @@ def build_single_package(
     }
 
     try:
-        # Step 1: Initialize PyDevelop-Docs (33%)
+        # Step 1: Initialize Pydvlppy (33%)
         if force_init or not checks["docs_initialized"]:
             progress.update(
                 main_task, advance=10, description=f"{package_name} [initializing]"
@@ -232,7 +232,7 @@ def build_single_package(
             )
 
             success, output, warnings, union_issues = run_command_with_progress(
-                ["poetry", "run", "pydvlp-docs", "init", "--force", "--yes"],
+                ["poetry", "run", "pydvlppy", "init", "--force", "--yes"],
                 str(package_path),
                 "Initializing",
                 progress,
@@ -640,7 +640,7 @@ def create_hub_page(haive_root: Path, build_results: List[Dict]) -> Path:
         </div>
         
         <footer>
-            <p>Built with ❤️ using PyDevelop-Docs</p>
+            <p>Built with ❤️ using Pydvlppy</p>
             <p class="timestamp">Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
         </footer>
     </div>
@@ -657,7 +657,7 @@ def create_hub_page(haive_root: Path, build_results: List[Dict]) -> Path:
 def main():
     """Enhanced main function with argument parsing."""
     parser = argparse.ArgumentParser(
-        description="Build Haive documentation with PyDevelop-Docs",
+        description="Build Haive documentation with Pydvlppy",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:

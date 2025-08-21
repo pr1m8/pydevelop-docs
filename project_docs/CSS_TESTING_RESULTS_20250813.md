@@ -54,7 +54,7 @@ body[data-theme="dark"] code.literal {
 
 ## 📊 Testing Environment
 
-**Test Project**: pydvlp-docs own documentation  
+**Test Project**: pydvlppy own documentation  
 **Build Status**: ✅ Successful (warnings present but not blocking)  
 **CSS Load Order**: Correct - furo-intense.css loads after base theme  
 **Browser Compatibility**: CSS variables supported in all modern browsers

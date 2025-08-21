@@ -120,7 +120,7 @@ autoapi_own_page_level = "module"  # For hierarchical organization
 The templates are automatically copied when running:
 
 ```bash
-poetry run pydvlp-docs init
+poetry run pydvlppy init
 ```
 
 ## Benefits

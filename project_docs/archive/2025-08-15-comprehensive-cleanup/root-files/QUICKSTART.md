@@ -1,4 +1,4 @@
-# PyDevelop-Docs Quick Start Guide
+# Pydvlppy Quick Start Guide
 
 Get beautiful documentation for your Python project in under 5 minutes.
 
@@ -6,13 +6,13 @@ Get beautiful documentation for your Python project in under 5 minutes.
 
 ```bash
 # 1. Install
-poetry add --group docs pydvlp-docs
+poetry add --group docs pydvlppy
 
 # 2. Initialize docs
-poetry run pydvlp-docs init
+poetry run pydvlppy init
 
 # 3. Build docs
-poetry run pydvlp-docs build
+poetry run pydvlppy build
 
 # 4. View docs
 open docs/build/html/index.html
@@ -115,7 +115,7 @@ Add this to your `pyproject.toml`:
 
 ```toml
 [tool.poe.tasks]
-docs = "pydvlp-docs build"
+docs = "pydvlppy build"
 docs-serve = "cd docs/build/html && python -m http.server 8000"
 ```
 
@@ -140,18 +140,18 @@ For projects with multiple packages:
 
 ```bash
 # Initialize docs for all packages
-pydvlp-docs init --packages-dir packages --packages-dir tools --include-root
+pydvlppy init --packages-dir packages --packages-dir tools --include-root
 
 # Build all packages
-pydvlp-docs build
+pydvlppy build
 
 # Build specific package
-pydvlp-docs build --package my-specific-package
+pydvlppy build --package my-specific-package
 ```
 
 ### Custom Configuration
 
-Create `.pydvlp-docs.yaml`:
+Create `.pydvlppy.yaml`:
 
 ```yaml
 settings:
@@ -192,7 +192,7 @@ jobs:
         run: poetry install --with docs
 
       - name: Build documentation
-        run: poetry run pydvlp-docs build
+        run: poetry run pydvlppy build
 
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'
@@ -210,8 +210,8 @@ If you get extension errors:
 
 ```bash
 # Clean and rebuild
-pydvlp-docs clean
-pydvlp-docs build --clean
+pydvlppy clean
+pydvlppy build --clean
 ```
 
 ### Import Errors
@@ -233,7 +233,7 @@ poetry install --with docs
 
 ## 🎯 Pro Tips
 
-1. **Use the interactive CLI**: Just run `pydvlp-docs` for guided setup
+1. **Use the interactive CLI**: Just run `pydvlppy` for guided setup
 2. **Write good docstrings**: They become your API documentation automatically
 3. **Use type hints**: They make your docs much more readable
 4. **Add examples in docstrings**: They show up beautifully in the docs
@@ -241,10 +241,10 @@ poetry install --with docs
 
 ## 📚 Learn More
 
-- [Full Documentation](https://pydvlp-docs.readthedocs.io)
+- [Full Documentation](https://pydvlppy.readthedocs.io)
 - [Extension Reference](docs/EXTENSIONS.md)
 - [Customization Guide](docs/CUSTOMIZATION.md)
-- [Examples Repository](https://github.com/haive-ai/pydvlp-docs-examples)
+- [Examples Repository](https://github.com/haive-ai/pydvlppy-examples)
 
 ## 🚀 You're Ready!
 

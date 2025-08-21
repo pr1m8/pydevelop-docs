@@ -1,4 +1,4 @@
-"""Enhanced CLI display utilities for pydvlp-docs."""
+"""Enhanced CLI display utilities for pydvlppy."""
 
 from datetime import datetime
 import logging
@@ -208,7 +208,7 @@ class EnhancedDisplay:
         click.echo()
         click.echo("📚 Next steps:")
         click.echo("   1. poetry lock && poetry install --with docs")
-        click.echo("   2. poetry run pydvlp-docs build-all --clean")
+        click.echo("   2. poetry run pydvlppy build-all --clean")
         click.echo("   3. open docs/build/html/index.html")
 
     def show_fixes_prompt(self, fixes: list[str]) -> bool:

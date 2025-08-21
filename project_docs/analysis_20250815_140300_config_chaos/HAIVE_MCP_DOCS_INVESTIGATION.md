@@ -5,7 +5,7 @@
 
 ## Key Discovery
 
-The documentation at `http://localhost:8003/autoapi/mcp/downloader/config/index.html` is from **haive-mcp**, NOT PyDevelop-Docs!
+The documentation at `http://localhost:8003/autoapi/mcp/downloader/config/index.html` is from **haive-mcp**, NOT Pydvlppy!
 
 ## haive-mcp Documentation Configuration
 
@@ -34,7 +34,7 @@ html_theme = "sphinx_rtd_theme"  # NOT Furo!
 
 ### Critical Findings
 
-1. **NOT using PyDevelop-Docs** - This is a hand-written conf.py
+1. **NOT using Pydvlppy** - This is a hand-written conf.py
 2. **NOT using Furo theme** - Using sphinx_rtd_theme instead
 3. **NOT using sphinx-autoapi** - Using autosummary instead
 4. **Has custom extension** - `mcp_doc_generator`
@@ -59,7 +59,7 @@ docs/build/autoapi/
 
 1. **Hidden AutoAPI usage** - Maybe added by custom extension or imported config
 2. **Multiple builds** - Previous build with AutoAPI, current without
-3. **Mixed configuration** - Some parts using PyDevelop-Docs generated config
+3. **Mixed configuration** - Some parts using Pydvlppy generated config
 
 ## The Real Problems
 
@@ -91,18 +91,18 @@ docs/build/autoapi/
 
 ### Possible Scenarios
 
-1. **PyDevelop-Docs was used initially**
+1. **Pydvlppy was used initially**
    - Generated initial conf.py
    - Later modified by hand
    - Lost critical settings
 
 2. **Manual configuration**
-   - Never used PyDevelop-Docs
+   - Never used Pydvlppy
    - Manually configured Sphinx
    - Missing key settings
 
 3. **Hybrid approach**
-   - Some PyDevelop-Docs templates
+   - Some Pydvlppy templates
    - Some manual configuration
    - Conflicting settings
 
@@ -116,10 +116,10 @@ When viewing the documentation:
 
 ## Next Investigation Steps
 
-1. **Check if PyDevelop-Docs was ever used**
-   - Look for `.pydvlp-docs` markers
+1. **Check if Pydvlppy was ever used**
+   - Look for `.pydvlppy` markers
    - Check git history of conf.py
-   - Look for PyDevelop-Docs templates
+   - Look for Pydvlppy templates
 
 2. **Find where AutoAPI is configured**
    - Check imported configurations
@@ -134,7 +134,7 @@ When viewing the documentation:
 ## Critical Questions
 
 1. **Was this ever working?** Or always broken?
-2. **Who configured this?** PyDevelop-Docs or manual?
+2. **Who configured this?** Pydvlppy or manual?
 3. **Why two different systems?** (autosummary in conf.py but autoapi in output)
 4. **Where is the navigation?** Theme should provide it automatically
 
@@ -142,12 +142,12 @@ When viewing the documentation:
 
 This reveals a bigger problem:
 
-- **PyDevelop-Docs may be generating broken configs**
+- **Pydvlppy may be generating broken configs**
 - **Or users are mixing manual and generated configs**
 - **Or there's a fundamental theme integration issue**
 
-The broken documentation is NOT PyDevelop-Docs' own docs, but a project that either:
+The broken documentation is NOT Pydvlppy' own docs, but a project that either:
 
-1. Used PyDevelop-Docs and it generated broken config
-2. Never used PyDevelop-Docs and has its own broken config
+1. Used Pydvlppy and it generated broken config
+2. Never used Pydvlppy and has its own broken config
 3. Mixed both approaches and created conflicts

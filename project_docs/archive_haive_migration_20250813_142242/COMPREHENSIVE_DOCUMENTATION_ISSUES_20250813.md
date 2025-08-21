@@ -263,7 +263,7 @@ Current Pydantic Display (TOO MUCH):
 ## 🔗 **Related Documentation**
 
 - **Original Critical Findings**: `DOCUMENTATION_CRITICAL_FINDINGS_20250813.md`
-- **PyDevelop-Docs Tool**: `/tools/pydvlp-docs/`
+- **Pydvlppy Tool**: `/tools/pydvlppy/`
 - **Package Documentation**: `/packages/*/docs/`
 - **Memory Index**: `@memory_index/by_task/documentation/`
 

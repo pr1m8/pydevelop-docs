@@ -36,8 +36,8 @@ except ImportError:
 
 ```bash
 # Clean build
-poetry run pydvlp-docs clean
-poetry run pydvlp-docs build
+poetry run pydvlppy clean
+poetry run pydvlppy build
 
 # Or directly with Sphinx
 poetry run sphinx-build -b html docs/source docs/build -E

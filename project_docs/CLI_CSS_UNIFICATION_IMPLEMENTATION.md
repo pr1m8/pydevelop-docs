@@ -154,7 +154,7 @@ def setup(app):
 
 ```bash
 cd test-projects/test-haive-template
-poetry run pydvlp-docs init --force
+poetry run pydvlppy init --force
 poetry run sphinx-build -b html docs/source docs/build -q
 ```
 

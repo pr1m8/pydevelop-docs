@@ -1,4 +1,4 @@
-# System dependencies for building pydvlp-docs documentation
+# System dependencies for building pydvlppy documentation
 # These are Ubuntu/Debian packages needed for various Sphinx extensions
 
 # Core build tools

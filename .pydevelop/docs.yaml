@@ -2,7 +2,7 @@ documentation:
   theme: furo
   logo: ${auto:find-logo}
   favicon: ${auto:find-favicon}
-  copyright: ${auto:year} pydvlp-docs contributors
+  copyright: ${auto:year} pydvlppy contributors
 build:
   auto_fix: true
   selective_rebuild: true

@@ -10,10 +10,10 @@
 
 ```bash
 # Use existing test-haive-template structure
-cd /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/test-projects/test-haive-template
+cd /home/will/Projects/haive/backend/haive/tools/pydvlppy/test-projects/test-haive-template
 
 # Regenerate with latest breadcrumb implementation
-poetry run pydvlp-docs init --force
+poetry run pydvlppy init --force
 
 # Build and serve locally
 poetry run sphinx-build -b html docs/source docs/build

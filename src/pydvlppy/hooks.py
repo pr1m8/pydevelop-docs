@@ -1,4 +1,4 @@
-"""Hook system for PyDevelop-Docs customization."""
+"""Hook system for Pydvlppy customization."""
 
 import os
 from pathlib import Path
@@ -10,7 +10,7 @@ import click
 
 
 class HookManager:
-    """Manage pre/post hooks for various PyDevelop-Docs operations."""
+    """Manage pre/post hooks for various Pydvlppy operations."""
 
     def __init__(self, project_path: Path):
         self.project_path = project_path
@@ -168,7 +168,7 @@ build_dir = project_path / "docs" / "build" / "html"
 if build_dir.exists():
     footer_html = """
     <div class="custom-footer">
-        Built with PyDevelop-Docs | 
+        Built with Pydvlppy | 
         <a href="https://github.com/yourusername/yourproject">GitHub</a>
     </div>
     """
@@ -212,7 +212,7 @@ css_dir.mkdir(parents=True, exist_ok=True)
 custom_css = css_dir / "custom.css"
 if not custom_css.exists():
     custom_css.write_text("""
-/* Custom PyDevelop-Docs styles */
+/* Custom Pydvlppy styles */
 .custom-note {
     background-color: #e8f4f8;
     border-left: 4px solid #2196F3;
@@ -238,9 +238,9 @@ js_dir.mkdir(parents=True, exist_ok=True)
 custom_js = js_dir / "custom.js"
 if not custom_js.exists():
     custom_js.write_text("""
-// Custom PyDevelop-Docs JavaScript
+// Custom Pydvlppy JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('PyDevelop-Docs: Custom JS loaded');
+    console.log('Pydvlppy: Custom JS loaded');
     
     // Example: Add copy buttons to all code blocks
     const codeBlocks = document.querySelectorAll('pre');
@@ -318,10 +318,10 @@ class TemplateOverrideManager:
 # Rename to conf.py to use this instead of the generated version
 
 # This example shows how to extend the generated configuration
-# while keeping PyDevelop-Docs features
+# while keeping Pydvlppy features
 
 # First, import the base configuration
-from pydvlp_docs.config import get_haive_config
+from pydvlppy.config import get_haive_config
 config = get_haive_config(__name__, project_root="../..")
 
 # Apply base configuration
@@ -399,7 +399,7 @@ Indices and tables
 .. raw:: html
 
    <div class="custom-footer">
-   This documentation was built with PyDevelop-Docs
+   This documentation was built with Pydvlppy
    </div>
 """
         )

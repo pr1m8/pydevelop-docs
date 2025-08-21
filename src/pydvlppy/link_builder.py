@@ -198,8 +198,8 @@ import os
 import sys
 from pathlib import Path
 
-# Import theming configuration from pydvlp-docs
-from pydvlp_docs.config import get_haive_config
+# Import theming configuration from pydvlppy
+from pydvlppy.config import get_haive_config
 
 # Get base configuration for theming inheritance
 base_config = get_haive_config("haive-hub", "", is_central_hub=True)

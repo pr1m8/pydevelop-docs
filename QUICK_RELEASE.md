@@ -1,9 +1,9 @@
-# 🚀 Quick Release Instructions for PyDevelop-Docs
+# 🚀 Quick Release Instructions for Pydvlppy
 
 ## Current Status
 - ✅ **Version**: 0.1.0
 - ✅ **Built**: dist/pydevelop_docs-0.1.0-py3-none-any.whl
-- ✅ **Repository**: https://github.com/pr1m8/pydvlp-docs (PUBLIC)
+- ✅ **Repository**: https://github.com/pr1m8/pydvlppy (PUBLIC)
 - ✅ **Workflows**: Running (fixing deprecated actions)
 - ⏳ **PyPI**: Not published yet
 - ⏳ **Read the Docs**: Not imported yet
@@ -20,7 +20,7 @@ poetry config pypi-token.pypi pypi-YOUR_TOKEN_HERE
 poetry publish
 
 # Or use the CLI:
-poetry run pydvlp-docs publish
+poetry run pydvlppy publish
 ```
 
 ### Option B: Using Twine
@@ -37,7 +37,7 @@ poetry run twine upload dist/*
 
 1. Go to: https://readthedocs.org/dashboard/import/
 2. Click "Import Manually" or connect GitHub
-3. Repository URL: `https://github.com/pr1m8/pydvlp-docs`
+3. Repository URL: `https://github.com/pr1m8/pydvlppy`
 4. RTD will auto-detect `.readthedocs.yaml`
 
 ## 3. Verify Installation
@@ -45,18 +45,18 @@ poetry run twine upload dist/*
 After PyPI release:
 ```bash
 # Install from PyPI
-pip install pydvlp-docs
+pip install pydvlppy
 
 # Test it works
-pydvlp-docs --version
-pydvlp-docs --help
+pydvlppy --version
+pydvlppy --help
 ```
 
 ## 4. GitHub Release (Optional)
 
 ```bash
 gh release create v0.1.0 \
-  --title "PyDevelop-Docs v0.1.0 - Initial Release" \
+  --title "Pydvlppy v0.1.0 - Initial Release" \
   --notes "Universal Python documentation generator with 40+ Sphinx extensions" \
   --generate-notes
 ```

@@ -1,16 +1,16 @@
-# Comprehensive Configuration Audit - PyDevelop-Docs
+# Comprehensive Configuration Audit - Pydvlppy
 
 **Date**: 2025-08-15 14:35:00
 **Analyst**: Claude
-**Purpose**: Complete audit of ALL configuration sources, inheritance patterns, and usage in PyDevelop-Docs
+**Purpose**: Complete audit of ALL configuration sources, inheritance patterns, and usage in Pydvlppy
 
 ## Executive Summary
 
-PyDevelop-Docs has a complex configuration system with multiple sources, inconsistent usage, and conflicting implementations. This is causing the documentation rendering issues we've observed.
+Pydvlppy has a complex configuration system with multiple sources, inconsistent usage, and conflicting implementations. This is causing the documentation rendering issues we've observed.
 
 ## Configuration Sources Identified
 
-### 1. Primary Configuration Files in PyDevelop-Docs
+### 1. Primary Configuration Files in Pydvlppy
 
 #### A. `/src/pydevelop_docs/config.py` (Main Config Module)
 
@@ -28,7 +28,7 @@ PyDevelop-Docs has a complex configuration system with multiple sources, inconsi
 
 #### B. `/src/pydevelop_docs/cli.py` (CLI Template Generator)
 
-- **Purpose**: Generates conf.py when running `pydvlp-docs init`
+- **Purpose**: Generates conf.py when running `pydvlppy init`
 - **Location**: Lines 375-683 (hardcoded template)
 - **Issues**:
   - MISSING `autoapi_own_page_level = "module"` ❌
@@ -60,7 +60,7 @@ PyDevelop-Docs has a complex configuration system with multiple sources, inconsi
 #### Example: haive-mcp Package
 
 - `/packages/haive-mcp/docs/conf.py` - Manual configuration
-- `/packages/haive-mcp/docs/source/conf.py` - PyDevelop-Docs generated
+- `/packages/haive-mcp/docs/source/conf.py` - Pydvlppy generated
 
 ## Configuration Inheritance Map
 
@@ -115,7 +115,7 @@ PyDevelop-Docs has a complex configuration system with multiple sources, inconsi
 Projects end up with multiple conf.py files:
 
 - `/docs/conf.py` - User created (wrong location)
-- `/docs/source/conf.py` - PyDevelop-Docs created (correct)
+- `/docs/source/conf.py` - Pydvlppy created (correct)
 
 Build commands use different files:
 
@@ -188,10 +188,10 @@ linkcode_resolve function  # ✅ GitHub links
 
 ### How Projects Get Configuration
 
-#### Method 1: PyDevelop-Docs Init (BROKEN PATH)
+#### Method 1: Pydvlppy Init (BROKEN PATH)
 
 ```bash
-pydvlp-docs init
+pydvlppy init
 # Generates conf.py from CLI template
 # Missing features, broken navigation
 ```
@@ -213,7 +213,7 @@ This package perfectly illustrates the chaos:
 
 1. **Has TWO conf.py files**:
    - `/docs/conf.py` - Manual, uses sphinx_rtd_theme
-   - `/docs/source/conf.py` - PyDevelop-Docs generated
+   - `/docs/source/conf.py` - Pydvlppy generated
 
 2. **Build uses wrong one**:
    - Building from `/docs/` uses manual config

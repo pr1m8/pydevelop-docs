@@ -198,7 +198,7 @@ body[data-theme="light"] .sig .pre {
 ### Step 1: Update CSS File
 
 ```bash
-cd /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/test-projects/test-haive-template
+cd /home/will/Projects/haive/backend/haive/tools/pydvlppy/test-projects/test-haive-template
 # Edit docs/source/_static/furo-intense.css with new selectors
 ```
 

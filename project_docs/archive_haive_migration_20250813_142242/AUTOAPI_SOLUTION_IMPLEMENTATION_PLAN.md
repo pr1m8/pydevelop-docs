@@ -117,13 +117,13 @@ cd docs && poetry run sphinx-build -b html source build
 - Navigation showing: haive.core → haive.agents → haive.tools structure
 - Significantly improved usability
 
-### Phase 2: Update pydvlp-docs Default Configuration 🔄 **NEXT**
+### Phase 2: Update pydvlppy Default Configuration 🔄 **NEXT**
 
 **Target**: Make hierarchical organization the default for all new projects
 
-#### 2.1 Update pydvlp-docs Templates
+#### 2.1 Update pydvlppy Templates
 
-**File**: `/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/conf.py.j2`
+**File**: `/home/will/Projects/haive/backend/haive/tools/pydvlppy/src/pydevelop_docs/templates/conf.py.j2`
 
 **Changes**:
 
@@ -152,16 +152,16 @@ html_theme_options = {
 
 ```bash
 # New options for advanced users
-pydvlp-docs init --api-page-level module  # Default
-pydvlp-docs init --api-page-level class   # Old behavior
-pydvlp-docs init --with-flat-api          # Override hierarchical
+pydvlppy init --api-page-level module  # Default
+pydvlppy init --api-page-level class   # Old behavior
+pydvlppy init --with-flat-api          # Override hierarchical
 ```
 
 #### 2.3 Update Documentation
 
 **Files to update**:
 
-- pydvlp-docs README
+- pydvlppy README
 - CLI help text
 - Template documentation
 
@@ -284,10 +284,10 @@ API Reference (NEW - EXCELLENT)
 
 ### Short-term (Phase 2):
 
-- [ ] Update pydvlp-docs default templates
+- [ ] Update pydvlppy default templates
 - [ ] Add CLI options for API organization preferences
-- [ ] Update pydvlp-docs documentation
-- [ ] Test with new projects using pydvlp-docs
+- [ ] Update pydvlppy documentation
+- [ ] Test with new projects using pydvlppy
 
 ### Long-term (Phase 3):
 
@@ -301,7 +301,7 @@ API Reference (NEW - EXCELLENT)
 - **Main Analysis**: @project_docs/pydevelop_docs/AUTOAPI_HIERARCHICAL_ORGANIZATION_ANALYSIS.md
 - **Test Results**: `file:///home/will/Projects/haive/backend/haive/test-haive-template/docs/build/autoapi/index.html`
 - **Original Issue**: @project_docs/pydevelop_docs/COMPREHENSIVE_DOCUMENTATION_ISSUES_20250813.md #4
-- **pydvlp-docs**: @tools/pydvlp-docs/
+- **pydvlppy**: @tools/pydvlppy/
 - **Main Project Hub**: @CLAUDE.md
 
 ---

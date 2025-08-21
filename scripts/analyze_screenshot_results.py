@@ -150,7 +150,7 @@ def analyze_session(session_dir: Path) -> Dict:
    - tippy-enhancements.css
    - css/custom.css
 
-3. Run `pydvlp-docs init --force` to update configuration
+3. Run `pydvlppy init --force` to update configuration
 """,
         }
     )
@@ -212,7 +212,7 @@ def display_feedback(results: Dict):
     # Next steps
     console.print("\n[bold]🎯 Next Steps:[/bold]")
     console.print("1. Apply the recommended fixes above")
-    console.print("2. Rebuild documentation: `poetry run pydvlp-docs build`")
+    console.print("2. Rebuild documentation: `poetry run pydvlppy build`")
     console.print(
         "3. Re-run visual tests: `poetry run python scripts/visual_test_runner.py`"
     )

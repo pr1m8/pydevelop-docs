@@ -1,13 +1,13 @@
 
-PyDevelop-Docs 📚
+Pydvlppy 📚
 =================
 
-.. image:: https://img.shields.io/pypi/v/pydvlp-docs.svg
-   :target: https://pypi.org/project/pydvlp-docs/
+.. image:: https://img.shields.io/pypi/v/pydvlppy.svg
+   :target: https://pypi.org/project/pydvlppy/
    :alt: PyPI Version
 
-.. image:: https://img.shields.io/pypi/pyversions/pydvlp-docs.svg
-   :target: https://pypi.org/project/pydvlp-docs/
+.. image:: https://img.shields.io/pypi/pyversions/pydvlppy.svg
+   :target: https://pypi.org/project/pydvlppy/
    :alt: Python Versions
 
 .. image:: https://img.shields.io/badge/License-MIT-yellow.svg
@@ -50,7 +50,7 @@ Transform any Python project into beautiful, professional documentation in minut
    .. grid-item-card:: 🚀 One Command
       :shadow: sm
       
-      ``pydvlp-docs setup-general /project`` and you're done!
+      ``pydvlppy setup-general /project`` and you're done!
 
 .. admonition:: ⚡ Quick Start - Any Python Project
    :class: tip
@@ -58,20 +58,20 @@ Transform any Python project into beautiful, professional documentation in minut
    .. code-block:: bash
 
       # Install
-      pip install pydvlp-docs
+      pip install pydvlppy
 
       # Set up docs for ANY Python project
-      pydvlp-docs setup-general /path/to/your/project
+      pydvlppy setup-general /path/to/your/project
 
       # Build beautiful documentation  
       cd /path/to/your/project/docs && make html
 
       # Your docs are ready at build/html/index.html! 🎉
 
-.. admonition:: 🎊 This Documentation Was Built With PyDevelop-Docs
+.. admonition:: 🎊 This Documentation Was Built With Pydvlppy
    :class: note
 
-   This very documentation you're reading was generated using PyDevelop-Docs itself!
+   This very documentation you're reading was generated using Pydvlppy itself!
    It showcases all the features: AutoAPI with hierarchical organization, 
    custom Jinja2 templates, 40+ extensions, and professional styling.
 
@@ -116,7 +116,7 @@ Transform any Python project into beautiful, professional documentation in minut
 🔧 Sphinx Extensions Ecosystem (40+)
 ------------------------------------
 
-PyDevelop-Docs includes a carefully curated collection of 40+ Sphinx extensions, all pre-configured and optimized:
+Pydvlppy includes a carefully curated collection of 40+ Sphinx extensions, all pre-configured and optimized:
 
 .. tab-set::
 
@@ -196,7 +196,7 @@ PyDevelop-Docs includes a carefully curated collection of 40+ Sphinx extensions,
 🎨 Custom Jinja2 Templates
 --------------------------
 
-PyDevelop-Docs includes professionally designed Jinja2 templates for enhanced documentation:
+Pydvlppy includes professionally designed Jinja2 templates for enhanced documentation:
 
 .. grid:: 1 2 2 2
    :gutter: 2
@@ -265,13 +265,13 @@ Documentation
    changelog
    guides/index
 
-🚀 Why PyDevelop-Docs?
+🚀 Why Pydvlppy?
 ----------------------
 
 .. grid:: 1 2 2 2
    :gutter: 3
 
-   .. grid-item-card:: ❌ **Before PyDevelop-Docs**
+   .. grid-item-card:: ❌ **Before Pydvlppy**
       :shadow: md
       :class-header: bg-danger text-white
       
@@ -283,7 +283,7 @@ Documentation
       * Complex build setups
       * Version conflicts and dependencies
 
-   .. grid-item-card:: ✅ **With PyDevelop-Docs**
+   .. grid-item-card:: ✅ **With Pydvlppy**
       :shadow: md
       :class-header: bg-success text-white
       
@@ -303,7 +303,7 @@ Documentation
       :widths: 25 25 25 25
 
       * - Feature
-        - **PyDevelop-Docs**
+        - **Pydvlppy**
         - Manual Sphinx
         - Other Tools
       * - **Setup Time**
@@ -334,7 +334,7 @@ Documentation
 🏗️ Supported Project Structures
 --------------------------------
 
-PyDevelop-Docs intelligently detects and supports **all** Python project structures:
+Pydvlppy intelligently detects and supports **all** Python project structures:
 
 .. tab-set::
 
@@ -400,7 +400,7 @@ PyDevelop-Docs intelligently detects and supports **all** Python project structu
 .. admonition:: 🎯 Smart Detection Magic
    :class: note
    
-   No matter how complex your project structure, PyDevelop-Docs automatically:
+   No matter how complex your project structure, Pydvlppy automatically:
    
    * **Detects** your project type (monorepo, single package, simple project)
    * **Extracts** metadata from pyproject.toml, setup.py, or package files
@@ -416,14 +416,14 @@ Getting Help & Contact
    .. grid-item-card:: 🐛 **Bug Reports & Features**
       :shadow: sm
       
-      `GitHub Issues <https://github.com/pr1m8/pydvlp-docs/issues>`_
+      `GitHub Issues <https://github.com/pr1m8/pydvlppy/issues>`_
       
       Report bugs, request features, or suggest improvements.
 
    .. grid-item-card:: 💬 **Questions & Discussion**  
       :shadow: sm
       
-      `GitHub Discussions <https://github.com/pr1m8/pydvlp-docs/discussions>`_
+      `GitHub Discussions <https://github.com/pr1m8/pydvlppy/discussions>`_
       
       Ask questions, share tips, and connect with the community.
 

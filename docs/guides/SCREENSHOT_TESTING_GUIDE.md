@@ -1,4 +1,4 @@
-# Screenshot Testing Guide for PyDevelop-Docs
+# Screenshot Testing Guide for Pydvlppy
 
 **Version**: 1.0
 **Created**: 2025-08-17
@@ -18,7 +18,7 @@ Visual testing ensures your documentation renders correctly across different the
 
 ### Built-in Tools
 
-PyDevelop-Docs includes powerful screenshot utilities:
+Pydvlppy includes powerful screenshot utilities:
 
 1. **`comprehensive_screenshot.py`** - Full documentation session
 2. **`screenshot_specific.py`** - Single page testing
@@ -31,7 +31,7 @@ PyDevelop-Docs includes powerful screenshot utilities:
 pip install playwright rich
 playwright install chromium
 
-# Install PyDevelop-Docs with dev dependencies
+# Install Pydvlppy with dev dependencies
 poetry install --with dev
 ```
 
@@ -40,8 +40,8 @@ poetry install --with dev
 ### 1. Build Documentation
 
 ```bash
-# Using PyDevelop-Docs
-poetry run pydvlp-docs build
+# Using Pydvlppy
+poetry run pydvlppy build
 
 # Or directly with Sphinx
 poetry run sphinx-build -b html docs/source docs/build
@@ -134,7 +134,7 @@ class VisualFeedbackTester:
     def run_tests(self):
         """Run screenshot tests and collect results."""
         # Build docs
-        subprocess.run(["poetry", "run", "pydvlp-docs", "build"])
+        subprocess.run(["poetry", "run", "pydvlppy", "build"])
 
         # Start server
         server = subprocess.Popen([
@@ -367,7 +367,7 @@ class DocChangeHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if event.src_path.endswith(('.css', '.py', '.rst', '.md')):
             print(f"Change detected: {event.src_path}")
-            subprocess.run(["poetry", "run", "pydvlp-docs", "build"])
+            subprocess.run(["poetry", "run", "pydvlppy", "build"])
             # Run screenshot of affected page
 
 observer = Observer()

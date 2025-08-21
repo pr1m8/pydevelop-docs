@@ -1,4 +1,4 @@
-# CSS Usage Analysis - PyDevelop-Docs
+# CSS Usage Analysis - Pydvlppy
 
 **Status**: Analysis Complete  
 **Date**: 2025-08-15  
@@ -60,7 +60,7 @@ static_files = [
 | **api-docs.css**              | ~Medium    | API documentation     | 🚫 Unused | Neither (distributed but not used) |
 | **toc-enhancements.css**      | ~Medium    | TOC improvements      | 🚫 Unused | Neither (distributed but not used) |
 
-### **PyDevelop-Docs Own Documentation** (docs/source/\_static/)
+### **Pydvlppy Own Documentation** (docs/source/\_static/)
 
 Uses **config.py shared config**, so gets the modern 4-file approach:
 
@@ -195,7 +195,7 @@ Analyze what's in each file to see if further consolidation is possible:
 cd test-haive-template
 
 # Test CLI approach
-poetry run pydvlp-docs init --force
+poetry run pydvlppy init --force
 # Check what CSS files are in generated conf.py
 
 # Test shared config approach

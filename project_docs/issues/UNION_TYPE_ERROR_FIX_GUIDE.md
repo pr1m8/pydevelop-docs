@@ -1,4 +1,4 @@
-# Union Type Error Fix Guide - PyDevelop-Docs
+# Union Type Error Fix Guide - Pydvlppy
 
 **Created**: 2025-08-15
 **Status**: Active Implementation
@@ -180,10 +180,10 @@ cd test-union-types
 echo "from test_union_types import TestUnions" > __init__.py
 
 # Initialize docs
-poetry run pydvlp-docs init
+poetry run pydvlppy init
 
 # Build and check for errors
-poetry run pydvlp-docs build 2>&1 | grep -i "unsupported"
+poetry run pydvlppy build 2>&1 | grep -i "unsupported"
 ```
 
 ## 🎯 Expected Outcomes

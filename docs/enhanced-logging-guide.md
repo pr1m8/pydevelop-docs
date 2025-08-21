@@ -186,14 +186,14 @@ The system automatically categorizes warnings:
   run: |
     export SPHINX_DEBUG=1
     export CI=true
-    poetry run python tools/pydvlp-docs/scripts/enhanced_build_logger.py \
+    poetry run python tools/pydvlppy/scripts/enhanced_build_logger.py \
       --command "sphinx-build -b html docs build" \
       --output artifacts/logs/
 
 - name: Analyze Build Results
   if: always()
   run: |
-    poetry run python tools/pydvlp-docs/scripts/analyze_build_log.py \
+    poetry run python tools/pydvlppy/scripts/analyze_build_log.py \
       artifacts/logs/sphinx-build-*.log \
       --json \
       --save artifacts/build-analysis.json
@@ -231,7 +231,7 @@ docs-clean-build: clean docs-debug docs-analyze
   hooks:
     - id: sphinx-build-check
       name: Check Sphinx Build
-      entry: poetry run python tools/pydvlp-docs/scripts/enhanced_build_logger.py
+      entry: poetry run python tools/pydvlppy/scripts/enhanced_build_logger.py
       language: system
       files: '\.(py|rst|md)$'
       pass_filenames: false

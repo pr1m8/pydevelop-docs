@@ -1,4 +1,4 @@
-# PyDevelop-Docs Enhancement Roadmap
+# Pydvlppy Enhancement Roadmap
 
 **Created**: 2025-01-13
 **Status**: Planning Phase
@@ -201,13 +201,13 @@ This roadmap outlines enhancements for both individual package documentation and
 - [ ] `scripts/generate-package-templates.py` - Template generation
 - [ ] `scripts/sync-cross-references.py` - Cross-package link management
 
-### Enhanced pydvlp-docs Commands to Add
+### Enhanced pydvlppy Commands to Add
 
-- [ ] `pydvlp-docs init-enhanced` - Create enhanced package structure
-- [ ] `pydvlp-docs validate-links` - Comprehensive link checking
-- [ ] `pydvlp-docs analyze-performance` - Documentation performance analysis
-- [ ] `pydvlp-docs generate-workflows` - Create cross-package tutorials
-- [ ] `pydvlp-docs health-check` - Documentation health assessment
+- [ ] `pydvlppy init-enhanced` - Create enhanced package structure
+- [ ] `pydvlppy validate-links` - Comprehensive link checking
+- [ ] `pydvlppy analyze-performance` - Documentation performance analysis
+- [ ] `pydvlppy generate-workflows` - Create cross-package tutorials
+- [ ] `pydvlppy health-check` - Documentation health assessment
 
 ## 📊 Success Metrics
 

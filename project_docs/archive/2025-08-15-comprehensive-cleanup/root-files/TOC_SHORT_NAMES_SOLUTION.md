@@ -47,7 +47,7 @@ Should be:
 
 ## How to Apply
 
-1. **For new projects**: Use `poetry run pydvlp-docs init` - will use updated template
+1. **For new projects**: Use `poetry run pydvlppy init` - will use updated template
 2. **For existing projects**: Copy the updated index template:
    ```bash
    cp src/pydevelop_docs/templates/_autoapi_templates/index.rst YOUR_PROJECT/docs/source/_autoapi_templates/
@@ -86,7 +86,7 @@ Not:
 The solution successfully creates hierarchical AutoAPI documentation with clean TOC structure:
 
 1. **Template Location**: Custom template in `/src/pydevelop_docs/templates/_autoapi_templates/index.rst`
-2. **Processing**: PyDevelop-Docs uses this template during documentation generation
+2. **Processing**: Pydvlppy uses this template during documentation generation
 3. **Result**: AutoAPI creates organized module structure instead of flat alphabetical lists
 
 ### Before vs After
@@ -126,7 +126,7 @@ API Reference
 ✅ **Build Success**: Documentation builds without warnings using `sphinx-build -W`
 ✅ **File Structure**: HTML files generated in organized hierarchy  
 ✅ **TOC Structure**: Clean navigation instead of flat alphabetical listing
-✅ **Template Integration**: PyDevelop-Docs template system working correctly
+✅ **Template Integration**: Pydvlppy template system working correctly
 
 **Tested with**: haive-mcp package (60+ modules)
 **Result**: Clean, navigable documentation structure

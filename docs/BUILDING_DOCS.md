@@ -1,6 +1,6 @@
-# Building pydvlp-docs Documentation
+# Building pydvlppy Documentation
 
-This directory contains the documentation source for pydvlp-docs itself.
+This directory contains the documentation source for pydvlppy itself.
 
 ## 🚀 Quick Build
 
@@ -37,7 +37,7 @@ sudo apt-get install -y \
 # Install documentation requirements
 pip install -r requirements.txt
 
-# Or install pydvlp-docs with docs extras
+# Or install pydvlppy with docs extras
 pip install -e ..[docs]
 ```
 
@@ -83,7 +83,7 @@ The documentation uses:
 - **API Docs**: AutoAPI with hierarchical organization
 - **Diagrams**: Mermaid, PlantUML, Graphviz
 
-Configuration is in `source/conf.py` which imports from `pydvlp_docs.config`.
+Configuration is in `source/conf.py` which imports from `pydvlppy.config`.
 
 ## 🌐 Viewing Documentation
 
@@ -101,7 +101,7 @@ open http://localhost:8000
 
 ### Import Errors
 
-If you get import errors for `pydvlp_docs`:
+If you get import errors for `pydvlppy`:
 
 ```bash
 # Install in development mode from parent directory
@@ -161,4 +161,4 @@ When importing to Read the Docs:
 
 ---
 
-**Note**: This documentation showcases pydvlp-docs eating its own dog food - we use pydvlp-docs to document pydvlp-docs!
+**Note**: This documentation showcases pydvlppy eating its own dog food - we use pydvlppy to document pydvlppy!

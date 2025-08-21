@@ -2,7 +2,7 @@
 
    /help for help, /status for your current setup
 
-   cwd: /home/will/Projects/haive/backend/haive/tools/pydvlp-docs
+   cwd: /home/will/Projects/haive/backend/haive/tools/pydvlppy
 
  ⚠Large /home/will/Projects/haive/backend/haive/CLAUDE.md will impact performance 
   (44.5k chars > 40.0k) • /memory to edit
@@ -17,7 +17,7 @@
     lates/python/module.rst (210 lines)
 
 ● Looking at the files you've shown me, I can see the
-  current state of the PyDevelop-Docs AutoAPI
+  current state of the Pydvlppy AutoAPI
   customization. Let me understand what's happening:
 
   1. From AUTOAPI_CUSTOMIZATION_STATE.md - it appears to be

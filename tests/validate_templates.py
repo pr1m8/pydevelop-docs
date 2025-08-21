@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Comprehensive template validation for pydvlp-docs.
+"""Comprehensive template validation for pydvlppy.
 
 This script validates all templates using multiple approaches:
 1. djLint for syntax and style checking

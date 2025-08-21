@@ -1,4 +1,4 @@
-# Careful CSS Fix Plan - PyDevelop-Docs
+# Careful CSS Fix Plan - Pydvlppy
 
 **Created**: 2025-08-17
 **Purpose**: Step-by-step plan to carefully fix CSS issues
@@ -113,7 +113,7 @@ app.add_css_file("css/custom.css", priority=600)
 2. **After Each Change**:
 
    ```bash
-   poetry run pydvlp-docs init --force
+   poetry run pydvlppy init --force
    poetry run sphinx-build -b html docs/source docs/build
    python -m http.server 8003 --directory docs/build
    # Check in browser

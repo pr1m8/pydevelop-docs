@@ -8,11 +8,11 @@ import os
 import sys
 
 
-# Add pydvlp-docs to path if needed
+# Add pydvlppy to path if needed
 sys.path.insert(0, os.path.abspath("."))
 
 # Import the complete shared configuration
-from pydvlp_docs.config import get_central_hub_config
+from pydvlppy.config import get_central_hub_config
 
 
 # Get central hub configuration with sphinx-collections support

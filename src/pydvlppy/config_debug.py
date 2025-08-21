@@ -256,7 +256,7 @@ def create_debug_conf_snippet() -> str:
 # Enable debug mode from environment
 import os
 if os.environ.get('SPHINX_DEBUG'):
-    from pydvlp_docs.config_debug import enhance_config_with_debug
+    from pydvlppy.config_debug import enhance_config_with_debug
     
     # Get current config as dict
     current_config = {k: v for k, v in globals().items() if not k.startswith('_')}
@@ -273,7 +273,7 @@ if os.environ.get('SPHINX_DEBUG'):
     
     # Setup logging filters
     def setup(app):
-        from pydvlp_docs.config_debug import setup_logging_filters
+        from pydvlppy.config_debug import setup_logging_filters
         from pathlib import Path
         
         # Filter noisy warnings to log file

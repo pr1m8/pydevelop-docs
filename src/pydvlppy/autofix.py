@@ -1,4 +1,4 @@
-"""Auto-fix utilities for common pydvlp-docs issues."""
+"""Auto-fix utilities for common pydvlppy issues."""
 
 from pathlib import Path
 import re
@@ -211,8 +211,8 @@ from sphinx.application import Sphinx
 # Path setup
 sys.path.insert(0, os.path.abspath("../../src"))
 
-# Import shared Haive configuration from pydvlp-docs package
-from pydvlp_docs.config import get_haive_config
+# Import shared Haive configuration from pydvlppy package
+from pydvlppy.config import get_haive_config
 
 # Get package-specific configuration
 package_name = "{package_name}"

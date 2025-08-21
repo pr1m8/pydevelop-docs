@@ -1,1 +1,1 @@
-"""Tests for pydvlp-docs package."""
+"""Tests for pydvlppy package."""

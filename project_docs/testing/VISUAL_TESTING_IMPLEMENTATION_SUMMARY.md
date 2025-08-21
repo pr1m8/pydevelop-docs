@@ -70,7 +70,7 @@ Critical issues: 20
 2. CSS Configuration Check [INFO]
    - Remove marketing CSS files
    - Verify minimal CSS set
-   - Run pydvlp-docs init --force
+   - Run pydvlppy init --force
 ```
 
 ## 💡 Key Features Demonstrated
@@ -163,4 +163,4 @@ This demonstrates how the visual testing system catches real problems and provid
 4. **Cross-Browser Testing**: Firefox, Safari support
 5. **Dashboard Integration**: Web UI for results
 
-The visual testing system with feedback loop is now a core part of PyDevelop-Docs, ensuring documentation quality through automated testing and actionable feedback!
+The visual testing system with feedback loop is now a core part of Pydvlppy, ensuring documentation quality through automated testing and actionable feedback!

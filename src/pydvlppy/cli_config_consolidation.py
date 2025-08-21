@@ -28,7 +28,7 @@ def approach1_import_at_generation():
 
         # Build conf.py that imports from config at runtime
         return f"""
-from pydvlp_docs.config import get_haive_config
+from pydvlppy.config import get_haive_config
 
 # Get configuration
 config = get_haive_config("{self.project_info["name"]}")
@@ -58,8 +58,8 @@ def approach3_hybrid():
     Import base config but allow CLI to override specific settings.
     """
     return """
-# Base configuration from pydvlp_docs
-from pydvlp_docs.config import get_haive_config
+# Base configuration from pydvlppy
+from pydvlppy.config import get_haive_config
 config = get_haive_config(project)
 
 # Apply base configuration

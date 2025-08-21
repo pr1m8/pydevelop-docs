@@ -1,4 +1,4 @@
-# Master Implementation Plan - PyDevelop-Docs Enhancement
+# Master Implementation Plan - Pydvlppy Enhancement
 
 **Goal**: Implement Issue #6 AutoAPI template improvements using the 45+ extensions  
 **Timeline**: 3-week phased approach  
@@ -346,7 +346,7 @@ config = {
 ```bash
 # Test with sample project
 cd test-projects/test-haive-template
-poetry run pydvlp-docs init --force
+poetry run pydvlppy init --force
 poetry run sphinx-build -b html docs/source docs/build
 
 # Validate:

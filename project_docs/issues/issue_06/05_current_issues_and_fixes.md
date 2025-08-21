@@ -27,7 +27,7 @@
 
 #### **Problem Description**
 
-Custom AutoAPI templates exist in PyDevelop-Docs `/docs/_autoapi_templates/` but are never distributed to projects that use `pydvlp-docs init`. This means all the enhanced templates we've created (Pydantic model detection, better class organization, etc.) are not available to end users.
+Custom AutoAPI templates exist in Pydvlppy `/docs/_autoapi_templates/` but are never distributed to projects that use `pydvlppy init`. This means all the enhanced templates we've created (Pydantic model detection, better class organization, etc.) are not available to end users.
 
 #### **Root Cause Analysis**
 
@@ -674,7 +674,7 @@ Inconsistencies between different configuration methods:
    - Add validation and error handling
 
 3. Test with real projects:
-   - Generate new project with pydvlp-docs init
+   - Generate new project with pydvlppy init
    - Verify templates are copied correctly
    - Confirm enhanced rendering works
 ```
@@ -829,7 +829,7 @@ class TestEnhancedTemplates:
 
 ```bash
 # Integration testing process
-1. Generate test project: pydvlp-docs init test-enhanced-templates
+1. Generate test project: pydvlppy init test-enhanced-templates
 2. Copy Haive framework classes to test project
 3. Build documentation: sphinx-build -b html
 4. Validate rendering: Check all enhanced features work

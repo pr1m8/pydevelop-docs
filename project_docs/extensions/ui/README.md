@@ -6,7 +6,7 @@
 
 ## Overview
 
-The UI enhancement extensions in PyDevelop-Docs work together to create a modern, professional documentation experience that rivals the best commercial documentation platforms. These extensions focus on visual polish, interactive elements, accessibility compliance, and mobile optimization to ensure your documentation not only looks professional but provides an exceptional user experience.
+The UI enhancement extensions in Pydvlppy work together to create a modern, professional documentation experience that rivals the best commercial documentation platforms. These extensions focus on visual polish, interactive elements, accessibility compliance, and mobile optimization to ensure your documentation not only looks professional but provides an exceptional user experience.
 
 ## Extension Suite
 
@@ -172,7 +172,7 @@ All UI extensions include comprehensive AutoAPI template integration examples th
 
 ### Centralized Management
 
-All UI extensions are configured through PyDevelop-Docs' centralized configuration system:
+All UI extensions are configured through Pydvlppy' centralized configuration system:
 
 ```python
 # Complete UI enhancement configuration in config.py
@@ -201,8 +201,8 @@ Install and initialize:
 
 .. prompt:: bash $
 
-   pip install pydvlp-docs
-   pydvlp-docs init
+   pip install pydvlppy
+   pydvlppy init
 
 The UI enhancements are automatically enabled with professional defaults.
 ```

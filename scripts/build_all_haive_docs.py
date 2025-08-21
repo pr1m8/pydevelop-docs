@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build all Haive package documentation using PyDevelop-Docs.
+Build all Haive package documentation using Pydvlppy.
 
 This script:
 1. Initializes documentation for each Haive package
@@ -52,10 +52,10 @@ def build_package_docs(package_path: Path, package_name: str) -> bool:
         print(f"{YELLOW}⚠️  Skipping {package_name} - no pyproject.toml found{RESET}")
         return False
 
-    # Initialize PyDevelop-Docs
-    print(f"  Initializing PyDevelop-Docs...")
+    # Initialize Pydvlppy
+    print(f"  Initializing Pydvlppy...")
     success, output = run_command(
-        ["poetry", "run", "pydvlp-docs", "init", "--force", "--yes"],
+        ["poetry", "run", "pydvlppy", "init", "--force", "--yes"],
         cwd=str(package_path),
     )
 

@@ -1,4 +1,4 @@
-# PyDevelop-Docs Template Fix Action Plan
+# Pydvlppy Template Fix Action Plan
 
 **Created**: 2025-08-15
 **Purpose**: Step-by-step plan to fix template issues
@@ -79,7 +79,7 @@ def _copy_autoapi_templates(self):
         )
     else:
         self.console.print(
-            "[yellow]⚠[/yellow] No custom AutoAPI templates found in pydvlp-docs"
+            "[yellow]⚠[/yellow] No custom AutoAPI templates found in pydvlppy"
         )
 ```
 
@@ -111,7 +111,7 @@ Consider removing the complex component system temporarily:
    cd /tmp
    mkdir test-pydevelop
    cd test-pydevelop
-   pydvlp-docs init --monorepo
+   pydvlppy init --monorepo
    ```
 
 2. **Verify templates were copied**:
@@ -136,7 +136,7 @@ Consider removing the complex component system temporarily:
 ### If templates aren't copied:
 
 - [ ] Check `template_src` path is correct
-- [ ] Verify templates exist in pydvlp-docs package
+- [ ] Verify templates exist in pydvlppy package
 - [ ] Check file permissions
 
 ### If templates are copied but not used:
@@ -156,7 +156,7 @@ Consider removing the complex component system temporarily:
 ### Test 1: Template Distribution
 
 ```python
-# After running pydvlp-docs init
+# After running pydvlppy init
 import os
 assert os.path.exists("docs/source/_autoapi_templates/python/module.rst")
 ```
@@ -186,7 +186,7 @@ assert 'autoapi_template_dir = "_autoapi_templates"' in open("docs/source/conf.p
 ## ✅ Success Criteria
 
 - [ ] Hierarchical API structure works (not flat list)
-- [ ] Templates are copied during `pydvlp-docs init`
+- [ ] Templates are copied during `pydvlppy init`
 - [ ] Custom templates are used during build
 - [ ] No template errors in build log
 - [ ] Clean RST output without formatting issues

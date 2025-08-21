@@ -1,7 +1,7 @@
 Getting Started
 ===============
 
-Welcome to PyDevelop-Docs! This guide will help you get started with creating beautiful documentation for your Python projects.
+Welcome to Pydvlppy! This guide will help you get started with creating beautiful documentation for your Python projects.
 
 .. contents:: Table of Contents
    :local:
@@ -10,18 +10,18 @@ Welcome to PyDevelop-Docs! This guide will help you get started with creating be
 Quick Start
 -----------
 
-PyDevelop-Docs provides a zero-configuration documentation system with 40+ pre-configured Sphinx extensions.
+Pydvlppy provides a zero-configuration documentation system with 40+ pre-configured Sphinx extensions.
 
 Installation
 ^^^^^^^^^^^^
 
-Install PyDevelop-Docs using pip or poetry:
+Install Pydvlppy using pip or poetry:
 
 .. code-block:: bash
 
-   pip install pydvlp-docs
+   pip install pydvlppy
    # or
-   poetry add pydvlp-docs
+   poetry add pydvlppy
 
 Basic Usage
 ^^^^^^^^^^^
@@ -30,25 +30,25 @@ Basic Usage
 
    .. code-block:: bash
 
-      pydvlp-docs init
+      pydvlppy init
 
 2. **Build the documentation:**
 
    .. code-block:: bash
 
-      pydvlp-docs build
+      pydvlppy build
 
 3. **View your documentation:**
 
    .. code-block:: bash
 
-      pydvlp-docs serve
+      pydvlppy serve
       # Open http://localhost:8000 in your browser
 
 Project Types
 -------------
 
-PyDevelop-Docs automatically detects your project structure and configures itself accordingly.
+Pydvlppy automatically detects your project structure and configures itself accordingly.
 
 Single Package
 ^^^^^^^^^^^^^^
@@ -64,7 +64,7 @@ For a standard Python package:
    ├── pyproject.toml
    └── README.md
 
-Run ``pydvlp-docs init`` in the project root.
+Run ``pydvlppy init`` in the project root.
 
 Monorepo
 ^^^^^^^^
@@ -80,7 +80,7 @@ For projects with multiple packages:
    │   └── package-c/
    └── pyproject.toml
 
-PyDevelop-Docs will detect the monorepo structure and offer to build documentation for all packages.
+Pydvlppy will detect the monorepo structure and offer to build documentation for all packages.
 
 Features
 --------
@@ -88,7 +88,7 @@ Features
 Automatic API Documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-PyDevelop-Docs uses Sphinx AutoAPI to automatically generate comprehensive API documentation from your code:
+Pydvlppy uses Sphinx AutoAPI to automatically generate comprehensive API documentation from your code:
 
 - Hierarchical organization (not flat alphabetical lists)
 - Classes, functions, and modules all documented
@@ -127,6 +127,6 @@ Next Steps
 Getting Help
 ------------
 
-- **Issues**: `GitHub Issues <https://github.com/pydevelop/pydvlp-docs/issues>`_
-- **Discussions**: `GitHub Discussions <https://github.com/pydevelop/pydvlp-docs/discussions>`_
+- **Issues**: `GitHub Issues <https://github.com/pydevelop/pydvlppy/issues>`_
+- **Discussions**: `GitHub Discussions <https://github.com/pydevelop/pydvlppy/discussions>`_
 - **Documentation**: You're reading it!

@@ -135,7 +135,7 @@ def main():
     print("\n" + "=" * 50)
     if success:
         print("🎉 All tests passed!")
-        print("\n✨ Ready to run: poetry run pydvlp-docs rebuild-haive")
+        print("\n✨ Ready to run: poetry run pydvlppy rebuild-haive")
     else:
         print("❌ Some tests failed!")
         return 1

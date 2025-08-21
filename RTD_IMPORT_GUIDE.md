@@ -1,4 +1,4 @@
-# 📚 Read the Docs Import Guide for pydvlp-docs
+# 📚 Read the Docs Import Guide for pydvlppy
 
 ## Quick Steps to Import:
 
@@ -10,14 +10,14 @@ https://readthedocs.org/dashboard/import/
 #### Option A: Connect GitHub (Recommended)
 1. Click "Connect your GitHub account"
 2. Authorize Read the Docs
-3. Select `pr1m8/pydvlp-docs` from your repositories
+3. Select `pr1m8/pydvlppy` from your repositories
 4. Click "Import"
 
 #### Option B: Manual Import
 1. Click "Import Manually"
 2. Fill in:
-   - **Name**: `pydvlp-docs`
-   - **Repository URL**: `https://github.com/pr1m8/pydvlp-docs`
+   - **Name**: `pydvlppy`
+   - **Repository URL**: `https://github.com/pr1m8/pydvlppy`
    - **Repository type**: Git
    - **Default branch**: main
 
@@ -30,7 +30,7 @@ https://readthedocs.org/dashboard/import/
 
 ### 4. After Import:
 Your documentation will be available at:
-**https://pydvlp-docs.readthedocs.io**
+**https://pydvlppy.readthedocs.io**
 
 ## 🔧 Configuration Details
 
@@ -53,7 +53,7 @@ The project is fully configured:
    - Check the detailed logs
 
 2. **Common Issues**:
-   - **Import errors**: Fixed - uses `pydvlp_docs` package name
+   - **Import errors**: Fixed - uses `pydvlppy` package name
    - **Missing graphviz**: Fixed - added `graphviz-dev` to apt packages
    - **Poetry not found**: Fixed - installed in `post_create_environment`
 
@@ -78,7 +78,7 @@ Once imported, you'll have:
 - ✅ Version tags automatically built
 - ✅ Search functionality
 - ✅ PDF/EPUB downloads
-- ✅ Beautiful documentation at https://pydvlp-docs.readthedocs.io
+- ✅ Beautiful documentation at https://pydvlppy.readthedocs.io
 
 ---
 

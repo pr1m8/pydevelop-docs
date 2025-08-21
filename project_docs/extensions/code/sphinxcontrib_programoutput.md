@@ -4,11 +4,11 @@
 **Package**: `sphinxcontrib-programoutput`
 **Purpose**: Execute external programs and include their output in documentation
 **Version**: 0.18+
-**Priority**: High (Execution category in PyDevelop-Docs)
+**Priority**: High (Execution category in Pydvlppy)
 
 ## Overview
 
-`sphinxcontrib.programoutput` enables execution of external programs, shell commands, and scripts during documentation build, capturing and formatting their output. This extension is essential for creating documentation that includes real command-line examples, CLI tool demonstrations, and system integration examples, particularly valuable for showing actual usage of PyDevelop-Docs itself.
+`sphinxcontrib.programoutput` enables execution of external programs, shell commands, and scripts during documentation build, capturing and formatting their output. This extension is essential for creating documentation that includes real command-line examples, CLI tool demonstrations, and system integration examples, particularly valuable for showing actual usage of Pydvlppy itself.
 
 ## Core Capabilities
 
@@ -21,7 +21,7 @@ Execute any command and include output:
 
 .. program-output:: ls -la /path/to/project
 
-.. program-output:: poetry run pydvlp-docs --help
+.. program-output:: poetry run pydvlppy --help
 ```
 
 ### Script Execution
@@ -46,7 +46,7 @@ Format output with syntax highlighting:
     :linenos:
 ```
 
-## Configuration in PyDevelop-Docs
+## Configuration in Pydvlppy
 
 ### Current Settings
 
@@ -208,10 +208,10 @@ Package Information
 .. program-output:: bash -c "
     # Initialize documentation
     cd /tmp/test-project
-    poetry run pydvlp-docs init --force
+    poetry run pydvlppy init --force
 
     # Build documentation
-    poetry run pydvlp-docs build
+    poetry run pydvlppy build
 
     # Show results
     ls -la docs/build/
@@ -251,7 +251,7 @@ Package Information
 
 ```rst
 .. program-output:: python -c "
-    # Test PyDevelop-Docs functionality
+    # Test Pydvlppy functionality
     from pydevelop_docs.cli import main
     from pydevelop_docs.config import get_haive_config
 
@@ -332,21 +332,21 @@ programoutput_concurrent_limit = 3          # Max concurrent executions
 programoutput_memory_limit = "256MB"        # Memory limit per command
 ```
 
-## Integration with PyDevelop-Docs
+## Integration with Pydvlppy
 
 ### Self-Documentation
 
 ```rst
-Show PyDevelop-Docs in Action
+Show Pydvlppy in Action
 ----------------------------
 
-.. program-output:: poetry run pydvlp-docs --version
+.. program-output:: poetry run pydvlppy --version
     :caption: Version Information
 
-.. program-output:: poetry run pydvlp-docs init --help
+.. program-output:: poetry run pydvlppy init --help
     :caption: Initialization Options
 
-.. program-output:: poetry run pydvlp-docs init --dry-run --use-shared-config
+.. program-output:: poetry run pydvlppy init --dry-run --use-shared-config
     :caption: Dry Run Example
 ```
 
@@ -389,7 +389,7 @@ Documentation Build Process
     rm -rf docs/build
 
     echo 'Step 2: Generate configuration'
-    poetry run pydvlp-docs init --force
+    poetry run pydvlppy init --force
 
     echo 'Step 3: Build documentation'
     cd docs && poetry run sphinx-build -b html source build
@@ -410,7 +410,7 @@ Documentation Build Process
     import subprocess
     import sys
 
-    # Test that PyDevelop-Docs CLI works
+    # Test that Pydvlppy CLI works
     try:
         result = subprocess.run([
             sys.executable, '-m', 'pydevelop_docs.cli', '--version'
@@ -465,7 +465,7 @@ Documentation Build Process
     :caption: Environment Validation
 ```
 
-## Implementation Status in PyDevelop-Docs
+## Implementation Status in Pydvlppy
 
 ### Current State
 

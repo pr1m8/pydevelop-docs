@@ -2,12 +2,12 @@
 
 **Extension Name**: `sphinx_inline_tabs`  
 **Official Documentation**: https://sphinx-inline-tabs.readthedocs.io/  
-**PyDevelop-Docs Status**: ✅ **CONFIGURED** (via sphinx_tabs.tabs)  
+**Pydvlppy Status**: ✅ **CONFIGURED** (via sphinx_tabs.tabs)  
 **Progressive Disclosure Impact**: 🎯 **MEDIUM** - Specialized tool for compact information display
 
 ## Overview
 
-Sphinx Inline Tabs provides a compact alternative to full-width tabs, enabling inline tabbed content that fits seamlessly within text flow. This extension complements PyDevelop-Docs' progressive disclosure strategy by offering space-efficient ways to present alternative information without breaking the reading flow. It's particularly valuable for Issue #6's mobile optimization and scannable documentation goals.
+Sphinx Inline Tabs provides a compact alternative to full-width tabs, enabling inline tabbed content that fits seamlessly within text flow. This extension complements Pydvlppy' progressive disclosure strategy by offering space-efficient ways to present alternative information without breaking the reading flow. It's particularly valuable for Issue #6's mobile optimization and scannable documentation goals.
 
 ## Core UI/UX Capabilities
 
@@ -26,12 +26,12 @@ You can choose between :itab:`Development|dev mode` or :itab:`Production|product
 Perfect for showing brief code alternatives without taking up vertical space:
 
 ```rst
-To install the package, use :itab:`pip|pip install pydvlp-docs` or :itab:`conda|conda install pydvlp-docs`.
+To install the package, use :itab:`pip|pip install pydvlppy` or :itab:`conda|conda install pydvlppy`.
 
 Configure the theme with :itab:`Python|theme="furo"` or :itab:`YAML|theme: furo`.
 ```
 
-## Current PyDevelop-Docs Configuration
+## Current Pydvlppy Configuration
 
 While sphinx_inline_tabs is not directly listed in the extensions, its functionality is provided through the `sphinx_tabs.tabs` extension which includes inline tab support:
 
@@ -88,7 +88,7 @@ While sphinx_inline_tabs is not directly listed in the extensions, its functiona
 ### Platform-Specific Instructions
 
 ```rst
-Installation varies by platform: :itab:`Windows|pip install pydvlp-docs` or :itab:`macOS|brew install pydvlp-docs` or :itab:`Linux|apt install pydvlp-docs`.
+Installation varies by platform: :itab:`Windows|pip install pydvlppy` or :itab:`macOS|brew install pydvlppy` or :itab:`Linux|apt install pydvlppy`.
 
 Configuration location: :itab:`Windows|%APPDATA%\\pydevelop` or :itab:`Unix|~/.config/pydevelop`.
 ```
@@ -507,14 +507,14 @@ function enhanceInlineTabAccessibility() {
 ### Copy Button Integration
 
 ```rst
-Choose your installation method: :itab:`pip|pip install pydvlp-docs` or :itab:`conda|conda install -c conda-forge pydvlp-docs`.
+Choose your installation method: :itab:`pip|pip install pydvlppy` or :itab:`conda|conda install -c conda-forge pydvlppy`.
 
 .. code-block:: bash
    :class: copyable-shell
 
    # Copy the command for your preferred method:
-   # pip install pydvlp-docs
-   # conda install -c conda-forge pydvlp-docs
+   # pip install pydvlppy
+   # conda install -c conda-forge pydvlppy
 ```
 
 ### Sphinx Design Integration
@@ -584,7 +584,7 @@ Response format: :itab:`JSON|application/json` or :itab:`XML|application/xml`
 Configuration Syntax
 ^^^^^^^^^^^^^^^^^^^^
 
-Configure PyDevelop-Docs using your preferred format:
+Configure Pydvlppy using your preferred format:
 
 **Theme Setting:**
 :itab:`Python|"html_theme": "furo"` or :itab:`YAML|html_theme: furo` or :itab:`Environment|PYDEVELOP_THEME=furo`
@@ -612,7 +612,7 @@ Common Issues
 :itab:`CSS|Check custom CSS files` or :itab:`Theme|Verify theme installation` or :itab:`Cache|Clear browser cache`
 ```
 
-## Best Practices for PyDevelop-Docs
+## Best Practices for Pydvlppy
 
 1. **Use sparingly** - Inline tabs are for compact alternatives, not major content
 2. **Clear labels** - Make tab labels descriptive and distinguishable
@@ -621,4 +621,4 @@ Common Issues
 5. **Accessibility first** - Include proper ARIA labels and keyboard support
 6. **Performance awareness** - Use lazy loading for content-heavy pages
 
-Sphinx Inline Tabs provides a space-efficient way to present alternatives in PyDevelop-Docs, supporting the progressive disclosure strategy while maintaining clean, scannable text flow that works well on both desktop and mobile devices.
+Sphinx Inline Tabs provides a space-efficient way to present alternatives in Pydvlppy, supporting the progressive disclosure strategy while maintaining clean, scannable text flow that works well on both desktop and mobile devices.

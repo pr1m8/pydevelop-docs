@@ -1,4 +1,4 @@
-# CSS Commits to Compare - PyDevelop-Docs
+# CSS Commits to Compare - Pydvlppy
 
 **Created**: 2025-08-17
 **Purpose**: List of commits with different CSS states to compare and find the best configuration
@@ -82,7 +82,7 @@ git show HEAD:src/pydevelop_docs/templates/static/api-docs.css | head -50
 # Checkout specific commit to test
 git checkout 3497afe
 cd test-projects/test-haive-template
-poetry run pydvlp-docs init --force
+poetry run pydvlppy init --force
 poetry run sphinx-build -b html docs/source docs/build
 # View results
 

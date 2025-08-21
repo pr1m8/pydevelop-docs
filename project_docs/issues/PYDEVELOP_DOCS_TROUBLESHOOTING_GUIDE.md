@@ -1,7 +1,7 @@
-# PyDevelop-Docs Troubleshooting Guide
+# Pydvlppy Troubleshooting Guide
 
 **Created**: 2025-08-17
-**Purpose**: Fix common issues when building Haive documentation with PyDevelop-Docs
+**Purpose**: Fix common issues when building Haive documentation with Pydvlppy
 **Status**: Active Guide
 
 ## 🚨 Common Issues and Solutions
@@ -16,7 +16,7 @@ TypeError: unsupported operand type(s) for |: 'type' and 'NoneType'
 
 **Cause**: sphinx-codeautolink can't handle Python 3.10's new union syntax (`str | None`)
 
-**Solution**: PyDevelop-Docs now includes `sphinx_codeautolink_wrapper.py` that catches these errors gracefully.
+**Solution**: Pydvlppy now includes `sphinx_codeautolink_wrapper.py` that catches these errors gracefully.
 
 **How it works**:
 
@@ -102,20 +102,20 @@ watch -n 1 'ps aux | grep sphinx'
 
 ### 5. Import/Path Issues
 
-**Problem**: Can't find haive packages or PyDevelop-Docs
+**Problem**: Can't find haive packages or Pydvlppy
 
 **Solutions**:
 
 ```bash
-# 1. Always run from PyDevelop-Docs directory
-cd /home/will/Projects/haive/backend/haive/tools/pydvlp-docs
+# 1. Always run from Pydvlppy directory
+cd /home/will/Projects/haive/backend/haive/tools/pydvlppy
 
 # 2. Use relative paths in scripts
 haive_root = Path(__file__).parent.parent.parent
 packages_dir = haive_root / "packages"
 
 # 3. Check PYTHONPATH if needed
-export PYTHONPATH=/home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src:$PYTHONPATH
+export PYTHONPATH=/home/will/Projects/haive/backend/haive/tools/pydvlppy/src:$PYTHONPATH
 ```
 
 ### 6. Warning Overload (600+ warnings)
@@ -144,11 +144,11 @@ suppress_warnings = [
 
 ## 📋 Step-by-Step Build Process
 
-### 1. Initialize PyDevelop-Docs
+### 1. Initialize Pydvlppy
 
 ```bash
 cd /path/to/package
-poetry run pydvlp-docs init --force --yes
+poetry run pydvlppy init --force --yes
 ```
 
 This creates:
@@ -223,7 +223,7 @@ Create `diagnose.py`:
 
 ```python
 #!/usr/bin/env python3
-"""Quick diagnostics for PyDevelop-Docs issues."""
+"""Quick diagnostics for Pydvlppy issues."""
 
 import subprocess
 import sys
@@ -366,7 +366,7 @@ main
 
    ```bash
    rm -rf docs/build docs/source/autoapi .doctrees
-   poetry run pydvlp-docs init --force --yes
+   poetry run pydvlppy init --force --yes
    ```
 
 2. **Minimal Build**:
@@ -399,7 +399,7 @@ main
 - [Sphinx Docs](https://www.sphinx-doc.org/)
 - [AutoAPI Docs](https://sphinx-autoapi.readthedocs.io/)
 - [Furo Theme](https://pradyunsg.me/furo/)
-- [PyDevelop-Docs Source](https://github.com/yourusername/pydvlp-docs)
+- [Pydvlppy Source](https://github.com/yourusername/pydvlppy)
 
 ---
 

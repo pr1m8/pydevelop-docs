@@ -166,11 +166,11 @@ class HaiveDocumentationManager:
             original_cwd = Path.cwd()
             package_path_abs = package_path.resolve()
 
-            # Run pydvlp-docs init
+            # Run pydvlppy init
             cmd = [
                 "poetry",
                 "run",
-                "pydvlp-docs",
+                "pydvlppy",
                 "init",
                 "--use-shared-config",  # Use modern shared config
                 "--modern-design",  # Use modern CSS system
@@ -380,7 +380,7 @@ class HaiveDocumentationManager:
             cmd = [
                 "poetry",
                 "run",
-                "pydvlp-docs",
+                "pydvlppy",
                 "init",
                 "--include-root",  # Include root-level docs
                 "--use-shared-config",  # Use modern shared config
@@ -459,8 +459,8 @@ class HaiveDocumentationManager:
         start_time = time.time()
 
         try:
-            # Use pydvlp-docs link-docs command for master hub
-            cmd = ["poetry", "run", "pydvlp-docs", "link-docs"]
+            # Use pydvlppy link-docs command for master hub
+            cmd = ["poetry", "run", "pydvlppy", "link-docs"]
 
             if clean:
                 cmd.append("--clean")

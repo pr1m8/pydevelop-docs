@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update CSS configuration for all Haive packages after PyDevelop-Docs CSS fix."""
+"""Update CSS configuration for all Haive packages after Pydvlppy CSS fix."""
 
 import subprocess
 import sys
@@ -31,11 +31,11 @@ def update_package(package_name: str) -> bool:
 
     print(f"\n📦 Updating {package_name}...")
 
-    # Change to package directory and run pydvlp-docs init
+    # Change to package directory and run pydvlppy init
     try:
-        # Run pydvlp-docs init in the package directory
+        # Run pydvlppy init in the package directory
         result = subprocess.run(
-            ["poetry", "run", "pydvlp-docs", "init", "--force"],
+            ["poetry", "run", "pydvlppy", "init", "--force"],
             cwd=str(package_path),
             capture_output=True,
             text=True,
@@ -60,8 +60,8 @@ def main():
     print("=" * 50)
 
     # Check if we're in the right directory
-    if not Path.cwd().name == "pydvlp-docs":
-        print("⚠️  Please run this script from the pydvlp-docs directory")
+    if not Path.cwd().name == "pydvlppy":
+        print("⚠️  Please run this script from the pydvlppy directory")
         return 1
 
     success_count = 0

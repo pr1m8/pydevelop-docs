@@ -11,7 +11,7 @@ This guide explains the current template structure and where to implement custom
 
 ## Current Template Structure
 
-### 1. **PyDevelop-Docs Templates** (Our Templates)
+### 1. **Pydvlppy Templates** (Our Templates)
 
 Located in: `/src/pydevelop_docs/templates/`
 
@@ -48,7 +48,7 @@ These can serve as a starting point for your customizations.
 ### Step 1: Create AutoAPI Template Directory
 
 ```bash
-mkdir -p /home/will/Projects/haive/backend/haive/tools/pydvlp-docs/src/pydevelop_docs/templates/_autoapi_templates/python/
+mkdir -p /home/will/Projects/haive/backend/haive/tools/pydvlppy/src/pydevelop_docs/templates/_autoapi_templates/python/
 ```
 
 ### Step 2: Copy Default AutoAPI Templates
@@ -210,7 +210,7 @@ AutoAPI provides these variables to templates:
 3. **Check generated documentation** for your customizations
 4. **Iterate** on template design
 
-## Integration with PyDevelop-Docs
+## Integration with Pydvlppy
 
 Once templates are created:
 

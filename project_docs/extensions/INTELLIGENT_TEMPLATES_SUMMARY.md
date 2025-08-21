@@ -5,7 +5,7 @@
 
 ## What We Built
 
-We created a comprehensive intelligent template system for PyDevelop-Docs that:
+We created a comprehensive intelligent template system for Pydvlppy that:
 
 1. **Transforms flat API documentation** into beautifully organized hierarchical structure
 2. **Leverages all 45+ Sphinx extensions** for enhanced functionality
@@ -45,12 +45,12 @@ The system is now fully integrated into `config.py`:
 ### 1. For New Projects
 
 ```bash
-# Initialize with pydvlp-docs
-pydvlp-docs init
+# Initialize with pydvlppy
+pydvlppy init
 
 # Templates are automatically used if available
 # Build to see enhanced documentation
-pydvlp-docs build
+pydvlppy build
 ```
 
 ### 2. For Existing Projects
@@ -126,4 +126,4 @@ API Reference
 3. **Add custom filters**: Extend type_filters.py for your needs
 4. **Report issues**: Help improve the templates
 
-The intelligent template system is now seamlessly integrated into PyDevelop-Docs!
+The intelligent template system is now seamlessly integrated into Pydvlppy!

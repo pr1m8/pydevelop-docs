@@ -2,12 +2,12 @@
 
 **Extension Name**: `sphinx_tabs.tabs`  
 **Official Documentation**: https://sphinx-tabs.readthedocs.io/  
-**PyDevelop-Docs Status**: ✅ **FULLY CONFIGURED**  
+**Pydvlppy Status**: ✅ **FULLY CONFIGURED**  
 **Progressive Disclosure Impact**: 🔥 **CRITICAL** - Essential for organizing complex information
 
 ## Overview
 
-Sphinx Tabs provides sophisticated tabbed content organization that is fundamental to PyDevelop-Docs' progressive disclosure strategy. By organizing related information into tabs, users can access exactly what they need without being overwhelmed by alternative approaches or implementation details. This extension is critical for Issue #6's goal of creating scannable, user-friendly documentation.
+Sphinx Tabs provides sophisticated tabbed content organization that is fundamental to Pydvlppy' progressive disclosure strategy. By organizing related information into tabs, users can access exactly what they need without being overwhelmed by alternative approaches or implementation details. This extension is critical for Issue #6's goal of creating scannable, user-friendly documentation.
 
 ## Core UI/UX Capabilities
 
@@ -22,7 +22,7 @@ Tabs enable clean separation of related but distinct content:
 
       .. code-block:: bash
 
-         pip install pydvlp-docs
+         pip install pydvlppy
 
    .. tab-item:: Development Setup
 
@@ -35,7 +35,7 @@ Tabs enable clean separation of related but distinct content:
 
       .. code-block:: bash
 
-         docker run pydvlp-docs
+         docker run pydvlppy
 ```
 
 ### Multi-Language Code Examples
@@ -57,17 +57,17 @@ Perfect for documenting APIs that support multiple programming languages:
 
       .. code-block:: javascript
 
-         const config = require('pydvlp-docs');
+         const config = require('pydvlppy');
          config.configure({theme: 'furo'});
 
    .. tab-item:: Shell
 
       .. code-block:: bash
 
-         pydvlp-docs configure --theme=furo
+         pydvlppy configure --theme=furo
 ```
 
-## Current PyDevelop-Docs Configuration
+## Current Pydvlppy Configuration
 
 In `/src/pydevelop_docs/config.py`, tabs are optimized for user experience:
 
@@ -399,7 +399,7 @@ This prevents accidental tab closure, ensuring users can navigate between tabs w
       .. code-block:: powershell
 
          # PowerShell
-         pip install pydvlp-docs
+         pip install pydvlppy
 
       **Configuration:**
 
@@ -417,7 +417,7 @@ This prevents accidental tab closure, ensuring users can navigate between tabs w
       .. code-block:: bash
 
          # Terminal
-         pip install pydvlp-docs
+         pip install pydvlppy
 
       **Configuration:**
 
@@ -435,11 +435,11 @@ This prevents accidental tab closure, ensuring users can navigate between tabs w
       .. code-block:: bash
 
          # Most distributions
-         pip install pydvlp-docs
+         pip install pydvlppy
 
          # Ubuntu/Debian
          sudo apt install python3-pip
-         pip3 install pydvlp-docs
+         pip3 install pydvlppy
 
       **Configuration:**
 
@@ -896,7 +896,7 @@ function setupLazyTabLoading() {
 }
 ```
 
-## Best Practices for PyDevelop-Docs
+## Best Practices for Pydvlppy
 
 1. **Logical tab organization** - Group related content logically
 2. **Consistent tab labeling** - Use clear, descriptive tab names
@@ -905,4 +905,4 @@ function setupLazyTabLoading() {
 5. **Keyboard accessibility** - Support full keyboard navigation
 6. **State persistence** - Remember user's tab preferences
 
-Sphinx Tabs is essential for PyDevelop-Docs' progressive disclosure strategy, enabling organized, scannable documentation that allows users to focus on exactly the information they need while keeping related alternatives easily accessible.
+Sphinx Tabs is essential for Pydvlppy' progressive disclosure strategy, enabling organized, scannable documentation that allows users to focus on exactly the information they need while keeping related alternatives easily accessible.

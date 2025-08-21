@@ -1,4 +1,4 @@
-# 📚 Import PyDevelop-Docs to Read the Docs
+# 📚 Import Pydvlppy to Read the Docs
 
 ## Quick Steps:
 
@@ -8,8 +8,8 @@
 2. **Click "Import Manually"** (or connect your GitHub account)
 
 3. **Fill in the details**:
-   - **Name**: `pydvlp-docs`
-   - **Repository URL**: `https://github.com/pr1m8/pydvlp-docs`
+   - **Name**: `pydvlppy`
+   - **Repository URL**: `https://github.com/pr1m8/pydvlppy`
    - **Repository type**: Git
    - **Default branch**: main
 
@@ -28,7 +28,7 @@
 ## After Import:
 
 Your documentation will be available at:
-https://pydvlp-docs.readthedocs.io
+https://pydvlppy.readthedocs.io
 
 ## Troubleshooting:
 

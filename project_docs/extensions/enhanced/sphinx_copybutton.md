@@ -2,12 +2,12 @@
 
 **Extension Name**: `sphinx_copybutton`  
 **Official Documentation**: https://sphinx-copybutton.readthedocs.io/  
-**PyDevelop-Docs Status**: ✅ **FULLY CONFIGURED**  
+**Pydvlppy Status**: ✅ **FULLY CONFIGURED**  
 **Progressive Disclosure Impact**: 🚀 **HIGH** - Essential for code-heavy documentation
 
 ## Overview
 
-Sphinx Copy Button transforms code blocks from static text into interactive, user-friendly components. This extension is crucial for PyDevelop-Docs' goal of creating modern, efficient documentation that enables users to quickly experiment with code examples. It significantly improves the developer experience by eliminating manual copy-paste errors and friction.
+Sphinx Copy Button transforms code blocks from static text into interactive, user-friendly components. This extension is crucial for Pydvlppy' goal of creating modern, efficient documentation that enables users to quickly experiment with code examples. It significantly improves the developer experience by eliminating manual copy-paste errors and friction.
 
 ## Core UI/UX Capabilities
 
@@ -29,8 +29,8 @@ setup_docs(config)
 
 ```bash
 # Shell commands are also copyable
-$ pip install pydvlp-docs
-$ pydvlp-docs init my-project
+$ pip install pydvlppy
+$ pydvlppy init my-project
 ```
 
 ```python
@@ -40,7 +40,7 @@ $ pydvlp-docs init my-project
 '1.0.0'
 ```
 
-## Current PyDevelop-Docs Configuration
+## Current Pydvlppy Configuration
 
 In `/src/pydevelop_docs/config.py`, copy button is intelligently configured:
 
@@ -222,7 +222,7 @@ The regex pattern handles multiple prompt types:
          export PYDEVELOP_OUTPUT_DIR=docs/build
 
          # Generate documentation
-         pydvlp-docs build
+         pydvlppy build
 ```
 
 ### Context-Aware Code Snippets
@@ -577,7 +577,7 @@ function enhanceCopyButtonAccessibility() {
       .. code-block:: bash
          :class: copyable-install
 
-         pip install pydvlp-docs
+         pip install pydvlppy
 
    .. grid-item-card:: Basic Usage
       :class-card: code-card
@@ -769,7 +769,7 @@ function lazyLoadCopyButtons() {
 }
 ```
 
-## Best Practices for PyDevelop-Docs
+## Best Practices for Pydvlppy
 
 1. **Clean prompt removal** - Configure regex patterns for all prompt types
 2. **Visual feedback** - Show clear success/failure states
@@ -778,4 +778,4 @@ function lazyLoadCopyButtons() {
 5. **Language awareness** - Adapt copy behavior for different code types
 6. **Performance** - Use lazy loading for large documentation sites
 
-Sphinx Copy Button significantly enhances the developer experience in PyDevelop-Docs by making code examples immediately actionable, reducing friction and encouraging experimentation with documented APIs.
+Sphinx Copy Button significantly enhances the developer experience in Pydvlppy by making code examples immediately actionable, reducing friction and encouraging experimentation with documented APIs.

@@ -1,4 +1,4 @@
-# CSS Simplification Plan - PyDevelop-Docs
+# CSS Simplification Plan - Pydvlppy
 
 **Created**: 2025-08-17
 **Purpose**: Step-by-step plan to fix CSS issues
@@ -6,7 +6,7 @@
 
 ## 🎯 Goal
 
-Transform PyDevelop-Docs documentation from looking like a marketing website to clean, professional technical documentation by removing aggressive CSS styling.
+Transform Pydvlppy documentation from looking like a marketing website to clean, professional technical documentation by removing aggressive CSS styling.
 
 ## 📊 Current State Analysis
 
@@ -112,7 +112,7 @@ Ensure Furo's semantic colors work properly:
 
    ```bash
    cd test-projects/test-haive-template
-   poetry run pydvlp-docs init --force
+   poetry run pydvlppy init --force
    poetry run sphinx-build -b html docs/source docs/build
    ```
 

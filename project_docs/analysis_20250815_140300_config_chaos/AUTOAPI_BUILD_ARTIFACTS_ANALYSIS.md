@@ -18,7 +18,7 @@ docs/build/
 │       └── type_filters/
 ```
 
-Wait... this is NOT the haive-mcp documentation! This is PyDevelop-Docs' own documentation.
+Wait... this is NOT the haive-mcp documentation! This is Pydvlppy' own documentation.
 
 ## Configuration Confusion
 
@@ -35,9 +35,9 @@ But our build directory has:
 
 ## The Real Issue
 
-1. **We're analyzing PyDevelop-Docs documentation** (at `/tools/pydvlp-docs/docs/build`)
+1. **We're analyzing Pydvlppy documentation** (at `/tools/pydvlppy/docs/build`)
 2. **User is viewing haive-mcp documentation** (somewhere else)
-3. **The broken documentation is in the haive-mcp package**, not PyDevelop-Docs itself
+3. **The broken documentation is in the haive-mcp package**, not Pydvlppy itself
 
 ## Where is haive-mcp Documentation?
 
@@ -48,10 +48,10 @@ Likely locations:
 
 ## What This Means
 
-1. **PyDevelop-Docs generated bad config** for haive-mcp
+1. **Pydvlppy generated bad config** for haive-mcp
 2. **haive-mcp is using the broken CLI template**
 3. **We need to check haive-mcp's conf.py**
-4. **The issue is in GENERATED projects**, not PyDevelop-Docs itself
+4. **The issue is in GENERATED projects**, not Pydvlppy itself
 
 ## Action Items
 
@@ -63,4 +63,4 @@ Likely locations:
 
 ## Key Insight
 
-The problem isn't with PyDevelop-Docs' own documentation - it's with the documentation that PyDevelop-Docs GENERATES for other projects!
+The problem isn't with Pydvlppy' own documentation - it's with the documentation that Pydvlppy GENERATES for other projects!

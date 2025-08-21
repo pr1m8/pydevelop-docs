@@ -1,4 +1,4 @@
-"""Pydvlp Documentation Tools.
+"""Pydvlppy - Python Development Documentation Tools.
 
 Universal Python documentation generator with 40+ Sphinx extensions pre-configured.
 Turn any Python project into beautiful documentation with zero configuration.
@@ -13,8 +13,8 @@ Features:
     - 🔄 Copy & Share: Transfer documentation setups between projects
 
 Quick Start:
-    1. Install: pip install pydvlp-docs
-    2. Initialize: pydvlp-docs setup-general /path/to/your/project
+    1. Install: pip install pydvlppy
+    2. Initialize: pydvlppy setup-general /path/to/your/project
     3. Build: cd /path/to/your/project/docs && make html
 
     Your documentation is ready at docs/build/html/index.html!
@@ -22,13 +22,13 @@ Quick Start:
 Examples:
     Set up documentation for any Python project:
 
-    >>> from pydvlp_docs.general_setup import setup_project_docs
+    >>> from pydvlppy.general_setup import setup_project_docs
     >>> result = setup_project_docs("/path/to/project")
     >>> print(f"Documentation created at: {result['target_dir']}")
 
     Or use the configuration directly:
 
-    >>> from pydvlp_docs.config import get_haive_config
+    >>> from pydvlppy.config import get_haive_config
     >>> config = get_haive_config(
     ...     package_name="my-package",
     ...     package_path="../../src"

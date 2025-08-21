@@ -31,7 +31,7 @@ First Steps
 
    Navigate to your Python project and run::
 
-       pydvlp-docs init
+       pydvlppy init
 
    This creates a ``docs/`` directory with everything configured.
 
@@ -39,11 +39,11 @@ First Steps
 
    Generate your documentation::
 
-       pydvlp-docs build
+       pydvlppy build
 
    Or for a clean build::
 
-       pydvlp-docs build --clean
+       pydvlppy build --clean
 
 3. **View Documentation**
 
@@ -56,7 +56,7 @@ First Steps
 What You Get
 ------------
 
-PyDevelop-Docs automatically configures:
+Pydvlppy automatically configures:
 
 ✅ **Automatic API Documentation**
    Your entire codebase is documented with AutoAPI
@@ -111,16 +111,16 @@ Common Commands
 .. code-block:: bash
 
     # Initialize with all sections
-    pydvlp-docs init --with-examples --with-tutorials --with-guides
+    pydvlppy init --with-examples --with-tutorials --with-guides
     
     # Build specific package (monorepo)
-    pydvlp-docs build --package my-package
+    pydvlppy build --package my-package
     
     # Clean all build artifacts
-    pydvlp-docs clean
+    pydvlppy clean
     
     # Check for issues
-    pydvlp-docs doctor
+    pydvlppy doctor
 
 Troubleshooting
 ---------------
@@ -149,7 +149,7 @@ Next Steps
 Getting Help
 ------------
 
-- `Documentation <https://pydvlp-docs.readthedocs.io>`_
+- `Documentation <https://pydvlppy.readthedocs.io>`_
 - `GitHub Issues <https://github.com/your-org/test-haive-template/issues>`_
 - `Discussions <https://github.com/your-org/test-haive-template/discussions>`_
 

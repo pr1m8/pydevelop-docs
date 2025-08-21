@@ -32,7 +32,7 @@ Sphinx TogglePrompt revolutionizes code documentation by providing interactive p
 - **Responsive Design**: Works seamlessly across all device sizes
 - **Intuitive Operation**: Clear visual feedback for toggle states
 
-## Current PyDevelop-Docs Configuration
+## Current Pydvlppy Configuration
 
 ```python
 # Toggle prompt configuration - Enhanced code examples
@@ -169,8 +169,8 @@ Install using pip:
    :class: toggleprompt
    :caption: Standard installation
 
-   $ pip install pydvlp-docs
-   $ pydvlp-docs --version
+   $ pip install pydvlppy
+   $ pydvlppy --version
 
 Development Installation
 -----------------------
@@ -181,8 +181,8 @@ For development work:
    :class: toggleprompt
    :caption: Development setup
 
-   $ git clone https://github.com/user/pydvlp-docs.git
-   $ cd pydvlp-docs
+   $ git clone https://github.com/user/pydvlppy.git
+   $ cd pydvlppy
    $ pip install -e .[dev]
    $ pre-commit install
 
@@ -198,7 +198,7 @@ Recommended setup with virtual environment:
    $ python -m venv .venv
    $ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    $ pip install --upgrade pip
-   $ pip install pydvlp-docs
+   $ pip install pydvlppy
 ```
 
 ### Multi-Platform Commands
