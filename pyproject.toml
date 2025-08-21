@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pydvlp-docs"
-version = "0.1.2"
+version = "0.1.3"
 description = "Universal Python documentation generator with 40+ Sphinx extensions pre-configured. Zero-configuration setup for beautiful, professional documentation."
 authors = ["William R. Astley"]
 homepage = "https://will.astley.dev"

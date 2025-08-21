@@ -499,7 +499,7 @@ def _get_complete_extensions(
         "sphinx_prompt",
         "sphinx_last_updated_by_git",
         # "sphinx_inlinecode",  # Temporarily disabled - causes issues with metaclasses
-        "sphinx_library",
+        # "sphinx_library",  # Not a real extension - removed
         "sphinx_icontract",
         "sphinx_tippy",
         # Documentation Tools (Priority 81-90)
