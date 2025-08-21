@@ -1,0 +1,154 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  packages: write
+
+jobs:
+  publish-pypi:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        
+    - name: Build package
+      run: |
+        poetry build
+        
+    - name: Publish to PyPI
+      env:
+        POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+      run: |
+        poetry publish
+
+  build-docs:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          python3-dev \
+          graphviz \
+          graphviz-dev \
+          libgraphviz-dev \
+          pkg-config \
+          default-jre \
+          plantuml \
+          imagemagick \
+          librsvg2-bin \
+          pandoc
+          
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        
+    - name: Install dependencies
+      run: |
+        poetry install --with docs
+        cd docs && pip install -r requirements.txt
+        
+    - name: Build documentation
+      run: |
+        cd docs
+        poetry run make html
+        
+    - name: Upload documentation artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: documentation
+        path: docs/build/html/
+        
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: Upload to GitHub Pages
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: docs/build/html/
+
+  deploy-docs:
+    name: Deploy Documentation
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-docs
+    
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v3
+
+  create-release-notes:
+    name: Update Release Notes
+    runs-on: ubuntu-latest
+    needs: [publish-pypi, deploy-docs]
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Update release with links
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        TAG_NAME="${GITHUB_REF#refs/tags/}"
+        RELEASE_ID=$(gh api repos/${{ github.repository }}/releases/tags/$TAG_NAME --jq '.id')
+        
+        # Get current release body
+        CURRENT_BODY=$(gh api repos/${{ github.repository }}/releases/$RELEASE_ID --jq '.body')
+        
+        # Append links
+        NEW_BODY="${CURRENT_BODY}
+
+---
+
+## 🔗 Links
+- **PyPI**: https://pypi.org/project/pydvlp-docs/${TAG_NAME#v}/
+- **Documentation**: https://pr1m8.github.io/pydvlp-docs/
+- **Install**: \`pip install pydvlp-docs==${TAG_NAME#v}\`"
+        
+        # Update release
+        gh api repos/${{ github.repository }}/releases/$RELEASE_ID \
+          -X PATCH \
+          -f body="$NEW_BODY"
