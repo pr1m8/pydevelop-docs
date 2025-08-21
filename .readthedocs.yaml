@@ -18,8 +18,10 @@ build:
   apt_packages:
     # Required for some Sphinx extensions
     - graphviz
+    - graphviz-dev
     - plantuml
     - imagemagick
+    - pandoc
 
 python:
   install:
