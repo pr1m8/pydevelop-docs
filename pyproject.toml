@@ -197,6 +197,8 @@ pre-commit = "^4.2.0"
 pre-commit-hooks = "^5.0.0"
 towncrier = "^24.8.0"
 rich = "^14.1.0"
+ruff = "^0.12.9"
+mypy = "^1.17.1"
 
 [tool.poetry.group.web.dependencies]
 playwright = "^1.54.0"
