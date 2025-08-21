@@ -36,7 +36,7 @@ Examples:
     >>> globals().update(config)
 """
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __author__ = "William R. Astley"
 
 # Export main configuration functions
