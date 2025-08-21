@@ -1,12 +1,9 @@
 """Mock operations system for comprehensive dry-run and testing capabilities."""
 
-import json
-import shutil
 from datetime import datetime
+import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
-
-import tomlkit
+from typing import Any
 
 
 class MockOperation:
@@ -16,8 +13,8 @@ class MockOperation:
         self,
         operation_type: str,
         description: str,
-        target: Union[str, Path] = "",
-        details: List[str] = None,
+        target: str | Path = "",
+        details: list[str] = None,
         reversible: bool = True,
         risk_level: str = "low",
     ):
@@ -32,7 +29,7 @@ class MockOperation:
         self.success = None
         self.error_message = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "type": self.operation_type,
@@ -89,7 +86,7 @@ class MockFileOperation(MockOperation):
             risk_level=self._assess_risk(),
         )
 
-    def _get_details(self) -> List[str]:
+    def _get_details(self) -> list[str]:
         """Get operation details."""
         details = []
         if self.source_path.exists():
@@ -106,10 +103,9 @@ class MockFileOperation(MockOperation):
         """Assess risk level of operation."""
         if self.operation_type == "delete_file":
             return "high" if not self.backup else "medium"
-        elif self.operation_type == "edit_file":
+        if self.operation_type == "edit_file":
             return "medium" if not self.backup else "low"
-        else:
-            return "low"
+        return "low"
 
 
 class MockDependencyOperation(MockOperation):
@@ -143,7 +139,7 @@ class MockDependencyOperation(MockOperation):
             risk_level="medium",
         )
 
-    def _get_details(self) -> List[str]:
+    def _get_details(self) -> list[str]:
         """Get operation details."""
         details = [f"Package: {self.package_name}"]
         if self.version:
@@ -159,7 +155,7 @@ class MockOperationPlan:
 
     def __init__(self, name: str = "Unnamed Plan"):
         self.name = name
-        self.operations: List[MockOperation] = []
+        self.operations: list[MockOperation] = []
         self.created_at = datetime.now()
         self.executed = False
 
@@ -176,9 +172,7 @@ class MockOperationPlan:
         backup: bool = True,
     ) -> MockFileOperation:
         """Add a file operation to the plan."""
-        op = MockFileOperation(
-            operation_type, source_path, target_path, content, backup
-        )
+        op = MockFileOperation(operation_type, source_path, target_path, content, backup)
         self.add_operation(op)
         return op
 
@@ -191,25 +185,23 @@ class MockOperationPlan:
         pyproject_path: Path = None,
     ) -> MockDependencyOperation:
         """Add a dependency operation to the plan."""
-        op = MockDependencyOperation(
-            operation_type, package_name, version, group, pyproject_path
-        )
+        op = MockDependencyOperation(operation_type, package_name, version, group, pyproject_path)
         self.add_operation(op)
         return op
 
-    def get_operations_by_type(self, operation_type: str) -> List[MockOperation]:
+    def get_operations_by_type(self, operation_type: str) -> list[MockOperation]:
         """Get all operations of a specific type."""
         return [op for op in self.operations if op.operation_type == operation_type]
 
-    def get_operations_by_risk(self, risk_level: str) -> List[MockOperation]:
+    def get_operations_by_risk(self, risk_level: str) -> list[MockOperation]:
         """Get all operations of a specific risk level."""
         return [op for op in self.operations if op.risk_level == risk_level]
 
-    def get_high_risk_operations(self) -> List[MockOperation]:
+    def get_high_risk_operations(self) -> list[MockOperation]:
         """Get all high-risk operations."""
         return self.get_operations_by_risk("high")
 
-    def simulate_execution(self) -> Dict[str, Any]:
+    def simulate_execution(self) -> dict[str, Any]:
         """Simulate execution and return results."""
         results = {
             "plan_name": self.name,
@@ -226,9 +218,7 @@ class MockOperationPlan:
         for op in self.operations:
             # Count by type
             op_type = op.operation_type
-            results["operations_by_type"][op_type] = (
-                results["operations_by_type"].get(op_type, 0) + 1
-            )
+            results["operations_by_type"][op_type] = results["operations_by_type"].get(op_type, 0) + 1
 
             # Count by risk
             results["operations_by_risk"][op.risk_level] += 1
@@ -264,7 +254,7 @@ class MockOperationPlan:
 
         return total
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert plan to dictionary for serialization."""
         return {
             "name": self.name,
@@ -281,7 +271,7 @@ class MockOperationPlan:
     @classmethod
     def load_from_file(cls, file_path: Path) -> "MockOperationPlan":
         """Load plan from JSON file."""
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             data = json.load(f)
 
         plan = cls(data["name"])
@@ -314,9 +304,7 @@ class MockOperationPlan:
         return plan
 
 
-def create_documentation_plan(
-    project_path: Path, analysis: Dict[str, Any], force: bool = False
-) -> MockOperationPlan:
+def create_documentation_plan(project_path: Path, analysis: dict[str, Any], force: bool = False) -> MockOperationPlan:
     """Create a mock operation plan for documentation initialization."""
     plan = MockOperationPlan("Documentation Initialization")
 
@@ -357,9 +345,7 @@ def create_documentation_plan(
     )
 
     # Create Makefile
-    plan.add_file_operation(
-        "create_file", docs_path / "Makefile", content="# Documentation build Makefile"
-    )
+    plan.add_file_operation("create_file", docs_path / "Makefile", content="# Documentation build Makefile")
 
     # Add documentation dependencies
     if analysis.get("package_manager") == "poetry":
@@ -368,9 +354,7 @@ def create_documentation_plan(
     return plan
 
 
-def create_package_docs_plan(
-    package_path: Path, package_name: str, shared_config: bool = True
-) -> MockOperationPlan:
+def create_package_docs_plan(package_path: Path, package_name: str, shared_config: bool = True) -> MockOperationPlan:
     """Create a mock operation plan for individual package documentation."""
     plan = MockOperationPlan(f"Package Documentation: {package_name}")
 
@@ -404,20 +388,16 @@ author = "Team"
 extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon"]
 """
 
-    plan.add_file_operation(
-        "create_file", source_path / "conf.py", content=conf_content
-    )
+    plan.add_file_operation("create_file", source_path / "conf.py", content=conf_content)
 
     # Create package index
     index_content = f"""{package_name}
-{'=' * len(package_name)}
+{"=" * len(package_name)}
 
-.. automodule:: {package_name.replace('-', '.')}
+.. automodule:: {package_name.replace("-", ".")}
    :members:
 """
 
-    plan.add_file_operation(
-        "create_file", source_path / "index.rst", content=index_content
-    )
+    plan.add_file_operation("create_file", source_path / "index.rst", content=index_content)
 
     return plan

@@ -2,36 +2,36 @@
 
 import json
 import re
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 
-def is_pydantic_model(obj: Dict[str, Any]) -> bool:
+def is_pydantic_model(obj: dict[str, Any]) -> bool:
     """Check if object is a Pydantic model."""
     bases = obj.get("bases", [])
     return any("BaseModel" in str(base) or "pydantic" in str(base) for base in bases)
 
 
-def is_agent_class(obj: Dict[str, Any]) -> bool:
+def is_agent_class(obj: dict[str, Any]) -> bool:
     """Check if object is an Agent class."""
     bases = obj.get("bases", [])
     name = obj.get("name", "")
     return any("Agent" in str(base) for base in bases) or "Agent" in name
 
 
-def is_tool_class(obj: Dict[str, Any]) -> bool:
+def is_tool_class(obj: dict[str, Any]) -> bool:
     """Check if object is a Tool class."""
     bases = obj.get("bases", [])
     name = obj.get("name", "")
     return any("Tool" in str(base) for base in bases) or "Tool" in name
 
 
-def is_enum_class(obj: Dict[str, Any]) -> bool:
+def is_enum_class(obj: dict[str, Any]) -> bool:
     """Check if object is an Enum class."""
     bases = obj.get("bases", [])
     return any("Enum" in str(base) for base in bases)
 
 
-def is_dataclass(obj: Dict[str, Any]) -> bool:
+def is_dataclass(obj: dict[str, Any]) -> bool:
     """Check if object is a dataclass."""
     decorators = obj.get("decorators", [])
     return any("dataclass" in str(dec) for dec in decorators)
@@ -44,9 +44,7 @@ def format_annotation(annotation: str) -> str:
     annotation = re.sub(r"\bcollections\.abc\.", "", annotation)
 
     # Format Union types
-    annotation = re.sub(
-        r"Union\[([^]]+)\]", lambda m: " | ".join(m.group(1).split(", ")), annotation
-    )
+    annotation = re.sub(r"Union\[([^]]+)\]", lambda m: " | ".join(m.group(1).split(", ")), annotation)
 
     # Format Optional
     annotation = re.sub(r"Optional\[([^]]+)\]", r"\1 | None", annotation)
@@ -54,7 +52,7 @@ def format_annotation(annotation: str) -> str:
     return annotation
 
 
-def extract_type_params(annotation: str) -> List[str]:
+def extract_type_params(annotation: str) -> list[str]:
     """Extract type parameters from generic annotation."""
     match = re.search(r"\[([^]]+)\]", annotation)
     if match:
@@ -62,12 +60,12 @@ def extract_type_params(annotation: str) -> List[str]:
     return []
 
 
-def is_async_function(obj: Dict[str, Any]) -> bool:
+def is_async_function(obj: dict[str, Any]) -> bool:
     """Check if function is async."""
     return obj.get("is_async", False) or "async" in obj.get("properties", [])
 
 
-def get_decorator_names(obj: Dict[str, Any]) -> List[str]:
+def get_decorator_names(obj: dict[str, Any]) -> list[str]:
     """Get list of decorator names."""
     decorators = obj.get("decorators", [])
     names = []
@@ -82,13 +80,13 @@ def get_decorator_names(obj: Dict[str, Any]) -> List[str]:
     return names
 
 
-def has_decorator(obj: Dict[str, Any], decorator_name: str) -> bool:
+def has_decorator(obj: dict[str, Any], decorator_name: str) -> bool:
     """Check if object has specific decorator."""
     decorators = get_decorator_names(obj)
     return decorator_name in decorators
 
 
-def get_complexity_score(obj: Dict[str, Any]) -> int:
+def get_complexity_score(obj: dict[str, Any]) -> int:
     """Calculate complexity score for progressive disclosure."""
     score = 0
 
@@ -113,7 +111,7 @@ def get_complexity_score(obj: Dict[str, Any]) -> int:
     return score
 
 
-def should_show_expanded(obj: Dict[str, Any]) -> bool:
+def should_show_expanded(obj: dict[str, Any]) -> bool:
     """Determine if section should be expanded by default."""
     # Important items that should be expanded
     if obj.get("type") == "module" and "core" in obj.get("name", ""):
@@ -125,7 +123,7 @@ def should_show_expanded(obj: Dict[str, Any]) -> bool:
     return False
 
 
-def group_by_category(items: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
+def group_by_category(items: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
     """Group items by their category."""
     categories = {
         "models": [],
@@ -157,7 +155,7 @@ def group_by_category(items: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, A
     return {k: v for k, v in categories.items() if v}
 
 
-def get_method_category(method: Dict[str, Any]) -> str:
+def get_method_category(method: dict[str, Any]) -> str:
     """Categorize method for better organization."""
     name = method.get("name", "")
 
@@ -186,7 +184,7 @@ def get_method_category(method: Dict[str, Any]) -> str:
     return "public"
 
 
-def group_methods(methods: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
+def group_methods(methods: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
     """Group methods by category."""
     grouped = {}
     for method in methods:
@@ -197,7 +195,7 @@ def group_methods(methods: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any
     return grouped
 
 
-def format_parameter_list(params: List[Dict[str, Any]]) -> str:
+def format_parameter_list(params: list[dict[str, Any]]) -> str:
     """Format parameter list for display."""
     if not params:
         return "()"
@@ -214,20 +212,14 @@ def format_parameter_list(params: List[Dict[str, Any]]) -> str:
     return f"({', '.join(parts)})"
 
 
-def get_summary_stats(obj: Dict[str, Any]) -> Dict[str, int]:
+def get_summary_stats(obj: dict[str, Any]) -> dict[str, int]:
     """Get summary statistics for an object."""
     stats = {
         "methods": len(obj.get("methods", [])),
         "attributes": len(obj.get("attributes", [])),
-        "properties": len(
-            [m for m in obj.get("methods", []) if has_decorator(m, "property")]
-        ),
-        "classmethods": len(
-            [m for m in obj.get("methods", []) if has_decorator(m, "classmethod")]
-        ),
-        "staticmethods": len(
-            [m for m in obj.get("methods", []) if has_decorator(m, "staticmethod")]
-        ),
+        "properties": len([m for m in obj.get("methods", []) if has_decorator(m, "property")]),
+        "classmethods": len([m for m in obj.get("methods", []) if has_decorator(m, "classmethod")]),
+        "staticmethods": len([m for m in obj.get("methods", []) if has_decorator(m, "staticmethod")]),
         "subclasses": len(obj.get("subclasses", [])),
     }
     return {k: v for k, v in stats.items() if v > 0}

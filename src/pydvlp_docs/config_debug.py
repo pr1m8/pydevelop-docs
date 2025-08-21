@@ -6,9 +6,10 @@ with Sphinx's built-in logging and third-party debug extensions.
 
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from sphinx.util import logging
+
 
 logger = logging.getLogger(__name__)
 
@@ -17,8 +18,8 @@ def get_debug_config(
     debug_level: int = 0,
     enable_profiling: bool = False,
     enable_measurement: bool = False,
-    warning_categories: Optional[List[str]] = None,
-) -> Dict[str, Any]:
+    warning_categories: list[str] | None = None,
+) -> dict[str, Any]:
     """Get debug configuration for Sphinx builds.
 
     Args:
@@ -76,10 +77,10 @@ def get_debug_config(
 
 
 def enhance_config_with_debug(
-    base_config: Dict[str, Any],
+    base_config: dict[str, Any],
     debug_mode: bool = False,
     ci_mode: bool = False,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Enhance existing configuration with debug features.
 
     Args:
@@ -109,9 +110,7 @@ def enhance_config_with_debug(
         base_config["extensions"].extend(debug_config.get("debug_extensions", []))
 
         # Apply debug settings
-        base_config.update(
-            {k: v for k, v in debug_config.items() if k != "debug_extensions"}
-        )
+        base_config.update({k: v for k, v in debug_config.items() if k != "debug_extensions"})
 
     # CI mode enhancements
     if ci_mode or os.environ.get("CI"):
@@ -133,8 +132,8 @@ def enhance_config_with_debug(
 
 def setup_logging_filters(
     app,
-    ignore_patterns: Optional[List[str]] = None,
-    log_file: Optional[Path] = None,
+    ignore_patterns: list[str] | None = None,
+    log_file: Path | None = None,
 ):
     """Setup custom logging filters for cleaner output.
 
@@ -152,9 +151,7 @@ def setup_logging_filters(
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.ignore_patterns = [
-                re.compile(pattern) for pattern in (ignore_patterns or [])
-            ]
+            self.ignore_patterns = [re.compile(pattern) for pattern in (ignore_patterns or [])]
             self.log_file = log_file
             if self.log_file:
                 self.log_file.parent.mkdir(parents=True, exist_ok=True)
@@ -216,7 +213,7 @@ DEBUG_PROFILES = {
 }
 
 
-def get_debug_profile(profile_name: str = "standard") -> Dict[str, Any]:
+def get_debug_profile(profile_name: str = "standard") -> dict[str, Any]:
     """Get a pre-configured debug profile.
 
     Args:
@@ -235,6 +232,7 @@ def get_debug_profile(profile_name: str = "standard") -> Dict[str, Any]:
 # Debugging utilities for conf.py
 def debug_extension_load(app, extension_name: str):
     """Debug helper for extension loading."""
+    import time
     from sphinx.util import logging
 
     logger = logging.getLogger("pydevelop.extensions")

@@ -1,11 +1,10 @@
 """Configuration discovery and management for PyDevelop-Docs."""
 
 import json
-import os
+from pathlib import Path
 import re
 import subprocess
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import click
 import yaml
@@ -17,9 +16,9 @@ class ConfigDiscovery:
     def __init__(self, project_path: Path):
         self.project_path = project_path
         self.pydevelop_dir = project_path / ".pydevelop"
-        self._cache: Dict[str, Any] = {}
+        self._cache: dict[str, Any] = {}
 
-    def discover_all(self) -> Dict[str, Any]:
+    def discover_all(self) -> dict[str, Any]:
         """Discover all available configuration."""
         config = {}
 
@@ -35,7 +34,7 @@ class ConfigDiscovery:
 
         return config
 
-    def _discover_from_pyproject(self) -> Dict[str, Any]:
+    def _discover_from_pyproject(self) -> dict[str, Any]:
         """Extract info from pyproject.toml."""
         pyproject_path = self.project_path / "pyproject.toml"
         if not pyproject_path.exists():
@@ -75,9 +74,7 @@ class ConfigDiscovery:
                 # Extract dependencies for intersphinx
                 deps = []
                 if "dependencies" in poetry:
-                    deps.extend(
-                        [k for k in poetry["dependencies"].keys() if k != "python"]
-                    )
+                    deps.extend([k for k in poetry["dependencies"].keys() if k != "python"])
                 config["dependencies"] = deps
 
             return config
@@ -86,7 +83,7 @@ class ConfigDiscovery:
             click.echo(f"Warning: Could not parse pyproject.toml: {e}", err=True)
             return {}
 
-    def _discover_from_git(self) -> Dict[str, Any]:
+    def _discover_from_git(self) -> dict[str, Any]:
         """Extract info from git repository."""
         config = {}
 
@@ -94,6 +91,7 @@ class ConfigDiscovery:
             # Get remote URL
             result = subprocess.run(
                 ["git", "config", "--get", "remote.origin.url"],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -111,6 +109,7 @@ class ConfigDiscovery:
             # Get current branch
             result = subprocess.run(
                 ["git", "branch", "--show-current"],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -121,6 +120,7 @@ class ConfigDiscovery:
             # Get latest commit info
             result = subprocess.run(
                 ["git", "log", "-1", "--format=%h %s"],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -131,6 +131,7 @@ class ConfigDiscovery:
             # Get author info from git config
             result = subprocess.run(
                 ["git", "config", "user.name"],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -140,6 +141,7 @@ class ConfigDiscovery:
 
                 result = subprocess.run(
                     ["git", "config", "user.email"],
+                    check=False,
                     cwd=self.project_path,
                     capture_output=True,
                     text=True,
@@ -153,7 +155,7 @@ class ConfigDiscovery:
 
         return config
 
-    def _discover_from_package_json(self) -> Dict[str, Any]:
+    def _discover_from_package_json(self) -> dict[str, Any]:
         """Extract info from package.json if present."""
         package_json = self.project_path / "package.json"
         if not package_json.exists():
@@ -184,7 +186,7 @@ class ConfigDiscovery:
         except Exception:
             return {}
 
-    def _discover_from_setup_py(self) -> Dict[str, Any]:
+    def _discover_from_setup_py(self) -> dict[str, Any]:
         """Extract info from setup.py if present."""
         setup_py = self.project_path / "setup.py"
         if not setup_py.exists():
@@ -218,7 +220,7 @@ class ConfigDiscovery:
         except Exception:
             return {}
 
-    def _discover_from_pypi(self) -> Dict[str, Any]:
+    def _discover_from_pypi(self) -> dict[str, Any]:
         """Check if package exists on PyPI."""
         # Only check if we have a package name
         if "name" not in self._cache:
@@ -229,9 +231,7 @@ class ConfigDiscovery:
         try:
             import requests
 
-            response = requests.get(
-                f"https://pypi.org/pypi/{package_name}/json", timeout=5
-            )
+            response = requests.get(f"https://pypi.org/pypi/{package_name}/json", timeout=5)
             if response.status_code == 200:
                 data = response.json()
                 info = data.get("info", {})
@@ -247,7 +247,7 @@ class ConfigDiscovery:
 
         return {}
 
-    def _auto_detect_paths(self) -> Dict[str, Any]:
+    def _auto_detect_paths(self) -> dict[str, Any]:
         """Auto-detect common project paths."""
         config = {}
 
@@ -284,9 +284,7 @@ class ConfigDiscovery:
         if (self.project_path / "packages").exists():
             config["project_type"] = "monorepo"
             config["packages"] = [
-                p.name
-                for p in (self.project_path / "packages").iterdir()
-                if p.is_dir() and not p.name.startswith(".")
+                p.name for p in (self.project_path / "packages").iterdir() if p.is_dir() and not p.name.startswith(".")
             ]
         else:
             config["project_type"] = "single"
@@ -303,7 +301,7 @@ class ConfigDiscovery:
             url = url[:-4]
         return url
 
-    def _parse_github_url(self, url: str) -> Dict[str, str]:
+    def _parse_github_url(self, url: str) -> dict[str, str]:
         """Parse GitHub URL for owner and repo."""
         clean_url = self._clean_git_url(url)
         parts = clean_url.split("/")
@@ -315,11 +313,11 @@ class ConfigDiscovery:
             }
         return {}
 
-    def _parse_gitlab_url(self, url: str) -> Dict[str, str]:
+    def _parse_gitlab_url(self, url: str) -> dict[str, str]:
         """Parse GitLab URL for owner and repo."""
         return self._parse_github_url(url)  # Same format
 
-    def _parse_authors(self, authors: List[Union[str, Dict]]) -> List[str]:
+    def _parse_authors(self, authors: list[str | dict]) -> list[str]:
         """Parse author information from various formats."""
         parsed = []
         for author in authors:
@@ -334,7 +332,7 @@ class ConfigDiscovery:
                     parsed.append(name)
         return parsed
 
-    def resolve_value(self, value: Any, discovered: Dict[str, Any]) -> Any:
+    def resolve_value(self, value: Any, discovered: dict[str, Any]) -> Any:
         """Resolve ${auto:} placeholders in configuration values."""
         if not isinstance(value, str):
             return value
@@ -370,9 +368,7 @@ class ConfigDiscovery:
             elif match == "year":
                 import datetime
 
-                result = result.replace(
-                    f"${{auto:{match}}}", str(datetime.datetime.now().year)
-                )
+                result = result.replace(f"${{auto:{match}}}", str(datetime.datetime.now().year))
 
         return result
 
@@ -384,10 +380,10 @@ class PyDevelopConfig:
         self.project_path = project_path
         self.config_dir = project_path / ".pydevelop"
         self.discovery = ConfigDiscovery(project_path)
-        self._discovered: Optional[Dict[str, Any]] = None
+        self._discovered: dict[str, Any] | None = None
 
     @property
-    def discovered(self) -> Dict[str, Any]:
+    def discovered(self) -> dict[str, Any]:
         """Lazy load discovered configuration."""
         if self._discovered is None:
             self._discovered = self.discovery.discover_all()
@@ -408,7 +404,7 @@ class PyDevelopConfig:
         # Add .pydevelop to .gitignore
         self._update_gitignore()
 
-        click.echo(f"✅ Initialized .pydevelop configuration directory")
+        click.echo("✅ Initialized .pydevelop configuration directory")
 
     def _create_default_config(self) -> None:
         """Create default config.yaml."""
@@ -459,9 +455,7 @@ class PyDevelopConfig:
                 "theme": "furo",
                 "logo": discovered.get("logo", "${auto:find-logo}"),
                 "favicon": "${auto:find-favicon}",
-                "copyright": "${auto:year} "
-                + discovered.get("name", "${auto:name}")
-                + " contributors",
+                "copyright": "${auto:year} " + discovered.get("name", "${auto:name}") + " contributors",
             },
             "build": {
                 "auto_fix": True,
@@ -514,17 +508,11 @@ class PyDevelopConfig:
             for dep in discovered["dependencies"]:
                 # Map common packages to their docs
                 if dep == "pydantic":
-                    config["intersphinx"]["mappings"][
-                        "pydantic"
-                    ] = "https://docs.pydantic.dev/latest"
+                    config["intersphinx"]["mappings"]["pydantic"] = "https://docs.pydantic.dev/latest"
                 elif dep == "fastapi":
-                    config["intersphinx"]["mappings"][
-                        "fastapi"
-                    ] = "https://fastapi.tiangolo.com"
+                    config["intersphinx"]["mappings"]["fastapi"] = "https://fastapi.tiangolo.com"
                 elif dep.startswith("langchain"):
-                    config["intersphinx"]["mappings"][
-                        "langchain"
-                    ] = "https://api.python.langchain.com/en/latest/"
+                    config["intersphinx"]["mappings"]["langchain"] = "https://api.python.langchain.com/en/latest/"
 
         with open(docs_path, "w") as f:
             yaml.dump(config, f, default_flow_style=False, sort_keys=False)
@@ -543,7 +531,7 @@ class PyDevelopConfig:
         ]
 
         if gitignore_path.exists():
-            with open(gitignore_path, "r") as f:
+            with open(gitignore_path) as f:
                 content = f.read()
 
             # Check if already added
@@ -558,7 +546,7 @@ class PyDevelopConfig:
             with open(gitignore_path, "w") as f:
                 f.write("\n".join(patterns_to_add) + "\n")
 
-    def load_config(self) -> Dict[str, Any]:
+    def load_config(self) -> dict[str, Any]:
         """Load and resolve all configuration."""
         config = {}
 
@@ -578,20 +566,19 @@ class PyDevelopConfig:
 
         return config
 
-    def _resolve_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _resolve_config(self, config: dict[str, Any]) -> dict[str, Any]:
         """Recursively resolve ${auto:} placeholders."""
         if isinstance(config, dict):
             return {k: self._resolve_config(v) for k, v in config.items()}
-        elif isinstance(config, list):
+        if isinstance(config, list):
             return [self._resolve_config(v) for v in config]
-        else:
-            return self.discovery.resolve_value(config, self.discovered)
+        return self.discovery.resolve_value(config, self.discovered)
 
     def get_cache_path(self, key: str) -> Path:
         """Get path for cache file."""
         return self.config_dir / "cache" / f"{key}.json"
 
-    def load_cache(self, key: str) -> Optional[Dict[str, Any]]:
+    def load_cache(self, key: str) -> dict[str, Any] | None:
         """Load cache data."""
         cache_path = self.get_cache_path(key)
         if cache_path.exists():
@@ -602,7 +589,7 @@ class PyDevelopConfig:
                 pass
         return None
 
-    def save_cache(self, key: str, data: Dict[str, Any]) -> None:
+    def save_cache(self, key: str, data: dict[str, Any]) -> None:
         """Save cache data."""
         cache_path = self.get_cache_path(key)
         cache_path.parent.mkdir(parents=True, exist_ok=True)

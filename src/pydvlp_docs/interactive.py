@@ -1,18 +1,16 @@
 """Interactive CLI for pydvlp-docs."""
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-import click
 import questionary
-import tomlkit
-import yaml
-from rich import print as rprint
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.tree import Tree
+import yaml
+
 
 console = Console()
 
@@ -99,17 +97,13 @@ class InteractiveCLI:
             ).ask()
 
             if "Custom..." in package_dirs:
-                custom = questionary.text(
-                    "Enter package directories (comma-separated):"
-                ).ask()
+                custom = questionary.text("Enter package directories (comma-separated):").ask()
                 package_dirs = [d.strip() for d in custom.split(",")]
 
             config["packages_dir"] = package_dirs
 
             # Include root?
-            config["include_root"] = questionary.confirm(
-                "Include root-level documentation?"
-            ).ask()
+            config["include_root"] = questionary.confirm("Include root-level documentation?").ask()
         else:
             config["type"] = "hybrid"
             config["include_root"] = True
@@ -117,15 +111,9 @@ class InteractiveCLI:
         # Documentation paths
         if questionary.confirm("Customize documentation paths?", default=False).ask():
             config["paths"] = {
-                "docs_dir": questionary.text(
-                    "Documentation directory name:", default="docs"
-                ).ask(),
-                "source_dir": questionary.text(
-                    "Source directory name:", default="source"
-                ).ask(),
-                "build_dir": questionary.text(
-                    "Build directory name:", default="build"
-                ).ask(),
+                "docs_dir": questionary.text("Documentation directory name:", default="docs").ask(),
+                "source_dir": questionary.text("Source directory name:", default="source").ask(),
+                "build_dir": questionary.text("Build directory name:", default="build").ask(),
             }
 
         # Theme selection
@@ -176,9 +164,7 @@ class InteractiveCLI:
 
             try:
                 self._do_initialize(config, progress, task)
-                self.console.print(
-                    "\n[green]✅ Documentation initialized successfully![/green]"
-                )
+                self.console.print("\n[green]✅ Documentation initialized successfully![/green]")
 
                 # Next steps
                 self._show_next_steps(config)
@@ -211,9 +197,7 @@ class InteractiveCLI:
         # Build options
         options = {
             "clean": questionary.confirm("Clean before building?", default=False).ask(),
-            "parallel": questionary.confirm(
-                "Use parallel building?", default=True
-            ).ask(),
+            "parallel": questionary.confirm("Use parallel building?", default=True).ask(),
             "open": questionary.confirm("Open in browser after?", default=True).ask(),
         }
 
@@ -234,7 +218,6 @@ class InteractiveCLI:
             TextColumn("[progress.description]{task.description}"),
             console=self.console,
         ) as progress:
-
             if "All packages" in selected:
                 to_build = packages
             else:
@@ -248,9 +231,7 @@ class InteractiveCLI:
                     progress.update(task, completed=True)
 
                 except Exception as e:
-                    self.console.print(
-                        f"[red]❌ Failed to build {package.name}: {e}[/red]"
-                    )
+                    self.console.print(f"[red]❌ Failed to build {package.name}: {e}[/red]")
 
         self.console.print("\n[green]✅ Build complete![/green]")
 
@@ -335,7 +316,7 @@ class InteractiveCLI:
             self.console.print("\n[green]✅ Cleaned successfully![/green]")
 
     # Helper methods
-    def _analyze_project(self) -> Dict[str, Any]:
+    def _analyze_project(self) -> dict[str, Any]:
         """Analyze current project structure."""
         analysis = {
             "name": self.project_path.name,
@@ -350,10 +331,7 @@ class InteractiveCLI:
         # Find package directories
         for item in self.project_path.iterdir():
             if item.is_dir() and not item.name.startswith("."):
-                if any(
-                    (item / sub).exists()
-                    for sub in ["pyproject.toml", "setup.py", "__init__.py"]
-                ):
+                if any((item / sub).exists() for sub in ["pyproject.toml", "setup.py", "__init__.py"]):
                     analysis["package_dirs"].append(item.name)
 
         # Count Python files
@@ -367,7 +345,7 @@ class InteractiveCLI:
 
         return analysis
 
-    def _show_project_info(self, analysis: Dict[str, Any]):
+    def _show_project_info(self, analysis: dict[str, Any]):
         """Display project analysis results."""
         table = Table(title="Project Analysis", show_header=False)
         table.add_column("Property", style="cyan")
@@ -383,7 +361,7 @@ class InteractiveCLI:
         self.console.print(table)
         self.console.print()
 
-    def _find_package_dirs(self) -> List[str]:
+    def _find_package_dirs(self) -> list[str]:
         """Find potential package directories."""
         dirs = []
         for name in ["packages", "libs", "apps", "src", "tools"]:
@@ -391,7 +369,7 @@ class InteractiveCLI:
                 dirs.append(name)
         return dirs
 
-    def _map_extensions(self, selected: List[str]) -> List[str]:
+    def _map_extensions(self, selected: list[str]) -> list[str]:
         """Map user selections to extension names."""
         mapping = {
             "API documentation": ["sphinx_autoapi"],
@@ -412,11 +390,9 @@ class InteractiveCLI:
 
         return extensions
 
-    def _dry_run_init(self, config: Dict[str, Any]):
+    def _dry_run_init(self, config: dict[str, Any]):
         """Show what would be created."""
-        self.console.print(
-            "\n[yellow]Dry Run - The following would be created:[/yellow]\n"
-        )
+        self.console.print("\n[yellow]Dry Run - The following would be created:[/yellow]\n")
 
         tree = Tree("📁 Project Root")
 
@@ -437,18 +413,14 @@ class InteractiveCLI:
         self.console.print(tree)
         self.console.print()
 
-    def _show_next_steps(self, config: Dict[str, Any]):
+    def _show_next_steps(self, config: dict[str, Any]):
         """Show next steps after initialization."""
         self.console.print("\n[bold]Next Steps:[/bold]")
-        self.console.print(
-            "1. Install dependencies: [cyan]poetry install --with docs[/cyan]"
-        )
+        self.console.print("1. Install dependencies: [cyan]poetry install --with docs[/cyan]")
         self.console.print("2. Build documentation: [cyan]pydvlp-docs build[/cyan]")
-        self.console.print(
-            "3. View documentation: [cyan]open docs/build/html/index.html[/cyan]"
-        )
+        self.console.print("3. View documentation: [cyan]open docs/build/html/index.html[/cyan]")
 
-    def _find_documented_packages(self) -> List[Path]:
+    def _find_documented_packages(self) -> list[Path]:
         """Find packages with documentation."""
         packages = []
 
@@ -464,7 +436,7 @@ class InteractiveCLI:
 
         return packages
 
-    def _find_artifacts(self) -> List[Path]:
+    def _find_artifacts(self) -> list[Path]:
         """Find build artifacts to clean."""
         artifacts = []
         patterns = [

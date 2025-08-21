@@ -4,17 +4,16 @@ Implements best practices from Sphinx's built-in logging API and integrates
 with third-party debug extensions for comprehensive build analysis.
 """
 
-import json
-import os
-import sys
-import time
 from contextlib import contextmanager
 from datetime import datetime
+import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+import time
+from typing import Any
 
 from sphinx.application import Sphinx
 from sphinx.util import logging
+
 
 # Get logger using Sphinx's namespace
 logger = logging.getLogger(__name__)
@@ -71,9 +70,7 @@ class SphinxDebugExtension:
 
         # Log with appropriate detail based on debug level
         if self.debug_level >= 2:  # -vv or higher
-            logger.verbose(
-                f"Warning category '{category}': {warning_msg}", location=location
-            )
+            logger.verbose(f"Warning category '{category}': {warning_msg}", location=location)
 
     def _categorize_warning(self, warning_msg: str) -> str:
         """Categorize warning messages."""
@@ -81,18 +78,17 @@ class SphinxDebugExtension:
 
         if "cannot resolve import" in msg_lower:
             return "import_resolution"
-        elif "deprecated" in msg_lower:
+        if "deprecated" in msg_lower:
             return "deprecation"
-        elif "duplicate" in msg_lower:
+        if "duplicate" in msg_lower:
             return "duplicate_reference"
-        elif "undefined" in msg_lower:
+        if "undefined" in msg_lower:
             return "undefined_reference"
-        elif "extension" in msg_lower:
+        if "extension" in msg_lower:
             return "extension"
-        elif "autoapi" in msg_lower:
+        if "autoapi" in msg_lower:
             return "autoapi"
-        else:
-            return "general"
+        return "general"
 
     def generate_debug_report(self):
         """Generate comprehensive debug report."""
@@ -103,19 +99,14 @@ class SphinxDebugExtension:
                 "total_duration": f"{total_time:.2f}s",
                 "files_processed": self.file_count,
                 "errors": self.error_count,
-                "warnings": sum(
-                    len(warns) for warns in self.warning_categories.values()
-                ),
+                "warnings": sum(len(warns) for warns in self.warning_categories.values()),
                 "debug_level": self.debug_level,
             },
             "phase_timings": {
-                phase: f"{duration:.2f}s ({duration/total_time*100:.1f}%)"
+                phase: f"{duration:.2f}s ({duration / total_time * 100:.1f}%)"
                 for phase, duration in self.phase_times.items()
             },
-            "warning_breakdown": {
-                category: len(warnings)
-                for category, warnings in self.warning_categories.items()
-            },
+            "warning_breakdown": {category: len(warnings) for category, warnings in self.warning_categories.items()},
             "extension_load_times": self.extension_load_times,
             "recommendations": self._generate_recommendations(),
         }
@@ -132,7 +123,7 @@ class SphinxDebugExtension:
 
         logger.info(f"📊 Debug report saved to {debug_dir / 'build_debug.json'}")
 
-    def _generate_recommendations(self) -> List[str]:
+    def _generate_recommendations(self) -> list[str]:
         """Generate build recommendations."""
         recommendations = []
 
@@ -148,22 +139,17 @@ class SphinxDebugExtension:
         for phase, duration in self.phase_times.items():
             if duration > 30:
                 recommendations.append(
-                    f"⏱️ Phase '{phase}' took {duration:.1f}s. "
-                    "Consider optimization or parallel builds"
+                    f"⏱️ Phase '{phase}' took {duration:.1f}s. Consider optimization or parallel builds"
                 )
 
         # Extension issues
-        slow_extensions = [
-            (ext, time) for ext, time in self.extension_load_times.items() if time > 1.0
-        ]
+        slow_extensions = [(ext, time) for ext, time in self.extension_load_times.items() if time > 1.0]
         if slow_extensions:
-            recommendations.append(
-                f"🔌 Slow extensions: {', '.join(ext for ext, _ in slow_extensions)}"
-            )
+            recommendations.append(f"🔌 Slow extensions: {', '.join(ext for ext, _ in slow_extensions)}")
 
         return recommendations
 
-    def _create_debug_html(self, debug_dir: Path, report: Dict[str, Any]):
+    def _create_debug_html(self, debug_dir: Path, report: dict[str, Any]):
         """Create HTML debug page."""
         html_content = f"""
 <!DOCTYPE html>
@@ -187,30 +173,32 @@ class SphinxDebugExtension:
     <div class="metric">
         <h2>Build Summary</h2>
         <ul>
-            <li>Duration: {report['build_summary']['total_duration']}</li>
-            <li>Files: {report['build_summary']['files_processed']}</li>
-            <li>Warnings: {report['build_summary']['warnings']}</li>
-            <li>Errors: {report['build_summary']['errors']}</li>
+            <li>Duration: {report["build_summary"]["total_duration"]}</li>
+            <li>Files: {report["build_summary"]["files_processed"]}</li>
+            <li>Warnings: {report["build_summary"]["warnings"]}</li>
+            <li>Errors: {report["build_summary"]["errors"]}</li>
         </ul>
     </div>
     
     <h2>⏱️ Phase Timings</h2>
     <table>
         <tr><th>Phase</th><th>Duration</th></tr>
-        {''.join(f"<tr><td>{phase}</td><td>{duration}</td></tr>" 
-                 for phase, duration in report['phase_timings'].items())}
+        {
+            "".join(
+                f"<tr><td>{phase}</td><td>{duration}</td></tr>" for phase, duration in report["phase_timings"].items()
+            )
+        }
     </table>
     
     <h2>⚠️ Warning Categories</h2>
     <table>
         <tr><th>Category</th><th>Count</th></tr>
-        {''.join(f"<tr><td>{cat}</td><td>{count}</td></tr>" 
-                 for cat, count in report['warning_breakdown'].items())}
+        {"".join(f"<tr><td>{cat}</td><td>{count}</td></tr>" for cat, count in report["warning_breakdown"].items())}
     </table>
     
     <h2>💡 Recommendations</h2>
     <ul>
-        {''.join(f"<li>{rec}</li>" for rec in report['recommendations'])}
+        {"".join(f"<li>{rec}</li>" for rec in report["recommendations"])}
     </ul>
     
     <p><em>Generated at {datetime.now().isoformat()}</em></p>

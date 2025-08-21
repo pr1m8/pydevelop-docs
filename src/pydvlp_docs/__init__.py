@@ -5,7 +5,7 @@ Turn any Python project into beautiful documentation with zero configuration.
 
 Features:
     - 🎯 Zero Configuration: Works out-of-the-box with any Python project
-    - 📦 Universal Support: Single packages, monorepos, any structure  
+    - 📦 Universal Support: Single packages, monorepos, any structure
     - 🎨 Beautiful Themes: Pre-configured Furo theme with dark mode
     - 🔧 40+ Extensions: Complete extension suite included
     - ⚡ Smart Detection: Automatically detects project structure
@@ -43,7 +43,8 @@ __author__ = "William R. Astley"
 from .config import get_central_hub_config, get_haive_config
 
 # Export generalized setup functions
-from .general_setup import ProjectDetector, GeneralDocumentationSetup, setup_project_docs
+from .general_setup import GeneralDocumentationSetup, ProjectDetector, setup_project_docs
+
 
 # Export builders and utilities (if available)
 try:
@@ -58,26 +59,26 @@ try:
     from .utils import HaiveDocumentationManager
 
     __all__ = [
-        "get_haive_config",
-        "get_central_hub_config", 
-        "ProjectDetector",
-        "GeneralDocumentationSetup",
-        "setup_project_docs",
         "BaseDocumentationBuilder",
-        "SinglePackageBuilder",
-        "MonorepoBuilder",
-        "CustomConfigBuilder",
-        "get_builder",
         "BuildErrorClassifier",
+        "CustomConfigBuilder",
         "ErrorSeverity",
+        "GeneralDocumentationSetup",
         "HaiveDocumentationManager",
+        "MonorepoBuilder",
+        "ProjectDetector",
+        "SinglePackageBuilder",
+        "get_builder",
+        "get_central_hub_config",
+        "get_haive_config",
+        "setup_project_docs",
     ]
 except ImportError:
     # CLI dependencies might not be installed
     __all__ = [
-        "get_haive_config", 
-        "get_central_hub_config",
+        "GeneralDocumentationSetup",
         "ProjectDetector",
-        "GeneralDocumentationSetup", 
-        "setup_project_docs"
+        "get_central_hub_config",
+        "get_haive_config",
+        "setup_project_docs",
     ]

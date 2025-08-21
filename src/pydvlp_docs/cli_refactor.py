@@ -60,7 +60,6 @@ def generate_inline_full_conf(project_name: str) -> str:
     Alternative: Generate full configuration by extracting values from config module
     and inlining them (no runtime import dependency).
     """
-    import json
 
     from .config import get_haive_config
 
@@ -112,11 +111,11 @@ release = "0.1.0"
             if len(value) == 0:
                 lines.append(f"{key} = []")
             elif len(value) == 1:
-                lines.append(f"{key} = [{repr(value[0])}]")
+                lines.append(f"{key} = [{value[0]!r}]")
             else:
                 lines.append(f"{key} = [")
                 for item in value:
-                    lines.append(f"    {repr(item)},")
+                    lines.append(f"    {item!r},")
                 lines.append("]")
 
         elif isinstance(value, dict):
@@ -125,13 +124,10 @@ release = "0.1.0"
             else:
                 lines.append(f"{key} = {{")
                 for k, v in value.items():
-                    lines.append(f"    {repr(k)}: {repr(v)},")
+                    lines.append(f"    {k!r}: {v!r},")
                 lines.append("}")
 
-        elif isinstance(value, bool):
-            lines.append(f"{key} = {value}")
-
-        elif isinstance(value, (int, float)):
+        elif isinstance(value, bool) or isinstance(value, (int, float)):
             lines.append(f"{key} = {value}")
 
         elif value is None:
@@ -139,7 +135,7 @@ release = "0.1.0"
 
         else:
             # For other types, use repr
-            lines.append(f"{key} = {repr(value)}")
+            lines.append(f"{key} = {value!r}")
 
         lines.append("")  # Empty line after each setting
 

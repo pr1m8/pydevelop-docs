@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """Package auditor for understanding project structure before documentation builds."""
 
-import json
-import os
 from datetime import datetime
+import json
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 import click
 
@@ -23,7 +21,7 @@ class PackageAuditor:
             "summary": {},
         }
 
-    def audit_package(self, package_path: Path) -> Dict:
+    def audit_package(self, package_path: Path) -> dict:
         """Audit a single package."""
         package_name = package_path.name
         click.echo(f"\n📦 Auditing {package_name}...")
@@ -46,9 +44,7 @@ class PackageAuditor:
         docs_dir = package_path / "docs"
         if docs_dir.exists():
             audit["has_docs"] = True
-            audit["doc_files"] = len(list(docs_dir.rglob("*.rst"))) + len(
-                list(docs_dir.rglob("*.md"))
-            )
+            audit["doc_files"] = len(list(docs_dir.rglob("*.rst"))) + len(list(docs_dir.rglob("*.md")))
 
         # Check for pyproject.toml (required by seed_intersphinx_mapping)
         pyproject_path = package_path / "pyproject.toml"
@@ -93,7 +89,7 @@ class PackageAuditor:
                 file_sizes.append((relative_path, size_kb))
 
                 # Count lines
-                with open(py_file, "r", encoding="utf-8", errors="ignore") as f:
+                with open(py_file, encoding="utf-8", errors="ignore") as f:
                     lines = len(f.readlines())
                     audit["total_lines"] += lines
 
@@ -114,10 +110,7 @@ class PackageAuditor:
 
         # Find largest files
         file_sizes.sort(key=lambda x: x[1], reverse=True)
-        audit["largest_files"] = [
-            {"path": str(path), "size_kb": round(size, 1)}
-            for path, size in file_sizes[:5]
-        ]
+        audit["largest_files"] = [{"path": str(path), "size_kb": round(size, 1)} for path, size in file_sizes[:5]]
 
         # Count directories
         all_dirs = set()
@@ -126,9 +119,7 @@ class PackageAuditor:
         audit["directories"] = len(all_dirs)
 
         # Display summary
-        click.echo(
-            f"   📊 Files: {audit['python_files']} Python, {audit['test_files']} tests"
-        )
+        click.echo(f"   📊 Files: {audit['python_files']} Python, {audit['test_files']} tests")
         click.echo(f"   📏 Lines: {audit['total_lines']:,}")
         click.echo(f"   💾 Size: {audit['size_mb']} MB")
         click.echo(f"   📁 Directories: {audit['directories']}")
@@ -136,20 +127,18 @@ class PackageAuditor:
         # Show build readiness
         build_ready = audit["has_docs"] and audit["has_pyproject"]
         if build_ready:
-            click.echo(f"   ✅ Ready for docs build (has docs/ and pyproject.toml)")
+            click.echo("   ✅ Ready for docs build (has docs/ and pyproject.toml)")
         else:
             missing = []
             if not audit["has_docs"]:
                 missing.append("docs/")
             if not audit["has_pyproject"]:
                 missing.append("pyproject.toml")
-            click.echo(
-                f"   ⚠️  Not ready for docs build (missing: {', '.join(missing)})"
-            )
+            click.echo(f"   ⚠️  Not ready for docs build (missing: {', '.join(missing)})")
 
         return audit
 
-    def audit_monorepo(self) -> Dict:
+    def audit_monorepo(self) -> dict:
         """Audit all packages in a monorepo."""
         packages_dir = self.root_path / "packages"
 
@@ -158,11 +147,7 @@ class PackageAuditor:
             return self.audit_data
 
         # Find all packages
-        packages = [
-            p
-            for p in packages_dir.iterdir()
-            if p.is_dir() and not p.name.startswith(".")
-        ]
+        packages = [p for p in packages_dir.iterdir() if p.is_dir() and not p.name.startswith(".")]
         click.echo(f"\n🔍 Found {len(packages)} packages to audit")
 
         total_files = 0
@@ -184,15 +169,13 @@ class PackageAuditor:
             "total_python_files": total_files,
             "total_lines": total_lines,
             "total_size_mb": round(total_size, 2),
-            "average_files_per_package": (
-                round(total_files / len(packages)) if packages else 0
-            ),
+            "average_files_per_package": (round(total_files / len(packages)) if packages else 0),
             "largest_packages": self._get_largest_packages(5),
         }
 
         return self.audit_data
 
-    def _get_largest_packages(self, count: int) -> List[Dict]:
+    def _get_largest_packages(self, count: int) -> list[dict]:
         """Get the largest packages by file count."""
         packages = []
         for name, audit in self.audit_data["packages"].items():
@@ -251,7 +234,7 @@ class PackageAuditor:
             click.echo("   - Monitor memory usage (may need 2-4GB)")
 
 
-def audit_before_build(root_path: Path) -> Dict:
+def audit_before_build(root_path: Path) -> dict:
     """Run audit before starting documentation build."""
     auditor = PackageAuditor(root_path)
     audit_data = auditor.audit_monorepo()

@@ -21,18 +21,18 @@ Builder Types:
 
 Examples:
     Build documentation for a single package:
-    
+
     >>> from pathlib import Path
     >>> from pydvlp_docs.builders import SinglePackageBuilder
-    >>> 
+    >>>
     >>> builder = SinglePackageBuilder(
     ...     project_path=Path("/path/to/project"),
     ...     config={"name": "my-package"}
     ... )
     >>> builder.build(clean=True, parallel=True)
-    
+
     Build all packages in a monorepo:
-    
+
     >>> builder = MonorepoBuilder(
     ...     project_path=Path("/path/to/monorepo"),
     ...     config={"packages": ["pkg-a", "pkg-b"]}
@@ -53,28 +53,27 @@ Note:
     Build logs are automatically saved to docs/logs/ for debugging.
 """
 
+from datetime import datetime
 import logging
+from pathlib import Path
 import shutil
 import subprocess
-from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import click
 import tomlkit
 
-from .config import get_haive_config
 from .config_discovery import PyDevelopConfig
 from .hooks import HookManager, TemplateOverrideManager
 
 
 class BaseDocumentationBuilder:
     """Core documentation builder with shared functionality for all project types.
-    
+
     This is the foundation class that provides essential documentation building
     capabilities including cleaning, building, logging, hook management, and
     template customization. All specialized builders inherit from this class.
-    
+
     Features:
         - Comprehensive build logging with timestamped log files
         - Pre/post build hook system for custom workflows
@@ -83,43 +82,43 @@ class BaseDocumentationBuilder:
         - Support for multiple Sphinx builders (html, pdf, epub, etc.)
         - Parallel building support for improved performance
         - Error handling and reporting
-        
+
     Attributes:
         project_path (Path): Absolute path to the project root directory
         config (Dict[str, Any]): Builder configuration including project metadata
         docs_path (Path): Path to the documentation directory (project_path/docs)
         hooks (HookManager): Manager for pre/post build hooks
         templates (TemplateOverrideManager): Manager for template customization
-        
+
     Examples:
         Basic usage with manual configuration:
-        
+
         >>> builder = BaseDocumentationBuilder(
         ...     project_path=Path("/path/to/project"),
         ...     config={"name": "my-project", "version": "1.0.0"}
         ... )
         >>> builder.clean()
         >>> builder.build(builder="html", clean=False)
-        
+
         Build with custom options:
-        
+
         >>> builder.build(
         ...     builder="html",
         ...     clean=True,
         ...     parallel=True,
         ...     warnings_as_errors=False
         ... )
-        
+
         Access build logs:
-        
+
         >>> log_dir = builder.docs_path / "logs"
         >>> latest_log = sorted(log_dir.glob("build_*.log"))[-1]
         >>> print(f"Latest build log: {latest_log}")
     """
 
-    def __init__(self, project_path: Path, config: Dict[str, Any]):
+    def __init__(self, project_path: Path, config: dict[str, Any]):
         """Initialize the documentation builder.
-        
+
         Args:
             project_path: Absolute path to the project root directory where
                          documentation will be built. Must contain or will create
@@ -135,21 +134,21 @@ class BaseDocumentationBuilder:
 
     def clean(self):
         """Clean all documentation build artifacts and generated files.
-        
+
         Removes the build directory and auto-generated API documentation
         to ensure a clean build environment. This is useful when documentation
         structure has changed or when troubleshooting build issues.
-        
+
         Directories Cleaned:
             - docs/build/: All built documentation output (HTML, PDF, etc.)
             - docs/source/autoapi/: Auto-generated API documentation files
-            
+
         Examples:
             Clean before building:
-            
+
             >>> builder.clean()
             >>> builder.build()  # Fresh build
-            
+
         Note:
             This operation is destructive - all built documentation will be removed.
             Source files (conf.py, index.rst, etc.) are never affected.
@@ -173,11 +172,11 @@ class BaseDocumentationBuilder:
         warnings_as_errors: bool = True,
     ):
         """Build documentation with comprehensive logging and error handling.
-        
+
         Executes the complete documentation build process using Sphinx with
         advanced logging, hook management, and error reporting. Supports
         multiple output formats and build optimization options.
-        
+
         Args:
             builder: Sphinx builder type to use for output generation.
                     Common options: 'html', 'pdf', 'epub', 'latex', 'linkcheck'
@@ -187,35 +186,35 @@ class BaseDocumentationBuilder:
                      Automatically detects CPU count for optimal performance.
             warnings_as_errors: Treat Sphinx warnings as errors that stop the build.
                                Recommended for production builds to ensure quality.
-                               
+
         Returns:
             bool: True if build succeeded, False if build failed.
-            
+
         Raises:
             subprocess.CalledProcessError: If Sphinx build command fails and
                                          error handling doesn't catch it.
-                                         
+
         Examples:
             Basic HTML build:
-            
+
             >>> success = builder.build()
             >>> if success:
             ...     print("Documentation built successfully!")
-            
+
             Clean build with custom options:
-            
+
             >>> success = builder.build(
             ...     builder="html",
             ...     clean=True,
             ...     parallel=False,
             ...     warnings_as_errors=False
             ... )
-            
+
             Build multiple formats:
-            
+
             >>> for fmt in ["html", "epub", "pdf"]:
             ...     builder.build(builder=fmt)
-            
+
         Note:
             Build logs are automatically saved to docs/logs/build_TIMESTAMP.log
             for debugging and analysis. Pre/post build hooks are executed
@@ -234,9 +233,7 @@ class BaseDocumentationBuilder:
         formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
         file_handler.setFormatter(formatter)
 
-        logger = logging.getLogger(
-            f"pydevelop_docs.{self.config.get('name', 'unknown')}"
-        )
+        logger = logging.getLogger(f"pydevelop_docs.{self.config.get('name', 'unknown')}")
         logger.setLevel(logging.DEBUG)
         logger.addHandler(file_handler)
 
@@ -289,9 +286,7 @@ class BaseDocumentationBuilder:
         click.echo(f"📝 Logging to: {log_file}")
 
         try:
-            result = subprocess.run(
-                cmd, cwd=self.project_path, capture_output=True, text=True
-            )
+            result = subprocess.run(cmd, check=False, cwd=self.project_path, capture_output=True, text=True)
 
             # Log full output
             logger.info("=== SPHINX BUILD OUTPUT ===")
@@ -324,35 +319,30 @@ class BaseDocumentationBuilder:
                     logger.warning("Post-build hook failed")
 
                 return True
-            else:
-                click.echo(f"❌ Build failed with errors:")
-                click.echo(result.stderr)
-                logger.error(f"Build failed with return code {result.returncode}")
+            click.echo("❌ Build failed with errors:")
+            click.echo(result.stderr)
+            logger.error(f"Build failed with return code {result.returncode}")
 
-                # Show first few lines of stderr for immediate feedback
-                stderr_lines = (
-                    result.stderr.strip().split("\n") if result.stderr else []
-                )
-                if stderr_lines:
-                    click.echo("🔍 First few error lines:")
-                    for line in stderr_lines[:5]:
-                        click.echo(f"   {line}")
-                    if len(stderr_lines) > 5:
-                        click.echo(
-                            f"   ... and {len(stderr_lines) - 5} more lines (see log file)"
-                        )
+            # Show first few lines of stderr for immediate feedback
+            stderr_lines = result.stderr.strip().split("\n") if result.stderr else []
+            if stderr_lines:
+                click.echo("🔍 First few error lines:")
+                for line in stderr_lines[:5]:
+                    click.echo(f"   {line}")
+                if len(stderr_lines) > 5:
+                    click.echo(f"   ... and {len(stderr_lines) - 5} more lines (see log file)")
 
-                # Run post-build hook even on failure
-                hook_context = {
-                    "builder": builder,
-                    "build_dir": str(build_dir),
-                    "success": False,
-                    "error": result.stderr,
-                    "html_file_count": len(html_files),
-                }
-                self.hooks.run_hook("post-build", hook_context)
+            # Run post-build hook even on failure
+            hook_context = {
+                "builder": builder,
+                "build_dir": str(build_dir),
+                "success": False,
+                "error": result.stderr,
+                "html_file_count": len(html_files),
+            }
+            self.hooks.run_hook("post-build", hook_context)
 
-                return False
+            return False
 
         except Exception as e:
             click.echo(f"❌ Build error: {e}")
@@ -387,7 +377,7 @@ class SinglePackageBuilder(BaseDocumentationBuilder):
             conf_content = self._substitute_variables(conf_content)
         else:
             conf_content = f'''"""
-Sphinx configuration for {self.config['name']}.
+Sphinx configuration for {self.config["name"]}.
 Generated by pydvlp-docs with AutoAPI hierarchical organization.
 
 ✅ INCLUDES AUTOAPI HIERARCHICAL FIX - Issue #4 Solution
@@ -405,7 +395,7 @@ sys.path.insert(0, os.path.abspath("../.."))
 try:
     from pydvlp_docs.config import get_haive_config
     config = get_haive_config(
-        package_name="{self.config['name']}",
+        package_name="{self.config["name"]}",
         package_path="../..",
         is_central_hub=False
     )
@@ -446,15 +436,13 @@ except ImportError:
     project = "{}"
     extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon"]
     html_theme = "furo"
-""".format(
-            self.config["name"]
-        )
+""".format(self.config["name"])
 
 
 class MonorepoBuilder(BaseDocumentationBuilder):
     """Builder for monorepo projects."""
 
-    def __init__(self, project_path: Path, config: Dict[str, Any]):
+    def __init__(self, project_path: Path, config: dict[str, Any]):
         super().__init__(project_path, config)
 
         # Load pydevelop configuration for ignore settings first
@@ -463,7 +451,7 @@ class MonorepoBuilder(BaseDocumentationBuilder):
         # Then discover packages (respecting ignore list)
         self.packages = self._discover_packages()
 
-    def _load_pydevelop_config(self) -> Dict[str, Any]:
+    def _load_pydevelop_config(self) -> dict[str, Any]:
         """Load pydevelop configuration including ignore settings."""
         try:
             config_manager = PyDevelopConfig(self.project_path)
@@ -472,24 +460,20 @@ class MonorepoBuilder(BaseDocumentationBuilder):
             click.echo(f"⚠️  Failed to load pydevelop config: {e}", err=True)
             return {}
 
-    def _discover_packages(self) -> List[Path]:
+    def _discover_packages(self) -> list[Path]:
         """Discover all packages in monorepo, respecting ignore_packages configuration."""
         packages = []
         packages_dir = self.project_path / "packages"
 
         # Get ignore list from configuration
-        ignore_packages = self.pydevelop_config.get("build", {}).get(
-            "ignore_packages", []
-        )
+        ignore_packages = self.pydevelop_config.get("build", {}).get("ignore_packages", [])
 
         if packages_dir.exists():
             for pkg_dir in packages_dir.iterdir():
                 if pkg_dir.is_dir() and not pkg_dir.name.startswith("."):
                     # Check if package should be ignored
                     if pkg_dir.name in ignore_packages:
-                        click.echo(
-                            f"🚫 Ignoring package: {pkg_dir.name} (configured in .pydevelop/docs.yaml)"
-                        )
+                        click.echo(f"🚫 Ignoring package: {pkg_dir.name} (configured in .pydevelop/docs.yaml)")
                         continue
 
                     # Check if it has docs
@@ -533,9 +517,7 @@ class MonorepoBuilder(BaseDocumentationBuilder):
         main_logger.addHandler(main_handler)
 
         main_logger.info(f"Starting monorepo build for {len(self.packages)} packages")
-        main_logger.info(
-            f"Clean: {clean}, Parallel: {parallel}, Warnings as errors: {warnings_as_errors}"
-        )
+        main_logger.info(f"Clean: {clean}, Parallel: {parallel}, Warnings as errors: {warnings_as_errors}")
 
         click.echo(f"🏗️  Building {len(self.packages)} packages...")
         click.echo(f"📝 Main log: {main_log_file}")
@@ -566,16 +548,12 @@ class MonorepoBuilder(BaseDocumentationBuilder):
 
                     # Check for package-specific logs
                     package_logs = (
-                        list((package / "docs" / "logs").glob("*.log"))
-                        if (package / "docs" / "logs").exists()
-                        else []
+                        list((package / "docs" / "logs").glob("*.log")) if (package / "docs" / "logs").exists() else []
                     )
                     if package_logs:
                         latest_log = max(package_logs, key=lambda x: x.stat().st_mtime)
                         click.echo(f"   📝 Package log: {latest_log}")
-                        main_logger.info(
-                            f"Package {package.name} detailed log: {latest_log}"
-                        )
+                        main_logger.info(f"Package {package.name} detailed log: {latest_log}")
 
                     results.append((package.name, success))
 
@@ -589,32 +567,24 @@ class MonorepoBuilder(BaseDocumentationBuilder):
             successful = sum(1 for _, success in results if success)
             failed = len(results) - successful
 
-            click.echo(
-                f"\n📊 Build Summary ({total_duration.total_seconds():.1f}s total):"
-            )
+            click.echo(f"\n📊 Build Summary ({total_duration.total_seconds():.1f}s total):")
             click.echo(f"   ✅ Successful: {successful}")
             click.echo(f"   ❌ Failed: {failed}")
             click.echo(f"   📁 Total packages: {len(results)}")
 
-            main_logger.info(
-                f"Monorepo build completed - {successful}/{len(results)} successful"
-            )
+            main_logger.info(f"Monorepo build completed - {successful}/{len(results)} successful")
 
             click.echo("\n📦 Package Details:")
             for name, success in results:
                 status = "✅" if success else "❌"
                 # Check for HTML file count
                 html_count = 0
-                build_dir = (
-                    self.project_path / "packages" / name / "docs" / "build" / "html"
-                )
+                build_dir = self.project_path / "packages" / name / "docs" / "build" / "html"
                 if build_dir.exists():
                     html_count = len(list(build_dir.rglob("*.html")))
 
                 click.echo(f"   {status} {name:15} ({html_count:3} HTML files)")
-                main_logger.info(
-                    f"Package {name}: Success={success}, HTML files={html_count}"
-                )
+                main_logger.info(f"Package {name}: Success={success}, HTML files={html_count}")
 
             return all(success for _, success in results)
 
@@ -639,9 +609,7 @@ class MonorepoBuilder(BaseDocumentationBuilder):
         conf_path.write_text(collections_conf)
 
         # Build central docs
-        central_builder = SinglePackageBuilder(
-            self.project_path, {"name": "Haive Monorepo"}
-        )
+        central_builder = SinglePackageBuilder(self.project_path, {"name": "Haive Monorepo"})
         return central_builder.build()
 
     def _generate_collections_conf(self):
@@ -707,7 +675,7 @@ class CustomConfigBuilder(BaseDocumentationBuilder):
         if "sphinx" in self.config:
             self._apply_sphinx_config(self.config["sphinx"])
 
-    def _apply_sphinx_config(self, sphinx_config: Dict[str, Any]):
+    def _apply_sphinx_config(self, sphinx_config: dict[str, Any]):
         """Apply custom Sphinx configuration."""
         conf_path = self.docs_path / "source" / "conf.py"
 
@@ -723,7 +691,7 @@ import sys
 
         conf_path.write_text(conf_content)
 
-    def _dict_to_python(self, d: Dict[str, Any]) -> str:
+    def _dict_to_python(self, d: dict[str, Any]) -> str:
         """Convert dictionary to Python assignments."""
         lines = []
         for key, value in d.items():
@@ -732,12 +700,12 @@ import sys
             elif isinstance(value, list):
                 lines.append(f"{key} = {value}")
             else:
-                lines.append(f"{key} = {repr(value)}")
+                lines.append(f"{key} = {value!r}")
         return "\n".join(lines)
 
 
 def get_builder(
-    project_path: Path, project_type: str = "auto", config_file: Optional[Path] = None
+    project_path: Path, project_type: str = "auto", config_file: Path | None = None
 ) -> BaseDocumentationBuilder:
     """Get appropriate builder for project type."""
 
@@ -753,5 +721,4 @@ def get_builder(
 
     if project_type == "monorepo":
         return MonorepoBuilder(project_path, {"name": project_path.name})
-    else:
-        return SinglePackageBuilder(project_path, {"name": project_path.name})
+    return SinglePackageBuilder(project_path, {"name": project_path.name})

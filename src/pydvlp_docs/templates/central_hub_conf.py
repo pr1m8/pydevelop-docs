@@ -6,13 +6,14 @@ a single unified documentation site.
 
 import os
 import sys
-from pathlib import Path
+
 
 # Add pydvlp-docs to path if needed
 sys.path.insert(0, os.path.abspath("."))
 
 # Import the complete shared configuration
 from pydvlp_docs.config import get_central_hub_config
+
 
 # Get central hub configuration with sphinx-collections support
 config = get_central_hub_config()
@@ -91,8 +92,10 @@ collections = {
 }
 
 # Add collections to extensions if not already there
-if "sphinxcontrib.collections" not in extensions:
-    extensions.append("sphinxcontrib.collections")
+# Note: extensions should be defined by get_central_hub_config()
+if "extensions" in globals():
+    if "sphinxcontrib.collections" not in globals()["extensions"]:
+        globals()["extensions"].append("sphinxcontrib.collections")
 
 # Custom index for the hub
 html_additional_pages = {

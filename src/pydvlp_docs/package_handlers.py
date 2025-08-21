@@ -1,11 +1,9 @@
 """Package-specific handlers for different Python project types."""
 
-import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import tomlkit
-import yaml
 
 
 class PackageHandler:
@@ -15,7 +13,7 @@ class PackageHandler:
         self.project_path = project_path
         self.package_info = self.detect_package_info()
 
-    def detect_package_info(self) -> Dict[str, Any]:
+    def detect_package_info(self) -> dict[str, Any]:
         """Detect package information."""
         info = {
             "name": self.project_path.name,
@@ -38,7 +36,7 @@ class PackageHandler:
 
         return info
 
-    def _parse_pyproject(self) -> Dict[str, Any]:
+    def _parse_pyproject(self) -> dict[str, Any]:
         """Parse pyproject.toml for package info."""
         with open(self.project_path / "pyproject.toml") as f:
             data = tomlkit.load(f)
@@ -83,7 +81,7 @@ class PackageHandler:
 
         return info
 
-    def _parse_setuppy(self) -> Dict[str, Any]:
+    def _parse_setuppy(self) -> dict[str, Any]:
         """Parse setup.py for package info."""
         # This is tricky without executing the file
         # For now, return basic info
@@ -92,7 +90,7 @@ class PackageHandler:
             "manager": "setuptools",
         }
 
-    def _parse_setupcfg(self) -> Dict[str, Any]:
+    def _parse_setupcfg(self) -> dict[str, Any]:
         """Parse setup.cfg for package info."""
         import configparser
 
@@ -107,7 +105,7 @@ class PackageHandler:
 
         return info
 
-    def _find_source_dirs(self) -> List[str]:
+    def _find_source_dirs(self) -> list[str]:
         """Find Python source directories."""
         dirs = []
 
@@ -127,7 +125,7 @@ class PackageHandler:
 
         return dirs
 
-    def get_autoapi_dirs(self) -> List[str]:
+    def get_autoapi_dirs(self) -> list[str]:
         """Get directories for AutoAPI to scan."""
         dirs = []
 
@@ -141,7 +139,7 @@ class PackageHandler:
 
         return dirs
 
-    def get_dependencies(self) -> Dict[str, str]:
+    def get_dependencies(self) -> dict[str, str]:
         """Get documentation dependencies for this package type."""
         # Base dependencies for all packages
         deps = {
@@ -185,7 +183,7 @@ class HaivePackageHandler(PackageHandler):
 
         return False
 
-    def get_dependencies(self) -> Dict[str, str]:
+    def get_dependencies(self) -> dict[str, str]:
         """Get Haive-specific documentation dependencies."""
         deps = super().get_dependencies()
 
@@ -204,7 +202,7 @@ class HaivePackageHandler(PackageHandler):
 
         return deps
 
-    def get_theme_config(self) -> Dict[str, Any]:
+    def get_theme_config(self) -> dict[str, Any]:
         """Get Haive-specific theme configuration."""
         # Package-specific colors
         package_colors = {
@@ -217,9 +215,7 @@ class HaivePackageHandler(PackageHandler):
             "haive-prebuilt": {"primary": "#20c997", "secondary": "#1aa179"},
         }
 
-        colors = package_colors.get(
-            self.package_info["name"], {"primary": "#007bff", "secondary": "#0056b3"}
-        )
+        colors = package_colors.get(self.package_info["name"], {"primary": "#007bff", "secondary": "#0056b3"})
 
         return {
             "theme": "furo",
@@ -243,7 +239,7 @@ class MonorepoHandler(PackageHandler):
         super().__init__(project_path)
         self.packages = self._discover_packages()
 
-    def _discover_packages(self) -> List[Dict[str, Any]]:
+    def _discover_packages(self) -> list[dict[str, Any]]:
         """Discover all packages in the monorepo."""
         packages = []
 
@@ -264,7 +260,7 @@ class MonorepoHandler(PackageHandler):
 
         return packages
 
-    def get_collections_config(self) -> Dict[str, Any]:
+    def get_collections_config(self) -> dict[str, Any]:
         """Get sphinx-collections configuration for monorepo."""
         collections = {}
 
@@ -283,10 +279,10 @@ class MonorepoHandler(PackageHandler):
     def generate_index_content(self) -> str:
         """Generate index.rst content for monorepo."""
         content = f"""
-{self.package_info['name']} Documentation
-{'=' * (len(self.package_info['name']) + 14)}
+{self.package_info["name"]} Documentation
+{"=" * (len(self.package_info["name"]) + 14)}
 
-Welcome to the documentation for {self.package_info['name']}.
+Welcome to the documentation for {self.package_info["name"]}.
 
 Packages
 --------

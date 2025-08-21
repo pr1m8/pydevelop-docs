@@ -1,10 +1,7 @@
 """Link existing built documentation into a central hub."""
 
-import json
-import shutil
-import subprocess
 from pathlib import Path
-from typing import Dict, List, Optional
+import subprocess
 
 import click
 
@@ -17,7 +14,7 @@ class DocumentationLinker:
         self.packages_dir = root_path / "packages"
         self.root_docs = root_path / "docs"
 
-    def discover_built_docs(self) -> Dict[str, Dict[str, Path]]:
+    def discover_built_docs(self) -> dict[str, dict[str, Path]]:
         """Discover all packages with built documentation."""
         packages = {}
 
@@ -42,9 +39,7 @@ class DocumentationLinker:
 
         return packages
 
-    def create_intersphinx_mapping(
-        self, packages: Dict[str, Dict[str, Path]]
-    ) -> Dict[str, tuple]:
+    def create_intersphinx_mapping(self, packages: dict[str, dict[str, Path]]) -> dict[str, tuple]:
         """Create intersphinx mapping for cross-referencing."""
         mapping = {
             "python": ("https://docs.python.org/3", None),
@@ -59,7 +54,7 @@ class DocumentationLinker:
 
         return mapping
 
-    def create_hub_index(self, packages: Dict[str, Dict[str, Path]]) -> str:
+    def create_hub_index(self, packages: dict[str, dict[str, Path]]) -> str:
         """Create a hub index.rst that links to all packages."""
         content = """Haive Documentation Hub
 =======================
@@ -188,7 +183,7 @@ Quick Links
         }
         return descriptions.get(name, f"Documentation for {name}")
 
-    def create_hub_config(self, packages: Dict[str, Dict[str, Path]]) -> str:
+    def create_hub_config(self, packages: dict[str, dict[str, Path]]) -> str:
         """Create hub conf.py with theming inherited from individual packages."""
         intersphinx = self.create_intersphinx_mapping(packages)
 
@@ -237,7 +232,7 @@ extensions = [
 ]
 
 # Intersphinx mapping to all packages
-intersphinx_mapping = {repr(intersphinx)}
+intersphinx_mapping = {intersphinx!r}
 
 # INHERIT THEMING from individual packages
 html_theme = base_config.get("html_theme", "furo")
@@ -530,9 +525,7 @@ Detailed documentation for each package:
 """
         for name in sorted(packages.keys()):
             # Path from hub docs/source/packages/index.rst to package docs
-            packages_index += (
-                f"   {name} <../../../../packages/{name}/docs/build/html/index>\n"
-            )
+            packages_index += f"   {name} <../../../../packages/{name}/docs/build/html/index>\n"
 
         (packages_dir / "index.rst").write_text(packages_index)
 
@@ -559,7 +552,7 @@ Detailed documentation for each package:
         click.echo("\n🔨 Building documentation hub...")
 
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            result = subprocess.run(cmd, check=False, capture_output=True, text=True)
 
             if result.returncode == 0:
                 click.echo("✅ Hub documentation built successfully!")
@@ -577,10 +570,9 @@ Detailed documentation for each package:
                     click.echo("🌐 Opened documentation in browser")
 
                 return True
-            else:
-                click.echo("❌ Build failed:")
-                click.echo(result.stderr)
-                return False
+            click.echo("❌ Build failed:")
+            click.echo(result.stderr)
+            return False
 
         except Exception as e:
             click.echo(f"❌ Build error: {e}")
@@ -602,8 +594,8 @@ Detailed documentation for each package:
 
         click.echo("=" * 50)
         click.echo(f"  📚 Total:              {total_pages:>5} pages")
-        click.echo(f"  🔗 Intersphinx enabled: ✅")
-        click.echo(f"  🌐 Cross-references:    ✅")
+        click.echo("  🔗 Intersphinx enabled: ✅")
+        click.echo("  🌐 Cross-references:    ✅")
 
     def update_hub(self):
         """Update the hub without full rebuild (only regenerate index)."""
@@ -634,14 +626,13 @@ Detailed documentation for each package:
             ]
 
             try:
-                result = subprocess.run(cmd, capture_output=True, text=True)
+                result = subprocess.run(cmd, check=False, capture_output=True, text=True)
                 if result.returncode == 0:
                     click.echo("✅ Hub updated successfully!")
                     self._generate_summary_report()
                     return True
-                else:
-                    click.echo("❌ Update failed")
-                    return False
+                click.echo("❌ Update failed")
+                return False
             except Exception as e:
                 click.echo(f"❌ Update error: {e}")
                 return False

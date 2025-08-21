@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """Smart documentation builder that handles large monorepos efficiently."""
 
+from datetime import datetime
 import json
+from pathlib import Path
 import shutil
 import subprocess
 import time
-from datetime import datetime
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 import click
 
@@ -28,7 +27,7 @@ class SmartDocBuilder:
         self.results = {}
         self.start_time = datetime.now()
 
-    def analyze_and_plan(self) -> Dict:
+    def analyze_and_plan(self) -> dict:
         """Analyze monorepo and create build plan."""
         click.echo("🔍 Analyzing monorepo structure...")
 
@@ -49,9 +48,7 @@ class SmartDocBuilder:
             "timestamp": datetime.now().isoformat(),
             "total_packages": len(self.build_order),
             "build_order": self.build_order,
-            "estimated_time_minutes": sum(
-                p["estimated_minutes"] for p in self.build_order
-            ),
+            "estimated_time_minutes": sum(p["estimated_minutes"] for p in self.build_order),
             "strategy": "individual" if len(audit_data["packages"]) > 5 else "combined",
         }
 
@@ -62,7 +59,7 @@ class SmartDocBuilder:
         click.echo(f"\n📋 Build Plan saved to: {plan_file}")
         return plan
 
-    def _determine_build_order(self, audit_data: Dict) -> List[Dict]:
+    def _determine_build_order(self, audit_data: dict) -> list[dict]:
         """Determine optimal build order."""
         packages = []
 
@@ -80,9 +77,7 @@ class SmartDocBuilder:
                     {
                         "name": pkg_name,
                         "files": pkg_data["python_files"],
-                        "estimated_minutes": round(
-                            pkg_data["python_files"] * 0.6 / 60, 1
-                        ),
+                        "estimated_minutes": round(pkg_data["python_files"] * 0.6 / 60, 1),
                         "priority": "high",
                     }
                 )
@@ -106,11 +101,11 @@ class SmartDocBuilder:
 
         return packages
 
-    def build_package(self, package_name: str, monitor_dir: Path) -> Tuple[bool, float]:
+    def build_package(self, package_name: str, monitor_dir: Path) -> tuple[bool, float]:
         """Build documentation for a single package with monitoring."""
-        click.echo(f"\n{'='*60}")
+        click.echo(f"\n{'=' * 60}")
         click.echo(f"📦 Building {package_name}")
-        click.echo(f"{'='*60}")
+        click.echo(f"{'=' * 60}")
 
         package_path = self.root_path / "packages" / package_name
         if not package_path.exists():
@@ -126,9 +121,7 @@ class SmartDocBuilder:
             return False, 0
 
         if not pyproject_path.exists():
-            click.echo(
-                f"⚠️  No pyproject.toml for {package_name}, skipping (required by seed_intersphinx_mapping)"
-            )
+            click.echo(f"⚠️  No pyproject.toml for {package_name}, skipping (required by seed_intersphinx_mapping)")
             return False, 0
 
         # Create package-specific monitor
@@ -185,7 +178,7 @@ class SmartDocBuilder:
 
             # Print summary
             monitor.print_summary()
-            click.echo(f"\n⏱️  Completed in {elapsed/60:.1f} minutes")
+            click.echo(f"\n⏱️  Completed in {elapsed / 60:.1f} minutes")
 
             return success, elapsed
 
@@ -198,9 +191,7 @@ class SmartDocBuilder:
         """Build all packages according to plan."""
         click.echo("\n🚀 Starting Smart Documentation Build")
         click.echo(f"📊 Total packages: {len(self.build_order)}")
-        click.echo(
-            f"⏱️  Estimated time: {sum(p['estimated_minutes'] for p in self.build_order):.1f} minutes"
-        )
+        click.echo(f"⏱️  Estimated time: {sum(p['estimated_minutes'] for p in self.build_order):.1f} minutes")
 
         # Create results tracking
         results_file = self.output_dir / "build_results.json"
@@ -251,9 +242,7 @@ class SmartDocBuilder:
                 "successful": successful,
                 "failed": failed,
                 "total_elapsed_minutes": round(total_time / 60, 1),
-                "average_seconds_per_file": round(
-                    total_time / sum(p["files"] for p in self.build_order[:i]), 2
-                ),
+                "average_seconds_per_file": round(total_time / sum(p["files"] for p in self.build_order[:i]), 2),
             }
 
             with open(results_file, "w") as f:
@@ -267,7 +256,7 @@ class SmartDocBuilder:
         # Final summary
         self._print_final_summary(results)
 
-    def _print_final_summary(self, results: Dict):
+    def _print_final_summary(self, results: dict):
         """Print final build summary."""
         summary = results["summary"]
 

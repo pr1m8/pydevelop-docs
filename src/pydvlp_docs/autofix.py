@@ -1,8 +1,8 @@
 """Auto-fix utilities for common pydvlp-docs issues."""
 
-import re
 from pathlib import Path
-from typing import Any, Dict, List
+import re
+from typing import Any
 
 import tomlkit
 
@@ -15,9 +15,7 @@ class AutoFixer:
         self.display = display
         self.fixes_applied = []
 
-    def analyze_and_fix(
-        self, analysis: Dict[str, Any], apply_fixes: bool = True
-    ) -> List[str]:
+    def analyze_and_fix(self, analysis: dict[str, Any], apply_fixes: bool = True) -> list[str]:
         """Analyze issues and apply fixes if requested."""
         available_fixes = []
 
@@ -33,13 +31,11 @@ class AutoFixer:
 
         return available_fixes
 
-    def _prepare_duplicate_fix(self, issue: str) -> Dict[str, Any]:
+    def _prepare_duplicate_fix(self, issue: str) -> dict[str, Any]:
         """Prepare fix for duplicate dependency."""
         # Extract dependency name and line numbers from issue
         # Format: "Duplicate dependency 'dep-name' (lines 123, 456)"
-        match = re.search(
-            r"Duplicate dependency '([^']+)' \(lines (\d+), (\d+)\)", issue
-        )
+        match = re.search(r"Duplicate dependency '([^']+)' \(lines (\d+), (\d+)\)", issue)
         if not match:
             return None
 
@@ -51,13 +47,13 @@ class AutoFixer:
             "description": f"Remove duplicate {dep_name} from line {line2}",
         }
 
-    def _apply_duplicate_fix(self, fix: Dict[str, Any]) -> None:
+    def _apply_duplicate_fix(self, fix: dict[str, Any]) -> None:
         """Apply duplicate dependency fix using proper TOML structure handling."""
         pyproject_path = self.project_path / "pyproject.toml"
 
         try:
             # Use tomlkit to properly handle TOML structure
-            with open(pyproject_path, "r") as f:
+            with open(pyproject_path) as f:
                 content = f.read()
 
             doc = tomlkit.parse(content)
@@ -76,10 +72,7 @@ class AutoFixer:
             # Check in dependency groups
             if "group" in doc.get("tool", {}).get("poetry", {}):
                 for group_name, group_deps in doc["tool"]["poetry"]["group"].items():
-                    if (
-                        "dependencies" in group_deps
-                        and dependency_name in group_deps["dependencies"]
-                    ):
+                    if "dependencies" in group_deps and dependency_name in group_deps["dependencies"]:
                         # For group dependencies, keep the first occurrence
                         pass
 
@@ -109,14 +102,10 @@ class AutoFixer:
             with open(pyproject_path, "w") as f:
                 f.write(tomlkit.dumps(doc))
 
-            self.fixes_applied.append(
-                f"Removed duplicate {fix['dependency']} using TOML-aware fix"
-            )
+            self.fixes_applied.append(f"Removed duplicate {fix['dependency']} using TOML-aware fix")
 
             if self.display:
-                self.display.success(
-                    f"Fixed: Removed duplicate {fix['dependency']} (TOML-safe)"
-                )
+                self.display.success(f"Fixed: Removed duplicate {fix['dependency']} (TOML-safe)")
 
         except Exception as e:
             if self.display:
@@ -125,12 +114,12 @@ class AutoFixer:
             # Fallback to line-based fix if TOML parsing fails
             self._apply_duplicate_fix_fallback(fix)
 
-    def _apply_duplicate_fix_fallback(self, fix: Dict[str, Any]) -> None:
+    def _apply_duplicate_fix_fallback(self, fix: dict[str, Any]) -> None:
         """Fallback line-based duplicate fix (original method)."""
         pyproject_path = self.project_path / "pyproject.toml"
 
         try:
-            with open(pyproject_path, "r") as f:
+            with open(pyproject_path) as f:
                 lines = f.readlines()
 
             # Remove the higher line number (keep the first occurrence)
@@ -162,7 +151,7 @@ class AutoFixer:
         pyproject_path = self.project_path / "pyproject.toml"
 
         try:
-            with open(pyproject_path, "r") as f:
+            with open(pyproject_path) as f:
                 content = f.read()
 
             # Try to parse and identify issues
@@ -189,9 +178,7 @@ class AutoFixer:
 
                 except:
                     if self.display:
-                        self.display.error(
-                            f"Could not auto-fix TOML syntax: {parse_error}"
-                        )
+                        self.display.error(f"Could not auto-fix TOML syntax: {parse_error}")
                     return False
 
         except Exception as e:
@@ -245,9 +232,7 @@ globals().update(config)
             self.fixes_applied.append(f"Updated {package_name} to use shared config")
 
             if self.display:
-                self.display.success(
-                    f"Updated {package_name} conf.py to use shared config"
-                )
+                self.display.success(f"Updated {package_name} conf.py to use shared config")
 
             return True
 
@@ -316,9 +301,7 @@ This ensures both structured release notes and detailed commit history are avail
 
         except Exception as e:
             if self.display:
-                self.display.error(
-                    f"Failed to create changelog for {package_name}: {e}"
-                )
+                self.display.error(f"Failed to create changelog for {package_name}: {e}")
             return False
 
     def update_index_rst(self, package_path: Path, package_name: str) -> bool:
@@ -377,11 +360,9 @@ This ensures both structured release notes and detailed commit history are avail
 
         except Exception as e:
             if self.display:
-                self.display.error(
-                    f"Failed to update index.rst for {package_name}: {e}"
-                )
+                self.display.error(f"Failed to update index.rst for {package_name}: {e}")
             return False
 
-    def get_applied_fixes(self) -> List[str]:
+    def get_applied_fixes(self) -> list[str]:
         """Get list of fixes that were applied."""
         return self.fixes_applied.copy()

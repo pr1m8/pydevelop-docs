@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """Build monitoring system with separate error and progress tracking."""
 
-import json
-import time
 from datetime import datetime
+import json
 from pathlib import Path
-from typing import Dict, List, Optional
 
 from .build_error_classifier import BuildError, BuildErrorClassifier, ErrorSeverity
 
@@ -46,9 +44,7 @@ class BuildMonitor:
         """Write initial content to monitoring files."""
         # Progress file header
         with open(self.progress_file, "w") as f:
-            f.write(
-                f"Build Monitor Started: {self.start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
-            )
+            f.write(f"Build Monitor Started: {self.start_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
             f.write(f"Package: {self.package_name}\n")
             f.write("=" * 60 + "\n\n")
 
@@ -147,9 +143,7 @@ class BuildMonitor:
             "phase": self.phase,
             "lines_processed": self.line_count,
             "error_summary": serializable_summary,
-            "critical_errors": [
-                self._serialize_error(e) for e in summary["critical_errors"]
-            ],
+            "critical_errors": [self._serialize_error(e) for e in summary["critical_errors"]],
             "last_update": datetime.now().isoformat(),
         }
 
@@ -162,15 +156,13 @@ class BuildMonitor:
             errors_data = {
                 "package": self.package_name,
                 "timestamp": datetime.now().isoformat(),
-                "critical": [
-                    self._serialize_error(e) for e in summary["critical_errors"]
-                ],
+                "critical": [self._serialize_error(e) for e in summary["critical_errors"]],
                 "warnings": [self._serialize_error(e) for e in summary["warnings"]],
             }
             with open(self.errors_file, "w") as f:
                 json.dump(errors_data, f, indent=2)
 
-    def _serialize_error(self, error: BuildError) -> Dict:
+    def _serialize_error(self, error: BuildError) -> dict:
         """Convert BuildError to serializable dict."""
         return {
             "severity": error.severity.value,
@@ -190,9 +182,7 @@ class BuildMonitor:
         elapsed = (datetime.now() - self.start_time).total_seconds()
         with open(self.progress_file, "a") as f:
             f.write(f"\n{'=' * 60}\n")
-            f.write(
-                f"Build Monitor Completed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-            )
+            f.write(f"Build Monitor Completed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
             f.write(f"Total Duration: {elapsed:.2f} seconds\n")
             f.write(f"Final Phase: {self.phase}\n")
             f.write(f"Total Lines: {self.line_count}\n")
@@ -232,14 +222,13 @@ def tail_monitor_files(output_dir: Path, follow: bool = True):
         import subprocess
 
         # Use tail -f to follow progress
-        subprocess.run(["tail", "-f", str(progress_file)])
-    else:
-        # Just show current state
-        if summary_file.exists():
-            with open(summary_file) as f:
-                summary = json.load(f)
+        subprocess.run(["tail", "-f", str(progress_file)], check=False)
+    # Just show current state
+    elif summary_file.exists():
+        with open(summary_file) as f:
+            summary = json.load(f)
 
-            print(f"\nPhase: {summary['phase']}")
-            print(f"Elapsed: {summary['elapsed_seconds']}s")
-            print(f"Critical Errors: {summary['error_summary']['counts']['critical']}")
-            print(f"Warnings: {summary['error_summary']['counts']['warning']}")
+        print(f"\nPhase: {summary['phase']}")
+        print(f"Elapsed: {summary['elapsed_seconds']}s")
+        print(f"Critical Errors: {summary['error_summary']['counts']['critical']}")
+        print(f"Warnings: {summary['error_summary']['counts']['warning']}")

@@ -1,10 +1,10 @@
 """Hook system for PyDevelop-Docs customization."""
 
 import os
+from pathlib import Path
 import subprocess
 import sys
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import click
 
@@ -16,9 +16,7 @@ class HookManager:
         self.project_path = project_path
         self.hooks_dir = project_path / ".pydevelop" / "hooks"
 
-    def run_hook(
-        self, hook_name: str, context: Optional[Dict[str, Any]] = None
-    ) -> bool:
+    def run_hook(self, hook_name: str, context: dict[str, Any] | None = None) -> bool:
         """Run a specific hook if it exists.
 
         Args:
@@ -45,30 +43,25 @@ class HookManager:
 
         return True
 
-    def _execute_hook(
-        self, hook_file: Path, context: Optional[Dict[str, Any]] = None
-    ) -> bool:
+    def _execute_hook(self, hook_file: Path, context: dict[str, Any] | None = None) -> bool:
         """Execute a hook file based on its type."""
         click.echo(f"🪝 Running hook: {hook_file.name}")
 
         try:
             if hook_file.suffix == ".py":
                 return self._run_python_hook(hook_file, context)
-            elif hook_file.suffix == ".sh":
+            if hook_file.suffix == ".sh":
                 return self._run_shell_hook(hook_file)
-            elif hook_file.suffix == ".js":
+            if hook_file.suffix == ".js":
                 return self._run_node_hook(hook_file)
-            else:
-                # Try to execute as shell script
-                return self._run_shell_hook(hook_file)
+            # Try to execute as shell script
+            return self._run_shell_hook(hook_file)
 
         except Exception as e:
             click.echo(f"❌ Hook failed: {e}", err=True)
             return False
 
-    def _run_python_hook(
-        self, hook_file: Path, context: Optional[Dict[str, Any]] = None
-    ) -> bool:
+    def _run_python_hook(self, hook_file: Path, context: dict[str, Any] | None = None) -> bool:
         """Run a Python hook."""
         # Add project path to Python path
         original_path = sys.path.copy()
@@ -100,6 +93,7 @@ class HookManager:
 
         result = subprocess.run(
             [str(hook_file)],
+            check=False,
             cwd=self.project_path,
             capture_output=True,
             text=True,
@@ -116,6 +110,7 @@ class HookManager:
         """Run a Node.js hook."""
         result = subprocess.run(
             ["node", str(hook_file)],
+            check=False,
             cwd=self.project_path,
             capture_output=True,
             text=True,
@@ -299,14 +294,14 @@ class TemplateOverrideManager:
         self.project_path = project_path
         self.templates_dir = project_path / ".pydevelop" / "templates"
 
-    def get_override(self, template_name: str) -> Optional[Path]:
+    def get_override(self, template_name: str) -> Path | None:
         """Check if a template override exists."""
         override_path = self.templates_dir / template_name
         if override_path.exists():
             return override_path
         return None
 
-    def list_overrides(self) -> List[Path]:
+    def list_overrides(self) -> list[Path]:
         """List all template overrides."""
         if not self.templates_dir.exists():
             return []

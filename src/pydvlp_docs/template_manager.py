@@ -5,15 +5,15 @@ Handles rendering of Jinja2 templates for documentation sections.
 """
 
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
-from jinja2 import Environment, FileSystemLoader, Template
+from jinja2 import Environment, FileSystemLoader
 
 
 class TemplateManager:
     """Manages documentation templates and rendering."""
 
-    def __init__(self, project_path: Path, project_info: Dict[str, Any]):
+    def __init__(self, project_path: Path, project_info: dict[str, Any]):
         """Initialize template manager.
 
         Args:
@@ -63,9 +63,7 @@ class TemplateManager:
         output_file.parent.mkdir(parents=True, exist_ok=True)
         output_file.write_text(content, encoding="utf-8")
 
-    def render_template(
-        self, template_name: str, context: Optional[Dict[str, Any]] = None
-    ) -> str:
+    def render_template(self, template_name: str, context: dict[str, Any] | None = None) -> str:
         """Render a template with the given context.
 
         Args:
@@ -83,7 +81,7 @@ class TemplateManager:
         self,
         template_name: str,
         output_path: str,
-        context: Optional[Dict[str, Any]] = None,
+        context: dict[str, Any] | None = None,
     ) -> None:
         """Render and write a template to a file.
 
@@ -133,13 +131,9 @@ class TemplateManager:
             "has_quickstart": config.get("has_quickstart", False),
         }
 
-        self.write_template(
-            "section_index.rst.jinja2", f"{output_dir}/index.rst", context
-        )
+        self.write_template("section_index.rst.jinja2", f"{output_dir}/index.rst", context)
 
-    def create_quickstart(
-        self, output_path: str = "docs/source/guides/quickstart.rst"
-    ) -> None:
+    def create_quickstart(self, output_path: str = "docs/source/guides/quickstart.rst") -> None:
         """Create a quickstart guide.
 
         Args:
@@ -147,9 +141,7 @@ class TemplateManager:
         """
         self.write_template("quickstart.rst.jinja2", output_path)
 
-    def create_installation(
-        self, output_path: str = "docs/source/guides/installation.rst"
-    ) -> None:
+    def create_installation(self, output_path: str = "docs/source/guides/installation.rst") -> None:
         """Create an installation guide.
 
         Args:
@@ -157,9 +149,7 @@ class TemplateManager:
         """
         self.write_template("installation.rst.jinja2", output_path)
 
-    def create_configuration(
-        self, output_path: str = "docs/source/guides/configuration.rst"
-    ) -> None:
+    def create_configuration(self, output_path: str = "docs/source/guides/configuration.rst") -> None:
         """Create a configuration guide.
 
         Args:
@@ -167,7 +157,7 @@ class TemplateManager:
         """
         self.write_template("configuration.rst.jinja2", output_path)
 
-    def create_all_sections(self, doc_config: Dict[str, bool]) -> None:
+    def create_all_sections(self, doc_config: dict[str, bool]) -> None:
         """Create all enabled documentation sections.
 
         Args:
@@ -191,8 +181,8 @@ class TemplateManager:
     def create_central_hub_config(
         self,
         output_path: str = "docs/source/conf.py",
-        collections_config: Optional[Dict[str, Any]] = None,
-        custom_extensions: Optional[list] = None,
+        collections_config: dict[str, Any] | None = None,
+        custom_extensions: list | None = None,
     ) -> None:
         """Create central hub configuration file.
 
@@ -222,7 +212,7 @@ class TemplateManager:
     def create_central_hub_index(
         self,
         output_path: str = "docs/source/index.rst",
-        package_info: Optional[Dict[str, Dict[str, Any]]] = None,
+        package_info: dict[str, dict[str, Any]] | None = None,
         include_tools: bool = False,
     ) -> None:
         """Create central hub index.rst with package navigation.
@@ -249,9 +239,7 @@ class TemplateManager:
 
         self._write_file(output_path, template.render(context))
 
-    def auto_detect_packages(
-        self, packages_dir: str = "packages"
-    ) -> Dict[str, Dict[str, Any]]:
+    def auto_detect_packages(self, packages_dir: str = "packages") -> dict[str, dict[str, Any]]:
         """Auto-detect packages for collections configuration.
 
         Args:
@@ -267,9 +255,7 @@ class TemplateManager:
             for package_dir in packages_path.iterdir():
                 if package_dir.is_dir() and not package_dir.name.startswith("."):
                     docs_path = package_dir / "docs" / "build" / "html"
-                    relative_source = (
-                        f"../{packages_dir}/{package_dir.name}/docs/build/html"
-                    )
+                    relative_source = f"../{packages_dir}/{package_dir.name}/docs/build/html"
 
                     collections[package_dir.name] = {
                         "driver": "copy_folder",
@@ -308,9 +294,7 @@ class TemplateManager:
         )
 
         # Create index.rst
-        self.create_central_hub_index(
-            output_path=str(source_path / "index.rst"), include_tools=include_tools
-        )
+        self.create_central_hub_index(output_path=str(source_path / "index.rst"), include_tools=include_tools)
 
         # Create basic structure
         for subdir in ["_static", "_templates"]:
@@ -322,6 +306,4 @@ class TemplateManager:
         print(
             f"   1. Build individual package docs: cd {packages_dir}/package-name/docs && sphinx-build -b html source build/html"
         )
-        print(
-            f"   2. Build central hub: cd {hub_dir} && sphinx-build -b html source build"
-        )
+        print(f"   2. Build central hub: cd {hub_dir} && sphinx-build -b html source build")

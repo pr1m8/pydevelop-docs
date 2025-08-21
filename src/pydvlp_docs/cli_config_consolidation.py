@@ -50,7 +50,6 @@ def approach2_static_generation():
     This removes runtime dependency on pydevelop_docs.
     """
     # See cli_refactor.py for full implementation
-    pass
 
 
 # Approach 3: Hybrid - Use config module but allow overrides

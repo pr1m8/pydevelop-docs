@@ -1,14 +1,12 @@
 """Enhanced CLI display utilities for pydvlp-docs."""
 
-import logging
-import sys
 from datetime import datetime
-from typing import Any, Dict, List
+import logging
+from typing import Any
 
 import click
 from rich.console import Console
 from rich.logging import RichHandler
-from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
 
@@ -75,7 +73,7 @@ class EnhancedDisplay:
         if self.debug_enabled:
             self.logger.debug(f"⏱️  {operation}: {duration_ms:.2f}ms")
 
-    def show_analysis(self, analysis: Dict[str, Any]) -> None:
+    def show_analysis(self, analysis: dict[str, Any]) -> None:
         """Display detailed project analysis."""
         if self.quiet:
             return
@@ -97,7 +95,7 @@ class EnhancedDisplay:
         # Show dependency issues
         self._show_dependency_analysis(analysis["dependencies"])
 
-    def _show_package_details(self, analysis: Dict[str, Any]) -> None:
+    def _show_package_details(self, analysis: dict[str, Any]) -> None:
         """Display detailed package analysis."""
         click.echo("📋 Detected Packages:")
 
@@ -110,9 +108,7 @@ class EnhancedDisplay:
             config_status = "✅" if details["pyproject_exists"] else "❌"
 
             # Shared config indicator
-            shared_indicator = (
-                " (shared)" if details["uses_shared_config"] else " (embedded)"
-            )
+            shared_indicator = " (shared)" if details["uses_shared_config"] else " (embedded)"
 
             click.echo(
                 f"   {self._get_package_status(details)} {pkg_name:<15} │ "
@@ -120,7 +116,7 @@ class EnhancedDisplay:
                 f"pyproject.toml: {config_status}{shared_indicator}"
             )
 
-    def _get_package_status(self, details: Dict[str, Any]) -> str:
+    def _get_package_status(self, details: dict[str, Any]) -> str:
         """Get overall package status indicator."""
         if (
             details["src_exists"]
@@ -129,38 +125,30 @@ class EnhancedDisplay:
             and details["uses_shared_config"]
         ):
             return "✅"
-        elif details["src_exists"] and details["docs_exists"]:
+        if details["src_exists"] and details["docs_exists"]:
             return "⚠️ "
-        else:
-            return "❌"
+        return "❌"
 
-    def _get_docs_status(self, details: Dict[str, Any]) -> str:
+    def _get_docs_status(self, details: dict[str, Any]) -> str:
         """Get detailed docs status."""
         if not details["docs_exists"]:
             return "❌"
-        elif not details["conf_py_exists"]:
+        if not details["conf_py_exists"]:
             return "⚠️ (no conf.py)"
-        elif not details["changelog_exists"]:
+        if not details["changelog_exists"]:
             return "⚠️ (no changelog)"
-        elif not details["uses_shared_config"]:
+        if not details["uses_shared_config"]:
             return "⚠️ (embedded config)"
-        else:
-            return "✅"
+        return "✅"
 
-    def _show_central_hub(self, hub_info: Dict[str, Any]) -> None:
+    def _show_central_hub(self, hub_info: dict[str, Any]) -> None:
         """Display central hub status."""
         status = "✅ exists" if hub_info["exists"] else "❌ missing"
-        collections = (
-            " (collections: ✅)"
-            if hub_info.get("collections_configured")
-            else " (collections: ❌)"
-        )
+        collections = " (collections: ✅)" if hub_info.get("collections_configured") else " (collections: ❌)"
 
-        click.echo(
-            f"🏗️  Central Hub: /docs ({status}{collections if hub_info['exists'] else ''})"
-        )
+        click.echo(f"🏗️  Central Hub: /docs ({status}{collections if hub_info['exists'] else ''})")
 
-    def _show_dependency_analysis(self, deps: Dict[str, Any]) -> None:
+    def _show_dependency_analysis(self, deps: dict[str, Any]) -> None:
         """Display dependency analysis results."""
         if deps["valid"]:
             click.echo("✅ Dependencies: All valid")
@@ -178,18 +166,16 @@ class EnhancedDisplay:
                     elif "TOML parse error" in issue:
                         click.echo(f"   [{i}] Fix TOML syntax")
 
-    def show_processing(self, packages: List[str]) -> None:
+    def show_processing(self, packages: list[str]) -> None:
         """Display package processing status."""
         if self.quiet:
             return
 
         click.echo("📦 Processing Packages:")
         for pkg in packages:
-            click.echo(
-                f"   🔨 {pkg:<15} │ conf.py: ... │ changelog.rst: ... │ index.rst: ..."
-            )
+            click.echo(f"   🔨 {pkg:<15} │ conf.py: ... │ changelog.rst: ... │ index.rst: ...")
 
-    def update_package_status(self, pkg_name: str, status: Dict[str, str]) -> None:
+    def update_package_status(self, pkg_name: str, status: dict[str, str]) -> None:
         """Update package processing status."""
         if self.quiet:
             return
@@ -205,7 +191,7 @@ class EnhancedDisplay:
             nl=False,
         )
 
-    def show_summary(self, summary: Dict[str, Any]) -> None:
+    def show_summary(self, summary: dict[str, Any]) -> None:
         """Display final summary."""
         if self.quiet:
             return
@@ -214,16 +200,10 @@ class EnhancedDisplay:
         click.echo()
         click.echo("📊 Summary:")
         click.echo(f"   - {summary.get('packages_configured', 0)} packages configured")
-        click.echo(
-            f"   - {summary.get('packages_created', 0)} packages had docs created"
-        )
-        click.echo(
-            f"   - {summary.get('packages_updated', 0)} packages had docs updated"
-        )
+        click.echo(f"   - {summary.get('packages_created', 0)} packages had docs created")
+        click.echo(f"   - {summary.get('packages_updated', 0)} packages had docs updated")
         click.echo(f"   - {summary.get('central_hub_status', 'unknown')} central hub")
-        click.echo(
-            f"   - {summary.get('conflicts_resolved', 0)} dependency conflicts resolved"
-        )
+        click.echo(f"   - {summary.get('conflicts_resolved', 0)} dependency conflicts resolved")
 
         click.echo()
         click.echo("📚 Next steps:")
@@ -231,7 +211,7 @@ class EnhancedDisplay:
         click.echo("   2. poetry run pydvlp-docs build-all --clean")
         click.echo("   3. open docs/build/html/index.html")
 
-    def show_fixes_prompt(self, fixes: List[str]) -> bool:
+    def show_fixes_prompt(self, fixes: list[str]) -> bool:
         """Show available fixes and prompt for confirmation."""
         if self.quiet:
             return True
@@ -274,9 +254,7 @@ class EnhancedDisplay:
         failed_ops = len([op for op in self.operations_log if not op["success"]])
         dry_run_ops = len([op for op in self.operations_log if op["dry_run"]])
 
-        table = Table(
-            title="📊 Operations Summary", show_header=True, header_style="bold magenta"
-        )
+        table = Table(title="📊 Operations Summary", show_header=True, header_style="bold magenta")
         table.add_column("Metric", style="cyan")
         table.add_column("Value", style="green")
 
@@ -304,19 +282,13 @@ class EnhancedDisplay:
 
         total_time = sum(log["duration_ms"] for log in self.timing_log)
 
-        for log in sorted(
-            self.timing_log, key=lambda x: x["duration_ms"], reverse=True
-        ):
-            percentage = (
-                (log["duration_ms"] / total_time * 100) if total_time > 0 else 0
-            )
-            timing_table.add_row(
-                log["operation"], f"{log['duration_ms']:.2f}ms", f"{percentage:.1f}%"
-            )
+        for log in sorted(self.timing_log, key=lambda x: x["duration_ms"], reverse=True):
+            percentage = (log["duration_ms"] / total_time * 100) if total_time > 0 else 0
+            timing_table.add_row(log["operation"], f"{log['duration_ms']:.2f}ms", f"{percentage:.1f}%")
 
         self.console.print(timing_table)
 
-    def show_detailed_analysis(self, analysis: Dict[str, Any]) -> None:
+    def show_detailed_analysis(self, analysis: dict[str, Any]) -> None:
         """Show comprehensive project analysis with debugging info."""
         self.show_analysis(analysis)
 
@@ -338,7 +310,7 @@ class EnhancedDisplay:
             deps_info = analysis.get("dependencies", {})
             self.logger.debug(f"📋 Dependencies: {deps_info}")
 
-    def show_mock_operations(self, operations: List[Dict[str, Any]]) -> None:
+    def show_mock_operations(self, operations: list[dict[str, Any]]) -> None:
         """Show what operations would be performed in dry-run mode."""
         if self.quiet:
             return

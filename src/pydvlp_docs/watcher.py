@@ -1,17 +1,12 @@
 """File watcher and auto-rebuild system for PyDevelop-Docs."""
 
 import asyncio
-import hashlib
-import json
-import os
-import subprocess
-import sys
 from datetime import datetime
+import hashlib
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 import click
-import yaml
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -26,7 +21,7 @@ class DocumentationWatcher(FileSystemEventHandler):
     def __init__(
         self,
         project_path: Path,
-        config: Dict[str, Any],
+        config: dict[str, Any],
         auto_fix: bool = True,
         selective: bool = True,
     ):
@@ -34,10 +29,10 @@ class DocumentationWatcher(FileSystemEventHandler):
         self.config = config
         self.auto_fix = auto_fix
         self.selective = selective
-        self.file_hashes: Dict[str, str] = {}
-        self.package_states: Dict[str, Dict[str, Any]] = {}
-        self.rebuild_queue: Set[str] = set()
-        self.last_build_time: Dict[str, datetime] = {}
+        self.file_hashes: dict[str, str] = {}
+        self.package_states: dict[str, dict[str, Any]] = {}
+        self.rebuild_queue: set[str] = set()
+        self.last_build_time: dict[str, datetime] = {}
 
         # Initialize auto-fixer
         self.fixer = DocumentationAutoFixer(project_path) if auto_fix else None
@@ -78,7 +73,7 @@ class DocumentationWatcher(FileSystemEventHandler):
             hasher.update(f.read())
         return hasher.hexdigest()
 
-    def _get_affected_package(self, file_path: str) -> Optional[str]:
+    def _get_affected_package(self, file_path: str) -> str | None:
         """Determine which package is affected by a file change."""
         path = Path(file_path)
 
@@ -107,9 +102,7 @@ class DocumentationWatcher(FileSystemEventHandler):
         file_path = Path(event.src_path)
 
         # Skip certain paths
-        if any(
-            skip in str(file_path) for skip in [".venv", "build", "__pycache__", ".git"]
-        ):
+        if any(skip in str(file_path) for skip in [".venv", "build", "__pycache__", ".git"]):
             return
 
         # Check if file actually changed
@@ -132,9 +125,7 @@ class DocumentationWatcher(FileSystemEventHandler):
             affected_package = self._get_affected_package(str(file_path))
             if affected_package:
                 self.rebuild_queue.add(affected_package)
-                click.echo(
-                    f"📝 Queued {affected_package} for rebuild (changed: {file_path.name})"
-                )
+                click.echo(f"📝 Queued {affected_package} for rebuild (changed: {file_path.name})")
         else:
             self.rebuild_queue.add("_all_")
             click.echo(f"📝 Queued full rebuild (changed: {file_path.name})")

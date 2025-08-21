@@ -24,23 +24,23 @@ CLI Commands:
 
 Examples:
     Basic initialization in current directory:
-    
+
     >>> pydvlp-docs init
-    
+
     Interactive setup with guided configuration:
-    
+
     >>> pydvlp-docs interactive
-    
+
     Analyze any Python project:
-    
+
     >>> pydvlp-docs analyze /path/to/project
-    
+
     Universal setup for any project:
-    
+
     >>> pydvlp-docs setup-general /path/to/project --force
-    
+
     Copy setup between projects:
-    
+
     >>> pydvlp-docs copy-setup /source/project /dest/project
 
 Classes:
@@ -55,66 +55,65 @@ Note:
 """
 
 import asyncio
+from datetime import datetime
 import json
+from pathlib import Path
 import shutil
 import subprocess
-from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import click
 import tomlkit
-import yaml
 
 from .autofix import AutoFixer
 from .builders import MonorepoBuilder, get_builder
-from .config import get_central_hub_config, get_haive_config
+from .config import get_haive_config
 from .display import EnhancedDisplay
 from .interactive import interactive_cli as run_interactive
-from .mock_operations import MockOperationPlan, create_documentation_plan
+from .mock_operations import create_documentation_plan
 
 
 class ProjectAnalyzer:
     """Intelligent Python project structure analysis and configuration detection.
-    
+
     This class provides comprehensive analysis of Python projects to determine
     their type, structure, package management system, and existing documentation
     status. It supports all common Python project layouts and package managers.
-    
+
     Supported Project Types:
         - monorepo: Multiple packages in packages/ directory structure
         - single: Single package with various layout patterns
         - unknown: Projects that don't match standard patterns
-        
+
     Supported Package Managers:
         - Poetry (pyproject.toml with [tool.poetry])
         - setuptools (setup.py or pyproject.toml with setuptools config)
         - pip (requirements.txt based projects)
         - hatch, pdm, and other pyproject.toml variants
-        
+
     Structure Patterns Detected:
         - src layout: src/package_name/ organization
         - flat layout: package_name/ in project root
         - monorepo: packages/package-name/ structure
-        
+
     Attributes:
         path (Path): Absolute path to the project directory being analyzed
-        
+
     Examples:
         Analyze a monorepo project:
-        
+
         >>> analyzer = ProjectAnalyzer(Path("/path/to/monorepo"))
         >>> info = analyzer.analyze()
         >>> print(f"Type: {info['type']}, Packages: {len(info['packages'])}")
-        
+
         Analyze a single package:
-        
+
         >>> analyzer = ProjectAnalyzer(Path("/path/to/single-package"))
         >>> info = analyzer.analyze()
         >>> print(f"Structure: {info['structure']}, Manager: {info['package_manager']}")
-        
+
         Check existing documentation:
-        
+
         >>> info = analyzer.analyze()
         >>> if info['has_docs']:
         ...     print("Documentation directory already exists")
@@ -122,20 +121,20 @@ class ProjectAnalyzer:
 
     def __init__(self, path: Path):
         """Initialize the project analyzer with a project path.
-        
+
         Args:
             path: Path to the Python project directory to analyze.
                  Will be resolved to an absolute path.
         """
         self.path = path.resolve()
 
-    def analyze(self) -> Dict[str, Any]:
+    def analyze(self) -> dict[str, Any]:
         """Perform comprehensive analysis of the Python project structure.
-        
+
         Analyzes the project to determine its type, package manager, structure
         patterns, existing documentation status, and provides detailed information
         about all packages found within the project.
-        
+
         Returns:
             Dict[str, Any]: Comprehensive project analysis containing:
                 - type (str): Project type ('monorepo', 'single', 'unknown')
@@ -148,10 +147,10 @@ class ProjectAnalyzer:
                 - structure (str): Structure pattern ('src', 'flat', None)
                 - python_files (List[Path]): List of Python files found
                 - dependencies (Dict): Dependency analysis results
-                
+
         Examples:
             Monorepo analysis result:
-            
+
             >>> info = analyzer.analyze()
             >>> print(info)
             {
@@ -163,9 +162,9 @@ class ProjectAnalyzer:
                 'structure': 'src',
                 ...
             }
-            
+
             Single package analysis:
-            
+
             >>> info = analyzer.analyze()
             >>> info['type']
             'single'
@@ -198,14 +197,11 @@ class ProjectAnalyzer:
         if (self.path / "packages").exists():
             info["type"] = "monorepo"
             package_names = [
-                p.name
-                for p in (self.path / "packages").iterdir()
-                if p.is_dir() and not p.name.startswith(".")
+                p.name for p in (self.path / "packages").iterdir() if p.is_dir() and not p.name.startswith(".")
             ]
             info["packages"] = package_names
             info["package_details"] = {
-                name: self._analyze_package(self.path / "packages" / name)
-                for name in package_names
+                name: self._analyze_package(self.path / "packages" / name) for name in package_names
             }
         else:
             info["type"] = "single"
@@ -221,7 +217,7 @@ class ProjectAnalyzer:
 
         return info
 
-    def _analyze_package(self, package_path: Path) -> Dict[str, Any]:
+    def _analyze_package(self, package_path: Path) -> dict[str, Any]:
         """Analyze individual package structure and status."""
         return {
             "src_exists": (package_path / "src").exists(),
@@ -229,19 +225,13 @@ class ProjectAnalyzer:
             "docs_source_exists": (package_path / "docs" / "source").exists(),
             "pyproject_exists": (package_path / "pyproject.toml").exists(),
             "conf_py_exists": (package_path / "docs" / "source" / "conf.py").exists(),
-            "changelog_exists": (
-                package_path / "docs" / "source" / "changelog.rst"
-            ).exists(),
-            "index_rst_exists": (
-                package_path / "docs" / "source" / "index.rst"
-            ).exists(),
+            "changelog_exists": (package_path / "docs" / "source" / "changelog.rst").exists(),
+            "index_rst_exists": (package_path / "docs" / "source" / "index.rst").exists(),
             "uses_shared_config": self._uses_shared_config(package_path),
-            "python_files_count": (
-                len(list(package_path.rglob("*.py"))) if package_path.exists() else 0
-            ),
+            "python_files_count": (len(list(package_path.rglob("*.py"))) if package_path.exists() else 0),
         }
 
-    def _analyze_central_hub(self) -> Dict[str, Any]:
+    def _analyze_central_hub(self) -> dict[str, Any]:
         """Analyze central documentation hub status."""
         docs_path = self.path / "docs"
         return {
@@ -253,7 +243,7 @@ class ProjectAnalyzer:
             "build_exists": (docs_path / "build").exists(),
         }
 
-    def _analyze_dependencies(self) -> Dict[str, Any]:
+    def _analyze_dependencies(self) -> dict[str, Any]:
         """Skip dependency analysis for existing projects - focus on documentation only."""
         pyproject_path = self.path / "pyproject.toml"
 
@@ -262,7 +252,7 @@ class ProjectAnalyzer:
 
         try:
             # Just validate that the TOML file is readable
-            with open(pyproject_path, "r") as f:
+            with open(pyproject_path) as f:
                 content = f.read()
 
             # Ensure it's valid TOML
@@ -275,7 +265,7 @@ class ProjectAnalyzer:
         except Exception as e:
             return {"valid": False, "issues": [f"TOML parse error: {e}"]}
 
-    def _analyze_dependencies_old(self) -> Dict[str, Any]:
+    def _analyze_dependencies_old(self) -> dict[str, Any]:
         """Original naive dependency analysis - now deprecated."""
         pyproject_path = self.path / "pyproject.toml"
         issues = []
@@ -284,7 +274,7 @@ class ProjectAnalyzer:
             return {"valid": False, "issues": ["No pyproject.toml found"]}
 
         try:
-            with open(pyproject_path, "r") as f:
+            with open(pyproject_path) as f:
                 content = f.read()
 
             # Check for duplicate entries (DEPRECATED - too broad)
@@ -294,9 +284,7 @@ class ProjectAnalyzer:
                 if "=" in line and not line.strip().startswith("#"):
                     dep_name = line.split("=")[0].strip()
                     if dep_name in seen_deps and dep_name:
-                        issues.append(
-                            f"Duplicate dependency '{dep_name}' (lines {seen_deps[dep_name]}, {i})"
-                        )
+                        issues.append(f"Duplicate dependency '{dep_name}' (lines {seen_deps[dep_name]}, {i})")
                     else:
                         seen_deps[dep_name] = i
 
@@ -306,7 +294,7 @@ class ProjectAnalyzer:
             tomlkit.parse(content)
 
         except Exception as e:
-            issues.append(f"TOML parse error: {str(e)}")
+            issues.append(f"TOML parse error: {e!s}")
 
         return {"valid": len(issues) == 0, "issues": issues}
 
@@ -342,14 +330,13 @@ class ProjectAnalyzer:
 
             if "poetry" in data.get("tool", {}):
                 return "poetry"
-            elif "hatch" in data.get("tool", {}):
+            if "hatch" in data.get("tool", {}):
                 return "hatch"
-            elif "pdm" in data.get("tool", {}):
+            if "pdm" in data.get("tool", {}):
                 return "pdm"
-            elif "setuptools" in data.get("tool", {}):
+            if "setuptools" in data.get("tool", {}):
                 return "setuptools"
-            else:
-                return "pep621"  # Standard pyproject.toml
+            return "pep621"  # Standard pyproject.toml
         except:
             return "unknown"
 
@@ -362,22 +349,21 @@ class ProjectAnalyzer:
             # Try different locations
             if "poetry" in data.get("tool", {}):
                 return data["tool"]["poetry"].get("name", self.path.name)
-            elif "project" in data:
+            if "project" in data:
                 return data["project"].get("name", self.path.name)
-            else:
-                return self.path.name
+            return self.path.name
         except:
             return self.path.name
 
 
 class DocsInitializer:
     """Initialize comprehensive Sphinx documentation for Python projects.
-    
+
     This class handles the complete initialization of Sphinx documentation
     for any Python project structure. It creates the necessary directory
     structure, generates configuration files, copies templates and static
     assets, and sets up AutoAPI for automatic API documentation generation.
-    
+
     Features:
         - Complete Sphinx documentation setup with 40+ extensions
         - AutoAPI configuration with hierarchical organization
@@ -385,24 +371,24 @@ class DocsInitializer:
         - Support for both shared and inline configuration approaches
         - Automatic dependency management for Poetry projects
         - Custom build scripts and Makefile generation
-        
+
     Configuration Options:
         - with_guides: Include user guides section
-        - with_examples: Include examples section  
+        - with_examples: Include examples section
         - with_cli: Include CLI documentation
         - with_tutorials: Include tutorials section
         - use_shared_config: Use centralized config vs inline config
-        
+
     Attributes:
         project_path (Path): Path to the project being documented
         project_info (Dict[str, Any]): Project analysis results from ProjectAnalyzer
         template_path (Path): Path to documentation templates directory
         quiet (bool): Whether to suppress output messages
         doc_config (Dict[str, bool]): Documentation configuration options
-        
+
     Examples:
         Initialize documentation for a single package:
-        
+
         >>> analyzer = ProjectAnalyzer(Path("/path/to/project"))
         >>> info = analyzer.analyze()
         >>> initializer = DocsInitializer(
@@ -411,9 +397,9 @@ class DocsInitializer:
         ...     doc_config={"with_guides": True}
         ... )
         >>> initializer.initialize(force=True)
-        
+
         Initialize with custom configuration:
-        
+
         >>> config = {
         ...     "with_guides": True,
         ...     "with_examples": True,
@@ -431,12 +417,12 @@ class DocsInitializer:
     def __init__(
         self,
         project_path: Path,
-        project_info: Dict[str, Any],
-        doc_config: Dict[str, bool] = None,
+        project_info: dict[str, Any],
+        doc_config: dict[str, bool] = None,
         quiet: bool = False,
     ):
         """Initialize the documentation initializer.
-        
+
         Args:
             project_path: Path to the project where documentation will be created
             project_info: Project analysis results containing type, structure, etc.
@@ -457,11 +443,11 @@ class DocsInitializer:
 
     def initialize(self, force: bool = False):
         """Initialize complete Sphinx documentation structure for the project.
-        
+
         Creates the full documentation setup including directory structure,
         configuration files, templates, static assets, and build scripts.
         Automatically detects project structure and configures AutoAPI paths.
-        
+
         Process Overview:
             1. Create docs/ directory structure with source, _static, _templates
             2. Copy static CSS, JavaScript, and template files
@@ -470,23 +456,23 @@ class DocsInitializer:
             5. Create professional index.rst homepage
             6. Generate Makefile and build scripts
             7. Add Poetry dependencies if using Poetry package manager
-            
+
         Args:
             force: If True, overwrite existing documentation directory.
                   If False, raise exception if docs/ already exists.
-                  
+
         Raises:
             click.ClickException: If documentation already exists and force=False
-            
+
         Examples:
             Initialize with overwrite protection:
-            
+
             >>> initializer.initialize()  # Fails if docs/ exists
-            
+
             Force initialization (overwrite existing):
-            
+
             >>> initializer.initialize(force=True)  # Overwrites docs/
-            
+
         Note:
             This method modifies the filesystem by creating directories and files.
             Use force=True carefully as it will overwrite existing documentation.
@@ -494,9 +480,7 @@ class DocsInitializer:
         docs_path = self.project_path / "docs"
 
         if docs_path.exists() and not force:
-            raise click.ClickException(
-                "Documentation already exists! Use --force to overwrite."
-            )
+            raise click.ClickException("Documentation already exists! Use --force to overwrite.")
 
         # Create directory structure
         self._create_directories()
@@ -612,7 +596,6 @@ class DocsInitializer:
         This method uses the centralized configuration from config.py
         to ensure consistency and prevent duplication.
         """
-        from .config import get_haive_config
 
         # Determine Python path based on project structure
         if self.project_info["structure"] == "src":
@@ -629,14 +612,10 @@ class DocsInitializer:
             for p in self.project_path.iterdir():
                 if p.is_dir() and (p / "__init__.py").exists():
                     package_dirs.append(f'"../../{p.name}"')
-            autoapi_dirs = (
-                f'[{", ".join(package_dirs)}]' if package_dirs else '["../.."]'
-            )
+            autoapi_dirs = f"[{', '.join(package_dirs)}]" if package_dirs else '["../.."]'
 
         # Get configuration from shared module
-        config = get_haive_config(
-            package_name=self.project_info["name"], package_path=str(self.project_path)
-        )
+        config = get_haive_config(package_name=self.project_info["name"], package_path=str(self.project_path))
 
         # Build the conf.py content
         conf_content = f'''"""
@@ -716,9 +695,7 @@ def setup(app):
             for p in self.project_path.iterdir():
                 if p.is_dir() and (p / "__init__.py").exists():
                     package_dirs.append(f'"../../{p.name}"')
-            autoapi_dirs = (
-                f'[{", ".join(package_dirs)}]' if package_dirs else '["../.."]'
-            )
+            autoapi_dirs = f"[{', '.join(package_dirs)}]" if package_dirs else '["../.."]'
 
         conf_content = f'''"""
 Sphinx configuration for {self.project_info["name"]}.
@@ -1172,26 +1149,19 @@ def cli(ctx):
     if ctx.invoked_subcommand is None:
         # No subcommand, run interactive mode
         run_interactive()
-    pass
 
 
 @cli.command()
 @click.option("--packages-dir", "-d", multiple=True, help="Package directories to scan")
-@click.option(
-    "--include-root", "-r", is_flag=True, help="Include root-level documentation"
-)
+@click.option("--include-root", "-r", is_flag=True, help="Include root-level documentation")
 @click.option("--packages", "-p", multiple=True, help="Specific packages to initialize")
-@click.option(
-    "--dry-run", "-n", is_flag=True, help="Show what would be done without doing it"
-)
+@click.option("--dry-run", "-n", is_flag=True, help="Show what would be done without doing it")
 @click.option("--force", "-f", is_flag=True, help="Overwrite existing documentation")
 @click.option("--quiet", "-q", is_flag=True, help="Minimal output")
 @click.option("--debug", is_flag=True, help="Show debug information")
 @click.option("--fix-dependencies", is_flag=True, help="Auto-fix dependency conflicts")
 @click.option("--yes", "-y", is_flag=True, help="Skip confirmation prompts")
-@click.option(
-    "--with-guides", is_flag=True, help="Include guides section in TOC (default: false)"
-)
+@click.option("--with-guides", is_flag=True, help="Include guides section in TOC (default: false)")
 @click.option(
     "--with-examples",
     is_flag=True,
@@ -1245,9 +1215,7 @@ def init(
     display = EnhancedDisplay(quiet=quiet, debug=debug, dry_run=dry_run)
 
     # Log operation start
-    display.log_operation(
-        "init_start", f"Initializing documentation for {project_path}"
-    )
+    display.log_operation("init_start", f"Initializing documentation for {project_path}")
 
     # Analyze project with enhanced detection
     analyzer = ProjectAnalyzer(project_path)
@@ -1277,9 +1245,7 @@ def init(
             for key, value in simulation_results.items():
                 click.echo(f"  {key}: {value}")
 
-        display.log_operation(
-            "dry_run_complete", f"Simulated {len(operation_plan.operations)} operations"
-        )
+        display.log_operation("dry_run_complete", f"Simulated {len(operation_plan.operations)} operations")
         display.show_operations_summary()
         return
 
@@ -1291,28 +1257,21 @@ def init(
             # In dry-run mode, only show what fixes would be applied
             available_fixes = autofix.analyze_and_fix(analysis, apply_fixes=False)
             if available_fixes and not quiet:
-                click.echo(
-                    f"ℹ️  Would apply {len(available_fixes)} fixes (dry-run mode)"
-                )
+                click.echo(f"ℹ️  Would apply {len(available_fixes)} fixes (dry-run mode)")
         elif fix_dependencies or yes:
             display.debug("Auto-fixing dependency issues...")
             autofix.analyze_and_fix(analysis, apply_fixes=True)
         else:
             available_fixes = autofix.analyze_and_fix(analysis, apply_fixes=False)
             if available_fixes and not quiet:
-                if display.show_fixes_prompt(
-                    [f["description"] for f in available_fixes]
-                ):
+                if display.show_fixes_prompt([f["description"] for f in available_fixes]):
                     autofix.analyze_and_fix(analysis, apply_fixes=True)
                 else:
                     display.warning("Dependency issues not fixed. Build may fail.")
 
     # Check if documentation exists
     has_existing_docs = (
-        any(
-            details.get("docs_exists", False)
-            for details in analysis["package_details"].values()
-        )
+        any(details.get("docs_exists", False) for details in analysis["package_details"].values())
         or analysis["central_hub"]["exists"]
     )
 
@@ -1393,9 +1352,7 @@ def init(
         display.show_operations_summary()
 
     except Exception as e:
-        display.log_operation(
-            "init_failed", f"Initialization failed: {e}", success=False
-        )
+        display.log_operation("init_failed", f"Initialization failed: {e}", success=False)
         display.error(f"Initialization failed: {e}")
         if debug:
             import traceback
@@ -1443,17 +1400,11 @@ def doctor(fix, quiet):
 
     # Check package configurations
     for pkg_name, details in analysis["package_details"].items():
-        if not details.get("uses_shared_config", False) and details.get(
-            "conf_py_exists", False
-        ):
+        if not details.get("uses_shared_config", False) and details.get("conf_py_exists", False):
             issues_found = True
-            display.warning(
-                f"{pkg_name} is using embedded config instead of shared config"
-            )
+            display.warning(f"{pkg_name} is using embedded config instead of shared config")
             if fix:
-                autofix.ensure_shared_config(
-                    project_path / "packages" / pkg_name, pkg_name
-                )
+                autofix.ensure_shared_config(project_path / "packages" / pkg_name, pkg_name)
 
     if not issues_found:
         display.success("No issues detected! Project is healthy.")
@@ -1615,12 +1566,8 @@ def sync(source, target):
 
 @cli.command()
 @click.option("--clean", "-c", is_flag=True, help="Clean build directory first")
-@click.option(
-    "--open", "-o", is_flag=True, help="Open documentation in browser after building"
-)
-@click.option(
-    "--update-only", "-u", is_flag=True, help="Update hub index only (faster)"
-)
+@click.option("--open", "-o", is_flag=True, help="Open documentation in browser after building")
+@click.option("--update-only", "-u", is_flag=True, help="Update hub index only (faster)")
 def link_docs(clean, open, update_only):
     """Link existing built documentation into a central hub.
 
@@ -1648,9 +1595,7 @@ def link_docs(clean, open, update_only):
 
 
 @cli.command()
-@click.option(
-    "--open", "-o", is_flag=True, help="Open documentation in browser after updating"
-)
+@click.option("--open", "-o", is_flag=True, help="Open documentation in browser after updating")
 def update_hub(open):
     """Update the documentation hub index (faster than full rebuild).
 
@@ -1742,7 +1687,6 @@ def list_extensions():
 )
 def watch(auto_fix: bool, selective: bool):
     """Watch for changes and automatically rebuild documentation."""
-    import asyncio
 
     from .config_discovery import PyDevelopConfig
     from .watcher import watch_documentation
@@ -1768,7 +1712,6 @@ def watch(auto_fix: bool, selective: bool):
 @cli.command()
 def discover():
     """Discover and display project configuration."""
-    import json
 
     from .config_discovery import ConfigDiscovery
 
@@ -1837,9 +1780,7 @@ def rebuild_haive(packages, no_master, no_clean, quiet, debug, save_log):
 
     # Initialize the documentation manager
     try:
-        manager = HaiveDocumentationManager(
-            haive_root=haive_root, quiet=quiet, debug=debug
-        )
+        manager = HaiveDocumentationManager(haive_root=haive_root, quiet=quiet, debug=debug)
     except ValueError as e:
         click.echo(f"❌ {e}")
         raise click.Abort()
@@ -1867,15 +1808,11 @@ def rebuild_haive(packages, no_master, no_clean, quiet, debug, save_log):
             summary = results["summary"]
 
             # Package results
-            click.echo(
-                f"📦 Packages: {summary['successful_builds']}/{summary['total_packages']} built successfully"
-            )
+            click.echo(f"📦 Packages: {summary['successful_builds']}/{summary['total_packages']} built successfully")
 
             # Master hub results
             if not no_master:
-                master_status = (
-                    "✅ Success" if summary["master_success"] else "❌ Failed"
-                )
+                master_status = "✅ Success" if summary["master_success"] else "❌ Failed"
                 click.echo(f"🏛️  Master Hub: {master_status}")
 
             # Failed packages
@@ -1884,9 +1821,7 @@ def rebuild_haive(packages, no_master, no_clean, quiet, debug, save_log):
 
             # Cleared artifacts
             cleared = results["cleared"]
-            click.echo(
-                f"🧹 Cleared: {cleared['directories']} dirs, {cleared['files']} files"
-            )
+            click.echo(f"🧹 Cleared: {cleared['directories']} dirs, {cleared['files']} files")
 
             # Performance
             ops_summary = manager.get_operations_summary()
@@ -1900,9 +1835,7 @@ def rebuild_haive(packages, no_master, no_clean, quiet, debug, save_log):
                 click.echo(f"\n📝 Detailed log: {log_path}")
 
         # Final status
-        if summary["successful_builds"] == summary["total_packages"] and (
-            no_master or summary["master_success"]
-        ):
+        if summary["successful_builds"] == summary["total_packages"] and (no_master or summary["master_success"]):
             if not quiet:
                 click.echo("\n🎉 Complete success! All documentation rebuilt.")
 
@@ -1910,15 +1843,11 @@ def rebuild_haive(packages, no_master, no_clean, quiet, debug, save_log):
                 master_index = haive_root / "docs" / "build" / "html" / "index.html"
                 if master_index.exists():
                     click.echo(f"\n🌐 View documentation: file://{master_index}")
-                    click.echo(
-                        "   Or run: python -m http.server 8000 --directory docs/build/html/"
-                    )
+                    click.echo("   Or run: python -m http.server 8000 --directory docs/build/html/")
         else:
             click.echo("\n⚠️  Some operations failed. Check the log for details.")
             if debug:
-                failed_ops = [
-                    op for op in manager.operations_log if op["status"] == "error"
-                ]
+                failed_ops = [op for op in manager.operations_log if op["status"] == "error"]
                 for op in failed_ops[-3:]:  # Show last 3 errors
                     click.echo(f"   ❌ {op['operation']}: {op['details']}")
             raise click.Abort()
@@ -1982,81 +1911,84 @@ def setup():
 
 @cli.command()
 @click.argument("project_path", type=click.Path(exists=True, file_okay=False, dir_okay=True), required=False)
-@click.option("--target-dir", "-t", type=click.Path(), help="Target directory for documentation (default: PROJECT_PATH/docs)")
+@click.option(
+    "--target-dir", "-t", type=click.Path(), help="Target directory for documentation (default: PROJECT_PATH/docs)"
+)
 @click.option("--force", "-f", is_flag=True, help="Overwrite existing documentation")
 @click.option("--non-interactive", "-n", is_flag=True, help="Skip interactive prompts")
 @click.option("--dry-run", "-d", is_flag=True, help="Show what would be done without executing")
 @click.option("--copy-to", "-c", type=click.Path(), help="Copy the setup to another directory")
 def setup_general(project_path, target_dir, force, non_interactive, dry_run, copy_to):
     """Set up documentation for any Python project with automatic detection.
-    
+
     This command analyzes any Python project structure and automatically
     sets up comprehensive documentation with zero configuration required.
-    
+
     Examples:
-    
+
         # Setup docs for current directory
         pydvlp-docs setup-general
-        
+
         # Setup docs for specific project
         pydvlp-docs setup-general /path/to/my-project
-        
+
         # Dry run to see what would be done
         pydvlp-docs setup-general --dry-run
-        
+
         # Copy setup to another location
         pydvlp-docs setup-general --copy-to /path/to/copy/destination
     """
     from .general_setup import setup_project_docs
-    
+
     # Use current directory if no project path provided
     if not project_path:
         project_path = Path.cwd()
     else:
         project_path = Path(project_path)
-    
+
     target_directory = Path(target_dir) if target_dir else None
-    
+
     try:
         click.echo(f"🔍 Analyzing Python project at: {project_path}")
-        
+
         # Set up documentation
         result = setup_project_docs(
             project_path=str(project_path),
             target_dir=str(target_directory) if target_directory else None,
             force=force,
             interactive=not non_interactive,
-            dry_run=dry_run
+            dry_run=dry_run,
         )
-        
+
         if result["status"] == "cancelled":
             click.echo("❌ Setup cancelled by user")
             return
-        
+
         if result["status"] == "dry_run":
             click.echo("\n📋 Dry Run - Actions that would be performed:")
             for action in result["actions"]:
                 click.echo(f"  {action}")
-            
-            click.echo(f"\n📊 Project Analysis:")
+
+            click.echo("\n📊 Project Analysis:")
             info = result["project_info"]
             click.echo(f"  Type: {info['type']}")
             click.echo(f"  Packages: {len(info['packages'])}")
             click.echo(f"  Python files: {info['python_files']}")
             click.echo(f"  Package manager: {info['package_manager']}")
             return
-        
+
         # Copy to another location if requested
         if copy_to:
             copy_destination = Path(copy_to)
             click.echo(f"\n📂 Copying setup to: {copy_destination}")
-            
+
             if copy_destination.exists() and not force:
                 if not click.confirm(f"Destination {copy_destination} exists. Continue?"):
                     return
-            
+
             # Copy the documentation setup
             import shutil
+
             source_docs = target_directory or (project_path / "docs")
             if source_docs.exists():
                 shutil.copytree(source_docs, copy_destination, dirs_exist_ok=True)
@@ -2064,28 +1996,29 @@ def setup_general(project_path, target_dir, force, non_interactive, dry_run, cop
             else:
                 click.echo("❌ No documentation found to copy")
                 return
-        
+
         # Success message
         docs_path = target_directory or (project_path / "docs")
-        click.echo(f"\n✅ Documentation setup complete!")
+        click.echo("\n✅ Documentation setup complete!")
         click.echo(f"📁 Documentation created at: {docs_path}")
-        
+
         if not dry_run:
             click.echo("\n🚀 Next steps:")
             click.echo(f"   1. cd {docs_path}")
             click.echo("   2. make html")
             click.echo("   3. open build/html/index.html")
-            
+
             click.echo("\n📝 Available commands:")
             click.echo("   • make html          - Build HTML documentation")
             click.echo("   • make livehtml      - Auto-rebuild on changes")
             click.echo("   • make linkcheck     - Check for broken links")
             click.echo("   • make clean         - Clean build artifacts")
-            
+
     except Exception as e:
         click.echo(f"❌ Error setting up documentation: {e}")
         import traceback
-        if click.get_current_context().params.get('debug'):
+
+        if click.get_current_context().params.get("debug"):
             click.echo(traceback.format_exc())
         raise click.Abort()
 
@@ -2098,45 +2031,45 @@ def setup_general(project_path, target_dir, force, non_interactive, dry_run, cop
 @click.option("--force", "-f", is_flag=True, help="Overwrite destination if it exists")
 def copy_setup(source_path, destination_path, include_config, include_static, force):
     """Copy documentation setup from one project to another.
-    
+
     This command copies a complete documentation setup from a source project
     to a destination, optionally including configuration and static files.
-    
+
     Examples:
-    
+
         # Copy basic documentation structure
         pydvlp-docs copy-setup /path/to/source /path/to/destination
-        
+
         # Copy with configuration files
         pydvlp-docs copy-setup /path/to/source /path/to/dest --include-config
-        
+
         # Copy everything including static assets
         pydvlp-docs copy-setup /path/to/source /path/to/dest --include-config --include-static
     """
     import shutil
-    
+
     source = Path(source_path)
     destination = Path(destination_path)
-    
+
     # Find documentation in source
     source_docs = source / "docs"
     if not source_docs.exists():
         click.echo(f"❌ No docs directory found in source: {source}")
         return
-    
+
     # Check destination
     if destination.exists() and not force:
         if not click.confirm(f"Destination {destination} exists. Continue?"):
             return
-    
+
     try:
-        click.echo(f"📂 Copying documentation setup...")
+        click.echo("📂 Copying documentation setup...")
         click.echo(f"   From: {source_docs}")
         click.echo(f"   To: {destination}")
-        
+
         # Copy documentation
         shutil.copytree(source_docs, destination, dirs_exist_ok=True)
-        
+
         # Copy configuration files if requested
         if include_config:
             config_files = [
@@ -2144,7 +2077,7 @@ def copy_setup(source_path, destination_path, include_config, include_static, fo
                 "pyproject.toml",  # For dependencies
                 "requirements.txt",
             ]
-            
+
             for config_file in config_files:
                 source_file = source / config_file
                 if source_file.exists():
@@ -2153,7 +2086,7 @@ def copy_setup(source_path, destination_path, include_config, include_static, fo
                     else:
                         shutil.copy2(source_file, destination.parent / config_file)
                     click.echo(f"   ✅ Copied: {config_file}")
-        
+
         # Copy additional static files if requested
         if include_static:
             static_files = [
@@ -2161,20 +2094,20 @@ def copy_setup(source_path, destination_path, include_config, include_static, fo
                 "LICENSE",
                 ".gitignore",
             ]
-            
+
             for static_file in static_files:
                 source_file = source / static_file
                 if source_file.exists():
                     shutil.copy2(source_file, destination.parent / static_file)
                     click.echo(f"   ✅ Copied: {static_file}")
-        
-        click.echo(f"\n✅ Documentation setup copied successfully!")
+
+        click.echo("\n✅ Documentation setup copied successfully!")
         click.echo(f"📁 Available at: {destination}")
-        
+
         click.echo("\n🚀 To build documentation:")
         click.echo(f"   cd {destination}")
         click.echo("   make html")
-        
+
     except Exception as e:
         click.echo(f"❌ Error copying setup: {e}")
         raise click.Abort()
@@ -2184,7 +2117,7 @@ def copy_setup(source_path, destination_path, include_config, include_static, fo
 @click.option("--coverage", is_flag=True, help="Run tests with coverage reporting")
 @click.option("--verbose", "-v", is_flag=True, help="Verbose test output")
 @click.option("--fast", is_flag=True, help="Skip slow tests")
-@click.option("--integration", is_flag=True, help="Run integration tests only") 
+@click.option("--integration", is_flag=True, help="Run integration tests only")
 @click.option("--unit", is_flag=True, help="Run unit tests only")
 @click.option("--lint", is_flag=True, help="Run code quality checks")
 @click.option("--format-check", is_flag=True, help="Check code formatting")
@@ -2192,122 +2125,126 @@ def copy_setup(source_path, destination_path, include_config, include_static, fo
 @click.option("--all", "run_all", is_flag=True, help="Run all tests and checks")
 def test(coverage, verbose, fast, integration, unit, lint, format_check, type_check, run_all):
     """Run tests and code quality checks for PyDevelop-Docs.
-    
+
     This command runs various types of tests and quality checks:
     - Unit tests for individual components
-    - Integration tests for CLI functionality  
+    - Integration tests for CLI functionality
     - Code quality checks (linting, formatting, type checking)
     - Coverage reporting
     """
     import time
+
     start_time = time.time()
-    
+
     click.echo("🧪 Running PyDevelop-Docs tests...")
-    
+
     project_path = Path.cwd()
-    
+
     # Check if we're in the right directory
     if not (project_path / "pyproject.toml").exists():
         click.echo("❌ Error: No pyproject.toml found. Run from project root.")
         raise click.Abort()
-    
+
     # Determine what to run
     if run_all:
         lint = format_check = type_check = coverage = True
         # Don't set unit/integration flags so all tests run
-    
+
     if not any([unit, integration, lint, format_check, type_check, coverage]):
         # Default: run basic tests
         unit = True
-    
+
     results = {}
-    
+
     # Code formatting check
     if format_check or run_all:
         click.echo("\n📝 Checking code formatting...")
         try:
             result = subprocess.run(
                 ["poetry", "run", "ruff", "format", "--check", "src/"],
+                check=False,
                 capture_output=True,
                 text=True,
-                cwd=project_path
+                cwd=project_path,
             )
             if result.returncode == 0:
                 click.echo("✅ Code formatting is correct")
-                results['format'] = True
+                results["format"] = True
             else:
                 click.echo("❌ Code formatting issues found:")
                 click.echo(result.stdout)
                 click.echo("💡 Fix with: poetry run ruff format src/")
-                results['format'] = False
+                results["format"] = False
         except Exception as e:
             click.echo(f"❌ Format check failed: {e}")
-            results['format'] = False
-    
+            results["format"] = False
+
     # Linting
     if lint or run_all:
         click.echo("\n🔍 Running code quality checks...")
         try:
             result = subprocess.run(
                 ["poetry", "run", "ruff", "check", "src/"],
+                check=False,
                 capture_output=True,
                 text=True,
-                cwd=project_path
+                cwd=project_path,
             )
             if result.returncode == 0:
                 click.echo("✅ No linting issues found")
-                results['lint'] = True
+                results["lint"] = True
             else:
                 click.echo("⚠️  Linting issues found:")
                 click.echo(result.stdout[:2000])  # First 2000 chars
                 click.echo("💡 Some issues can be auto-fixed with: poetry run ruff check --fix src/")
-                results['lint'] = False
+                results["lint"] = False
         except Exception as e:
             click.echo(f"❌ Linting failed: {e}")
-            results['lint'] = False
-    
+            results["lint"] = False
+
     # Type checking
     if type_check or run_all:
         click.echo("\n🔬 Running type checking...")
         try:
             result = subprocess.run(
                 ["poetry", "run", "mypy", "src/pydevelop_docs/"],
+                check=False,
                 capture_output=True,
                 text=True,
                 cwd=project_path,
-                timeout=120
+                timeout=120,
             )
             if result.returncode == 0:
                 click.echo("✅ No type errors found")
-                results['typecheck'] = True
+                results["typecheck"] = True
             else:
                 click.echo("⚠️  Type checking issues found:")
                 click.echo(result.stdout[:1500])  # First 1500 chars
-                results['typecheck'] = False
+                results["typecheck"] = False
         except subprocess.TimeoutExpired:
             click.echo("⚠️  Type checking timed out")
-            results['typecheck'] = False
+            results["typecheck"] = False
         except Exception as e:
             click.echo(f"❌ Type checking failed: {e}")
-            results['typecheck'] = False
-    
+            results["typecheck"] = False
+
     # Unit tests
     if unit or (not integration and not run_all):
         click.echo("\n🧪 Running unit tests...")
-        
+
         pytest_cmd = ["poetry", "run", "pytest"]
-        
+
         if coverage:
             pytest_cmd.extend(["--cov=pydevelop_docs", "--cov-report=term-missing", "--cov-report=xml"])
-        
+
         if verbose:
             pytest_cmd.append("-v")
         else:
             pytest_cmd.append("-q")
-        
+
         if fast:
             pytest_cmd.extend(["-m", "not slow"])
-        
+
         # Add test directory
         test_dir = project_path / "tests"
         if test_dir.exists():
@@ -2315,7 +2252,12 @@ def test(coverage, verbose, fast, integration, unit, lint, format_check, type_ch
         else:
             click.echo("⚠️  No tests/ directory found, creating basic CLI test...")
             # Run a basic CLI test
-            pytest_cmd = ["poetry", "run", "python", "-c", """
+            pytest_cmd = [
+                "poetry",
+                "run",
+                "python",
+                "-c",
+                """
 import subprocess
 import sys
 try:
@@ -2330,48 +2272,51 @@ try:
 except Exception as e:
     print(f'❌ CLI test failed: {e}')
     exit(1)
-"""]
-        
+""",
+            ]
+
         try:
             result = subprocess.run(
                 pytest_cmd,
+                check=False,
                 cwd=project_path,
-                timeout=300  # 5 minute timeout
+                timeout=300,  # 5 minute timeout
             )
             if result.returncode == 0:
                 click.echo("✅ Unit tests passed")
-                results['unit'] = True
+                results["unit"] = True
             else:
                 click.echo("❌ Some unit tests failed")
-                results['unit'] = False
+                results["unit"] = False
         except subprocess.TimeoutExpired:
             click.echo("⚠️  Tests timed out")
-            results['unit'] = False
+            results["unit"] = False
         except Exception as e:
             click.echo(f"❌ Test execution failed: {e}")
-            results['unit'] = False
-    
+            results["unit"] = False
+
     # Integration tests (CLI functionality)
     if integration or run_all:
         click.echo("\n🔗 Running integration tests...")
-        
+
         # Test CLI commands
         cli_tests = [
             (["--help"], "Help command"),
             (["analyze", ".", "--dry-run"], "Project analysis"),
             (["setup-general", "/tmp", "--dry-run", "--non-interactive"], "General setup"),
         ]
-        
+
         integration_results = []
         for cmd_args, description in cli_tests:
             click.echo(f"   Testing: {description}")
             try:
                 result = subprocess.run(
                     ["poetry", "run", "pydvlp-docs"] + cmd_args,
+                    check=False,
                     capture_output=True,
                     text=True,
                     cwd=project_path,
-                    timeout=60
+                    timeout=60,
                 )
                 if result.returncode == 0:
                     click.echo(f"   ✅ {description} - OK")
@@ -2383,14 +2328,14 @@ except Exception as e:
             except Exception as e:
                 click.echo(f"   ❌ {description} - Exception: {e}")
                 integration_results.append(False)
-        
+
         if all(integration_results):
             click.echo("✅ All integration tests passed")
-            results['integration'] = True
+            results["integration"] = True
         else:
             click.echo(f"❌ {len([r for r in integration_results if not r])} integration tests failed")
-            results['integration'] = False
-    
+            results["integration"] = False
+
     # Test documentation build
     docs_path = project_path / "docs"
     if docs_path.exists():
@@ -2398,35 +2343,36 @@ except Exception as e:
         try:
             result = subprocess.run(
                 ["make", "html"],
+                check=False,
                 cwd=docs_path,
                 capture_output=True,
                 text=True,
-                timeout=180  # 3 minute timeout
+                timeout=180,  # 3 minute timeout
             )
             if result.returncode == 0:
                 click.echo("✅ Documentation builds successfully")
-                results['docs'] = True
+                results["docs"] = True
             else:
                 click.echo("❌ Documentation build failed:")
                 click.echo(result.stderr[:1000])
-                results['docs'] = False
+                results["docs"] = False
         except subprocess.TimeoutExpired:
             click.echo("⚠️  Documentation build timed out")
-            results['docs'] = False
+            results["docs"] = False
         except Exception as e:
             click.echo(f"❌ Documentation build test failed: {e}")
-            results['docs'] = False
-    
+            results["docs"] = False
+
     # Summary
     end_time = time.time()
     duration = end_time - start_time
-    
+
     click.echo(f"\n📊 Test Summary (completed in {duration:.1f}s)")
     click.echo("=" * 50)
-    
+
     passed = 0
     total = 0
-    
+
     for test_type, passed_status in results.items():
         total += 1
         if passed_status:
@@ -2434,22 +2380,22 @@ except Exception as e:
             click.echo(f"✅ {test_type.upper()}: PASSED")
         else:
             click.echo(f"❌ {test_type.upper()}: FAILED")
-    
+
     if total == 0:
         click.echo("⚠️  No tests were run")
     elif passed == total:
         click.echo(f"\n🎉 All {total} test categories passed!")
     else:
         click.echo(f"\n⚠️  {passed}/{total} test categories passed")
-        
+
         # Provide helpful next steps
-        if not results.get('format', True):
+        if not results.get("format", True):
             click.echo("💡 Fix formatting: poetry run ruff format src/")
-        if not results.get('lint', True):
+        if not results.get("lint", True):
             click.echo("💡 Fix linting: poetry run ruff check --fix src/")
-        if not results.get('unit', True):
+        if not results.get("unit", True):
             click.echo("💡 Debug tests: poetry run pytest -v --tb=short")
-    
+
     # Set exit code based on results
     if total > 0 and passed < total:
         raise click.Abort()
@@ -2461,26 +2407,27 @@ except Exception as e:
 @click.option("--force", is_flag=True, help="Force publish even if version exists")
 def publish(test, dry_run, force):
     """Publish PyDevelop-Docs to PyPI or TestPyPI.
-    
+
     This command builds the package and publishes it to PyPI.
     Use --test to publish to TestPyPI for testing first.
     """
     click.echo("🚀 Publishing PyDevelop-Docs...")
-    
+
     if dry_run:
         click.echo("🔍 DRY RUN MODE - No actual publishing will occur")
-    
+
     project_path = Path.cwd()
-    
+
     # Check if we're in the right directory
     if not (project_path / "pyproject.toml").exists():
         click.echo("❌ Error: No pyproject.toml found. Run from project root.")
         raise click.Abort()
-    
+
     # Read version from pyproject.toml
     try:
         with open(project_path / "pyproject.toml") as f:
             import tomlkit
+
             data = tomlkit.load(f)
             version = data["tool"]["poetry"]["version"]
             name = data["tool"]["poetry"]["name"]
@@ -2488,16 +2435,16 @@ def publish(test, dry_run, force):
     except Exception as e:
         click.echo(f"❌ Error reading pyproject.toml: {e}")
         raise click.Abort()
-    
+
     if dry_run:
         click.echo(f"🔍 Would publish {name} v{version} to {'TestPyPI' if test else 'PyPI'}")
         click.echo("🔍 Build command: poetry build")
         click.echo(f"🔍 Publish command: poetry publish{'--repository testpypi' if test else ''}")
         return
-    
+
     # Check if poetry is available
     try:
-        result = subprocess.run(["poetry", "--version"], capture_output=True, text=True)
+        result = subprocess.run(["poetry", "--version"], check=False, capture_output=True, text=True)
         if result.returncode != 0:
             click.echo("❌ Poetry not found. Please install Poetry first.")
             raise click.Abort()
@@ -2505,24 +2452,18 @@ def publish(test, dry_run, force):
     except FileNotFoundError:
         click.echo("❌ Poetry not found. Please install Poetry first.")
         raise click.Abort()
-    
+
     # Build the package
     click.echo("🔨 Building package...")
     try:
-        result = subprocess.run(
-            ["poetry", "build"], 
-            cwd=project_path,
-            capture_output=True, 
-            text=True,
-            check=True
-        )
+        result = subprocess.run(["poetry", "build"], cwd=project_path, capture_output=True, text=True, check=True)
         click.echo("✅ Package built successfully")
         click.echo(result.stdout)
     except subprocess.CalledProcessError as e:
         click.echo(f"❌ Build failed: {e}")
         click.echo(e.stderr)
         raise click.Abort()
-    
+
     # Check if version already exists (if not forcing)
     if not force:
         if test:
@@ -2530,15 +2471,15 @@ def publish(test, dry_run, force):
         else:
             click.echo("🔍 Checking if version already exists on PyPI...")
             # Note: In a real scenario, you'd check PyPI API here
-    
+
     # Publish the package
     target = "TestPyPI" if test else "PyPI"
     click.echo(f"🚀 Publishing to {target}...")
-    
+
     publish_cmd = ["poetry", "publish"]
     if test:
         publish_cmd.extend(["--repository", "testpypi"])
-    
+
     try:
         if test:
             click.echo("📝 Note: You may need to configure TestPyPI repository:")
@@ -2547,24 +2488,18 @@ def publish(test, dry_run, force):
         else:
             click.echo("📝 Note: You may need to configure PyPI token:")
             click.echo("   poetry config pypi-token.pypi YOUR_PYPI_TOKEN")
-        
-        result = subprocess.run(
-            publish_cmd,
-            cwd=project_path,
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        
+
+        result = subprocess.run(publish_cmd, cwd=project_path, capture_output=True, text=True, check=True)
+
         click.echo(f"🎉 Successfully published {name} v{version} to {target}!")
         click.echo(result.stdout)
-        
+
         if test:
             click.echo(f"🔗 Test package: https://test.pypi.org/project/{name}/")
         else:
             click.echo(f"🔗 Live package: https://pypi.org/project/{name}/")
             click.echo("📝 Installation: pip install pydvlp-docs")
-        
+
     except subprocess.CalledProcessError as e:
         click.echo(f"❌ Publish failed: {e}")
         click.echo(e.stderr)
@@ -2580,52 +2515,47 @@ def publish(test, dry_run, force):
 @click.option("--deploy-pages", is_flag=True, help="Deploy to GitHub Pages")
 def publish_docs(check_links, upload_rtd, deploy_pages):
     """Build and publish documentation to various platforms.
-    
+
     This command builds the documentation and optionally deploys it to
     Read the Docs, GitHub Pages, or other platforms.
     """
     click.echo("📚 Publishing PyDevelop-Docs documentation...")
-    
+
     project_path = Path.cwd()
     docs_path = project_path / "docs"
-    
+
     if not docs_path.exists():
         click.echo("❌ Error: No docs/ directory found.")
         raise click.Abort()
-    
+
     # Build documentation
     click.echo("🔨 Building documentation...")
     try:
-        result = subprocess.run(
-            ["make", "html"],
-            cwd=docs_path,
-            capture_output=True,
-            text=True,
-            check=True
-        )
+        result = subprocess.run(["make", "html"], cwd=docs_path, capture_output=True, text=True, check=True)
         click.echo("✅ Documentation built successfully")
-        
+
         # Count generated files
         build_path = docs_path / "build" / "html"
         if build_path.exists():
             html_files = list(build_path.glob("**/*.html"))
             click.echo(f"📄 Generated {len(html_files)} HTML pages")
-        
+
     except subprocess.CalledProcessError as e:
         click.echo(f"❌ Documentation build failed: {e}")
         click.echo(e.stderr)
         raise click.Abort()
-    
+
     # Check links if requested
     if check_links:
         click.echo("🔗 Checking documentation links...")
         try:
             result = subprocess.run(
                 ["make", "linkcheck"],
+                check=False,
                 cwd=docs_path,
                 capture_output=True,
                 text=True,
-                timeout=120  # 2 minute timeout for link checking
+                timeout=120,  # 2 minute timeout for link checking
             )
             if result.returncode == 0:
                 click.echo("✅ All links are valid")
@@ -2636,14 +2566,14 @@ def publish_docs(check_links, upload_rtd, deploy_pages):
             click.echo("⚠️  Link checking timed out")
         except Exception as e:
             click.echo(f"⚠️  Link checking failed: {e}")
-    
+
     # GitHub Pages deployment info
     if deploy_pages:
         click.echo("\n🚀 GitHub Pages Deployment:")
         click.echo("   The docs will be deployed automatically via GitHub Actions")
         click.echo("   when you push to the main branch.")
         click.echo("   Make sure GitHub Pages is enabled in your repository settings.")
-    
+
     # Read the Docs info
     if upload_rtd:
         click.echo("\n📖 Read the Docs:")
@@ -2651,11 +2581,11 @@ def publish_docs(check_links, upload_rtd, deploy_pages):
         click.echo("   Configuration: .readthedocs.yaml")
         click.echo("   Dependencies: docs/requirements.txt")
         click.echo("   🔗 https://readthedocs.org/projects/pydvlp-docs/")
-    
+
     # Local serving info
     build_path = docs_path / "build" / "html"
     if build_path.exists():
-        click.echo(f"\n🌐 Local documentation available at:")
+        click.echo("\n🌐 Local documentation available at:")
         click.echo(f"   file://{build_path.absolute()}/index.html")
         click.echo("\n💡 To serve locally:")
         click.echo(f"   cd {build_path}")
@@ -2666,11 +2596,15 @@ def publish_docs(check_links, upload_rtd, deploy_pages):
 @cli.command()
 @click.option("--check-version", is_flag=True, help="Check if version bump is needed")
 @click.option("--dry-run", is_flag=True, help="Show what would be done without doing it")
-@click.option("--part", type=click.Choice(["patch", "minor", "major"]), default="patch", 
-              help="Version part to bump (default: patch)")
+@click.option(
+    "--part",
+    type=click.Choice(["patch", "minor", "major"]),
+    default="patch",
+    help="Version part to bump (default: patch)",
+)
 def release(check_version, dry_run, part):
     """Complete release workflow: version bump, build, test, and publish.
-    
+
     This command automates the entire release process:
     1. Bump version (patch/minor/major)
     2. Build package and documentation
@@ -2679,34 +2613,30 @@ def release(check_version, dry_run, part):
     5. Deploy documentation
     """
     click.echo("🎯 Starting PyDevelop-Docs release workflow...")
-    
+
     if dry_run:
         click.echo("🔍 DRY RUN MODE - No actual changes will be made")
-    
+
     project_path = Path.cwd()
-    
+
     # Check if we're in a clean git state
     try:
-        result = subprocess.run(
-            ["git", "status", "--porcelain"],
-            capture_output=True,
-            text=True,
-            check=True
-        )
+        result = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
         if result.stdout.strip() and not dry_run:
             click.echo("⚠️  Warning: Git working directory is not clean")
             click.echo("   Uncommitted changes detected:")
-            for line in result.stdout.strip().split('\n'):
+            for line in result.stdout.strip().split("\n"):
                 click.echo(f"   {line}")
             if not click.confirm("Continue anyway?"):
                 raise click.Abort()
     except subprocess.CalledProcessError:
         click.echo("⚠️  Git status check failed")
-    
+
     # Read current version
     try:
         with open(project_path / "pyproject.toml") as f:
             import tomlkit
+
             data = tomlkit.load(f)
             current_version = data["tool"]["poetry"]["version"]
             name = data["tool"]["poetry"]["name"]
@@ -2714,12 +2644,12 @@ def release(check_version, dry_run, part):
     except Exception as e:
         click.echo(f"❌ Error reading version: {e}")
         raise click.Abort()
-    
+
     if check_version:
         click.echo(f"📊 Current version: {current_version}")
         click.echo(f"🔄 Next {part} version would be calculated by Poetry")
         return
-    
+
     if dry_run:
         click.echo(f"🔍 Would bump {part} version from {current_version}")
         click.echo("🔍 Would build package and documentation")
@@ -2727,30 +2657,26 @@ def release(check_version, dry_run, part):
         click.echo("🔍 Would publish to PyPI")
         click.echo("🔍 Would deploy documentation")
         return
-    
+
     # Version bump
     click.echo(f"⬆️  Bumping {part} version...")
     try:
-        result = subprocess.run(
-            ["poetry", "version", part],
-            capture_output=True,
-            text=True,
-            check=True
-        )
+        result = subprocess.run(["poetry", "version", part], capture_output=True, text=True, check=True)
         new_version_line = result.stdout.strip()
         click.echo(f"✅ {new_version_line}")
     except subprocess.CalledProcessError as e:
         click.echo(f"❌ Version bump failed: {e}")
         raise click.Abort()
-    
+
     # Run tests
     click.echo("🧪 Running tests...")
     try:
         result = subprocess.run(
             ["poetry", "run", "pytest", "--tb=short"],
+            check=False,
             capture_output=True,
             text=True,
-            timeout=300  # 5 minute timeout
+            timeout=300,  # 5 minute timeout
         )
         if result.returncode == 0:
             click.echo("✅ All tests passed")
@@ -2767,23 +2693,23 @@ def release(check_version, dry_run, part):
         click.echo(f"⚠️  Test execution failed: {e}")
         if not click.confirm("Continue release despite test errors?"):
             raise click.Abort()
-    
+
     # Build and publish
     click.echo("🚀 Building and publishing...")
     try:
         # Build
         subprocess.run(["poetry", "build"], check=True)
         click.echo("✅ Package built")
-        
+
         # Publish
         subprocess.run(["poetry", "publish"], check=True)
         click.echo("🎉 Published to PyPI!")
-        
+
     except subprocess.CalledProcessError as e:
         click.echo(f"❌ Build/publish failed: {e}")
         click.echo("💡 You may need to run: poetry config pypi-token.pypi YOUR_TOKEN")
         raise click.Abort()
-    
+
     # Git commit and tag
     click.echo("📝 Creating git commit and tag...")
     try:
@@ -2791,21 +2717,21 @@ def release(check_version, dry_run, part):
         with open(project_path / "pyproject.toml") as f:
             data = tomlkit.load(f)
             new_version = data["tool"]["poetry"]["version"]
-        
+
         # Commit
         subprocess.run(["git", "add", "pyproject.toml"], check=True)
         subprocess.run(["git", "commit", "-m", f"chore: bump version to {new_version}"], check=True)
-        
+
         # Tag
         subprocess.run(["git", "tag", "-a", f"v{new_version}", "-m", f"Release v{new_version}"], check=True)
-        
+
         click.echo(f"✅ Created commit and tag v{new_version}")
         click.echo("💡 Don't forget to push: git push && git push --tags")
-        
+
     except subprocess.CalledProcessError as e:
         click.echo(f"⚠️  Git operations failed: {e}")
         click.echo("   (Package was still published successfully)")
-    
+
     # Documentation
     click.echo("📚 Building documentation...")
     try:
@@ -2813,7 +2739,7 @@ def release(check_version, dry_run, part):
         click.echo("✅ Documentation built")
     except subprocess.CalledProcessError as e:
         click.echo(f"⚠️  Documentation build failed: {e}")
-    
+
     click.echo(f"\n🎉 Release v{new_version} completed successfully!")
     click.echo(f"🔗 Package: https://pypi.org/project/{name}/")
     click.echo("📚 Documentation will be available on Read the Docs after next push")

@@ -4,11 +4,10 @@ This module provides smart error classification and actionable error reporting
 for Sphinx documentation builds, making it easier to identify and fix issues.
 """
 
-import re
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+import re
 
 import click
 
@@ -29,10 +28,10 @@ class BuildError:
     severity: ErrorSeverity
     category: str
     message: str
-    file_path: Optional[str] = None
-    line_number: Optional[int] = None
-    suggestion: Optional[str] = None
-    raw_error: Optional[str] = None
+    file_path: str | None = None
+    line_number: int | None = None
+    suggestion: str | None = None
+    raw_error: str | None = None
 
 
 class BuildErrorClassifier:
@@ -106,7 +105,7 @@ class BuildErrorClassifier:
             package_name: Name of the package being built
         """
         self.package_name = package_name
-        self.errors: List[BuildError] = []
+        self.errors: list[BuildError] = []
         self.error_counts = {
             ErrorSeverity.CRITICAL: 0,
             ErrorSeverity.WARNING: 0,
@@ -114,7 +113,7 @@ class BuildErrorClassifier:
             ErrorSeverity.IGNORE: 0,
         }
 
-    def classify_line(self, line: str) -> Optional[BuildError]:
+    def classify_line(self, line: str) -> BuildError | None:
         """Classify a single line of build output.
 
         Args:
@@ -148,9 +147,7 @@ class BuildErrorClassifier:
 
         return None
 
-    def _create_error(
-        self, severity: ErrorSeverity, category: str, line: str, match: re.Match
-    ) -> BuildError:
+    def _create_error(self, severity: ErrorSeverity, category: str, line: str, match: re.Match) -> BuildError:
         """Create a BuildError with context and suggestions.
 
         Args:
@@ -186,7 +183,7 @@ class BuildErrorClassifier:
 
         return error
 
-    def _extract_location(self, line: str) -> Tuple[Optional[str], Optional[int]]:
+    def _extract_location(self, line: str) -> tuple[str | None, int | None]:
         """Extract file path and line number from error line.
 
         Args:
@@ -224,22 +221,12 @@ class BuildErrorClassifier:
             User-friendly message
         """
         # Safely get match groups
-        group1 = (
-            match.group(1)
-            if match and match.lastindex and match.lastindex >= 1
-            else None
-        )
+        group1 = match.group(1) if match and match.lastindex and match.lastindex >= 1 else None
 
         messages = {
-            "import_error": (
-                f"Cannot import '{group1}'" if group1 else "Import error detected"
-            ),
-            "module_not_found": (
-                f"Module '{group1}' not found" if group1 else "Module not found"
-            ),
-            "undefined_name": (
-                f"Name '{group1}' is not defined" if group1 else "Undefined name error"
-            ),
+            "import_error": (f"Cannot import '{group1}'" if group1 else "Import error detected"),
+            "module_not_found": (f"Module '{group1}' not found" if group1 else "Module not found"),
+            "undefined_name": (f"Name '{group1}' is not defined" if group1 else "Undefined name error"),
             "pydantic_forward_ref": (
                 f"Pydantic forward reference error: '{group1}' not defined"
                 if group1
@@ -253,24 +240,16 @@ class BuildErrorClassifier:
             "docstring_indentation": "Docstring indentation issue",
             "docstring_indentation_error": "Docstring indentation error",
             "duplicate_object": (
-                f"Duplicate documentation for '{group1}'"
-                if group1
-                else "Duplicate object documentation"
+                f"Duplicate documentation for '{group1}'" if group1 else "Duplicate object documentation"
             ),
-            "extension_error": (
-                f"Extension '{group1}' failed" if group1 else "Extension error"
-            ),
+            "extension_error": (f"Extension '{group1}' failed" if group1 else "Extension error"),
             "orphan_document": "Document not included in any toctree",
-            "undefined_reference": (
-                f"Undefined reference: '{group1}'" if group1 else "Undefined reference"
-            ),
+            "undefined_reference": (f"Undefined reference: '{group1}'" if group1 else "Undefined reference"),
         }
 
         return messages.get(category, line.strip())
 
-    def _generate_suggestion(
-        self, category: str, match: re.Match, file_path: Optional[str]
-    ) -> Optional[str]:
+    def _generate_suggestion(self, category: str, match: re.Match, file_path: str | None) -> str | None:
         """Generate fix suggestions for common errors.
 
         Args:
@@ -282,11 +261,7 @@ class BuildErrorClassifier:
             Suggestion for fixing the error
         """
         # Safely get match groups
-        group1 = (
-            match.group(1)
-            if match and match.lastindex and match.lastindex >= 1
-            else None
-        )
+        group1 = match.group(1) if match and match.lastindex and match.lastindex >= 1 else None
 
         suggestions = {
             "pydantic_forward_ref": (
@@ -303,39 +278,19 @@ class BuildErrorClassifier:
                 "   2. Move shared types to a common module\n"
                 "   3. Use string annotations with 'from __future__ import annotations'"
             ),
-            "grid_structure": (
-                "Fix grid structure:\n"
-                "   .. grid:: 2\n"
-                "      .. grid-item::\n"
-                "         Content here"
-            ),
-            "docstring_markup": (
-                "Add blank line after explicit markup:\n"
-                "   .. note::\n"
-                "   \n"
-                "      Note content here"
-            ),
+            "grid_structure": ("Fix grid structure:\n   .. grid:: 2\n      .. grid-item::\n         Content here"),
+            "docstring_markup": ("Add blank line after explicit markup:\n   .. note::\n   \n      Note content here"),
             "docstring_block_quote": (
-                "Add blank line after block quote:\n"
-                "   Block quote text\n"
-                "   \n"
-                "   Regular text here"
+                "Add blank line after block quote:\n   Block quote text\n   \n   Regular text here"
             ),
-            "docstring_indentation": (
-                "Fix indentation in docstring:\n"
-                "   Ensure consistent indentation levels"
-            ),
+            "docstring_indentation": ("Fix indentation in docstring:\n   Ensure consistent indentation levels"),
             "duplicate_object": (
-                f"Add :no-index: to one occurrence of {group1}:\n"
-                f"   .. automethod:: {group1}\n"
-                f"      :no-index:"
+                f"Add :no-index: to one occurrence of {group1}:\n   .. automethod:: {group1}\n      :no-index:"
                 if group1
                 else "Add :no-index: to duplicate object documentation"
             ),
             "module_not_found": (
-                f"Ensure {group1} is installed:\n"
-                f"   poetry add {group1}\n"
-                f"   # or check import path"
+                f"Ensure {group1} is installed:\n   poetry add {group1}\n   # or check import path"
                 if group1
                 else "Check that the module is installed and import path is correct"
             ),
@@ -360,7 +315,7 @@ class BuildErrorClassifier:
         for line in output.splitlines():
             self.classify_line(line)
 
-    def get_summary(self) -> Dict[str, any]:
+    def get_summary(self) -> dict[str, any]:
         """Get summary of all errors found.
 
         Returns:
@@ -370,16 +325,12 @@ class BuildErrorClassifier:
             "package": self.package_name,
             "total_errors": len(self.errors),
             "counts": dict(self.error_counts),
-            "critical_errors": [
-                e for e in self.errors if e.severity == ErrorSeverity.CRITICAL
-            ],
+            "critical_errors": [e for e in self.errors if e.severity == ErrorSeverity.CRITICAL],
             "warnings": [e for e in self.errors if e.severity == ErrorSeverity.WARNING],
             "has_critical": self.error_counts[ErrorSeverity.CRITICAL] > 0,
         }
 
-    def print_summary(
-        self, show_warnings: bool = True, show_suggestions: bool = True
-    ) -> None:
+    def print_summary(self, show_warnings: bool = True, show_suggestions: bool = True) -> None:
         """Print a formatted summary of errors.
 
         Args:
@@ -403,9 +354,7 @@ class BuildErrorClassifier:
                 self._print_error(error, show_suggestions)
 
             if len(summary["critical_errors"]) > 5:
-                click.echo(
-                    f"   ... and {len(summary['critical_errors']) - 5} more critical errors"
-                )
+                click.echo(f"   ... and {len(summary['critical_errors']) - 5} more critical errors")
 
         # Show warnings if requested
         if show_warnings and summary["warnings"]:

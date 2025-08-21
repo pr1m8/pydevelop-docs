@@ -4,18 +4,16 @@ This module provides specialized tools for working with the Haive AI Agent Frame
 complex monorepo structure with 7 packages and central documentation hub.
 """
 
+from datetime import datetime
 import json
+from pathlib import Path
 import shutil
 import subprocess
 import time
-from datetime import datetime
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 import click
 
 from .build_error_classifier import BuildErrorClassifier, ErrorSeverity
-from .build_monitor import BuildMonitor
 
 
 class HaiveDocumentationManager:
@@ -68,9 +66,7 @@ class HaiveDocumentationManager:
         existing_packages = [p.name for p in self.packages_dir.iterdir() if p.is_dir()]
         return len(set(existing_packages) & set(self.packages)) >= 3
 
-    def log_operation(
-        self, operation: str, status: str, details: str = "", duration: float = 0
-    ):
+    def log_operation(self, operation: str, status: str, details: str = "", duration: float = 0):
         """Log an operation with timestamp and details."""
         entry = {
             "timestamp": datetime.now().isoformat(),
@@ -82,13 +78,11 @@ class HaiveDocumentationManager:
         self.operations_log.append(entry)
 
         if not self.quiet:
-            status_icon = (
-                "✅" if status == "success" else "❌" if status == "error" else "🔄"
-            )
+            status_icon = "✅" if status == "success" else "❌" if status == "error" else "🔄"
             duration_str = f" ({duration:.2f}s)" if duration > 0 else ""
             click.echo(f"{status_icon} {operation}: {details}{duration_str}")
 
-    def clear_all_documentation(self) -> Dict[str, int]:
+    def clear_all_documentation(self) -> dict[str, int]:
         """Clear all documentation build artifacts from Haive monorepo.
 
         Returns:
@@ -125,20 +119,14 @@ class HaiveDocumentationManager:
                             shutil.rmtree(path)
                             cleared_dirs += 1
                             if self.debug:
-                                click.echo(
-                                    f"   🗑️  Removed directory: {path.relative_to(self.haive_root)}"
-                                )
+                                click.echo(f"   🗑️  Removed directory: {path.relative_to(self.haive_root)}")
                         else:
                             path.unlink()
                             cleared_files += 1
                             if self.debug:
-                                click.echo(
-                                    f"   🗑️  Removed file: {path.relative_to(self.haive_root)}"
-                                )
+                                click.echo(f"   🗑️  Removed file: {path.relative_to(self.haive_root)}")
                     except Exception as e:
-                        self.log_operation(
-                            "clear_failed", "error", f"Failed to remove {path}: {e}"
-                        )
+                        self.log_operation("clear_failed", "error", f"Failed to remove {path}: {e}")
 
         duration = time.time() - start_time
         result = {"directories": cleared_dirs, "files": cleared_files}
@@ -165,9 +153,7 @@ class HaiveDocumentationManager:
         package_path = self.packages_dir / package_name
 
         if not package_path.exists():
-            self.log_operation(
-                "init_package", "error", f"Package {package_name} not found"
-            )
+            self.log_operation("init_package", "error", f"Package {package_name} not found")
             return False
 
         if not self.quiet:
@@ -202,6 +188,7 @@ class HaiveDocumentationManager:
             # Execute in package directory
             result = subprocess.run(
                 cmd,
+                check=False,
                 cwd=package_path_abs,
                 capture_output=True,
                 text=True,
@@ -211,37 +198,30 @@ class HaiveDocumentationManager:
             duration = time.time() - start_time
 
             if result.returncode == 0:
-                self.log_operation(
-                    "init_package", "success", f"Initialized {package_name}", duration
-                )
+                self.log_operation("init_package", "success", f"Initialized {package_name}", duration)
 
                 if self.debug and result.stdout:
                     click.echo(f"   📋 Output: {result.stdout.strip()}")
 
                 return True
-            else:
-                error_msg = result.stderr.strip() if result.stderr else "Unknown error"
-                self.log_operation(
-                    "init_package",
-                    "error",
-                    f"Failed to initialize {package_name}: {error_msg}",
-                    duration,
-                )
+            error_msg = result.stderr.strip() if result.stderr else "Unknown error"
+            self.log_operation(
+                "init_package",
+                "error",
+                f"Failed to initialize {package_name}: {error_msg}",
+                duration,
+            )
 
-                if self.debug:
-                    click.echo(f"   ❌ Error output: {error_msg}")
+            if self.debug:
+                click.echo(f"   ❌ Error output: {error_msg}")
 
-                return False
+            return False
 
         except subprocess.TimeoutExpired:
-            self.log_operation(
-                "init_package", "error", f"Timeout initializing {package_name}"
-            )
+            self.log_operation("init_package", "error", f"Timeout initializing {package_name}")
             return False
         except Exception as e:
-            self.log_operation(
-                "init_package", "error", f"Exception initializing {package_name}: {e}"
-            )
+            self.log_operation("init_package", "error", f"Exception initializing {package_name}: {e}")
             return False
 
     def build_package_docs(self, package_name: str, clean: bool = True) -> bool:
@@ -257,17 +237,13 @@ class HaiveDocumentationManager:
         package_path = self.packages_dir / package_name
 
         if not package_path.exists():
-            self.log_operation(
-                "build_package", "error", f"Package {package_name} not found"
-            )
+            self.log_operation("build_package", "error", f"Package {package_name} not found")
             return False
 
         # Check if docs exist
         docs_path = package_path / "docs"
         if not docs_path.exists():
-            self.log_operation(
-                "build_package", "error", f"No docs directory in {package_name}"
-            )
+            self.log_operation("build_package", "error", f"No docs directory in {package_name}")
             return False
 
         if not self.quiet:
@@ -311,6 +287,7 @@ class HaiveDocumentationManager:
             # Execute build
             result = subprocess.run(
                 cmd,
+                check=False,
                 cwd=package_path,
                 capture_output=True,
                 text=True,
@@ -352,43 +329,37 @@ class HaiveDocumentationManager:
                         duration,
                     )
                     return True
-                else:
-                    self.log_operation(
-                        "build_package",
-                        "error",
-                        f"Build completed but no index.html created for {package_name}",
-                    )
-                    return False
-            else:
-                # Build failed due to critical errors
-                critical_count = summary["counts"][ErrorSeverity.CRITICAL]
                 self.log_operation(
                     "build_package",
                     "error",
-                    f"Failed to build {package_name}: {critical_count} critical errors",
-                    duration,
+                    f"Build completed but no index.html created for {package_name}",
                 )
-
-                # Show first critical error details
-                if summary["critical_errors"]:
-                    first_error = summary["critical_errors"][0]
-                    click.echo(f"\n   🔥 First critical error: {first_error.message}")
-                    if first_error.file_path:
-                        click.echo(f"      File: {first_error.file_path}")
-                    if first_error.suggestion:
-                        click.echo(f"      💡 {first_error.suggestion}")
-
                 return False
+            # Build failed due to critical errors
+            critical_count = summary["counts"][ErrorSeverity.CRITICAL]
+            self.log_operation(
+                "build_package",
+                "error",
+                f"Failed to build {package_name}: {critical_count} critical errors",
+                duration,
+            )
+
+            # Show first critical error details
+            if summary["critical_errors"]:
+                first_error = summary["critical_errors"][0]
+                click.echo(f"\n   🔥 First critical error: {first_error.message}")
+                if first_error.file_path:
+                    click.echo(f"      File: {first_error.file_path}")
+                if first_error.suggestion:
+                    click.echo(f"      💡 {first_error.suggestion}")
+
+            return False
 
         except subprocess.TimeoutExpired:
-            self.log_operation(
-                "build_package", "error", f"Build timeout for {package_name}"
-            )
+            self.log_operation("build_package", "error", f"Build timeout for {package_name}")
             return False
         except Exception as e:
-            self.log_operation(
-                "build_package", "error", f"Exception building {package_name}: {e}"
-            )
+            self.log_operation("build_package", "error", f"Exception building {package_name}: {e}")
             return False
 
     def initialize_master_docs(self, force: bool = True) -> bool:
@@ -428,6 +399,7 @@ class HaiveDocumentationManager:
             # Execute in Haive root
             result = subprocess.run(
                 cmd,
+                check=False,
                 cwd=self.haive_root,
                 capture_output=True,
                 text=True,
@@ -448,29 +420,24 @@ class HaiveDocumentationManager:
                     click.echo(f"   📋 Output: {result.stdout.strip()}")
 
                 return True
-            else:
-                error_msg = result.stderr.strip() if result.stderr else "Unknown error"
-                self.log_operation(
-                    "init_master",
-                    "error",
-                    f"Failed to initialize master docs: {error_msg}",
-                    duration,
-                )
+            error_msg = result.stderr.strip() if result.stderr else "Unknown error"
+            self.log_operation(
+                "init_master",
+                "error",
+                f"Failed to initialize master docs: {error_msg}",
+                duration,
+            )
 
-                if self.debug:
-                    click.echo(f"   ❌ Error output: {error_msg}")
+            if self.debug:
+                click.echo(f"   ❌ Error output: {error_msg}")
 
-                return False
+            return False
 
         except subprocess.TimeoutExpired:
-            self.log_operation(
-                "init_master", "error", "Timeout initializing master docs"
-            )
+            self.log_operation("init_master", "error", "Timeout initializing master docs")
             return False
         except Exception as e:
-            self.log_operation(
-                "init_master", "error", f"Exception initializing master docs: {e}"
-            )
+            self.log_operation("init_master", "error", f"Exception initializing master docs: {e}")
             return False
 
     def build_master_docs(self, clean: bool = True) -> bool:
@@ -483,9 +450,7 @@ class HaiveDocumentationManager:
             True if successful, False otherwise
         """
         if not self.master_docs.exists():
-            self.log_operation(
-                "build_master", "error", "No master docs directory found"
-            )
+            self.log_operation("build_master", "error", "No master docs directory found")
             return False
 
         if not self.quiet:
@@ -506,6 +471,7 @@ class HaiveDocumentationManager:
             # Execute in Haive root
             result = subprocess.run(
                 cmd,
+                check=False,
                 cwd=self.haive_root,
                 capture_output=True,
                 text=True,
@@ -529,43 +495,39 @@ class HaiveDocumentationManager:
                         click.echo(f"   📋 Build output: {result.stdout.strip()}")
 
                     return True
-                else:
-                    self.log_operation(
-                        "build_master",
-                        "error",
-                        "Master build completed but no index.html",
-                    )
-                    return False
-            else:
-                error_msg = result.stderr.strip() if result.stderr else "Build failed"
                 self.log_operation(
                     "build_master",
                     "error",
-                    f"Failed to build master docs: {error_msg}",
-                    duration,
+                    "Master build completed but no index.html",
                 )
-
-                if self.debug:
-                    click.echo(f"   ❌ Build errors: {error_msg}")
-
                 return False
+            error_msg = result.stderr.strip() if result.stderr else "Build failed"
+            self.log_operation(
+                "build_master",
+                "error",
+                f"Failed to build master docs: {error_msg}",
+                duration,
+            )
+
+            if self.debug:
+                click.echo(f"   ❌ Build errors: {error_msg}")
+
+            return False
 
         except subprocess.TimeoutExpired:
             self.log_operation("build_master", "error", "Master build timeout")
             return False
         except Exception as e:
-            self.log_operation(
-                "build_master", "error", f"Exception building master docs: {e}"
-            )
+            self.log_operation("build_master", "error", f"Exception building master docs: {e}")
             return False
 
     def rebuild_all_documentation(
         self,
-        packages: Optional[List[str]] = None,
+        packages: list[str] | None = None,
         include_master: bool = True,
         force: bool = True,
         clean: bool = True,
-    ) -> Dict[str, any]:
+    ) -> dict[str, any]:
         """Rebuild all documentation in the Haive monorepo.
 
         Args:
@@ -588,9 +550,7 @@ class HaiveDocumentationManager:
 
         # Determine packages to process
         packages_to_process = packages or self.packages
-        existing_packages = [
-            p for p in packages_to_process if (self.packages_dir / p).exists()
-        ]
+        existing_packages = [p for p in packages_to_process if (self.packages_dir / p).exists()]
 
         if len(existing_packages) != len(packages_to_process):
             missing = set(packages_to_process) - set(existing_packages)
@@ -612,9 +572,7 @@ class HaiveDocumentationManager:
 
         # Phase 1: Initialize all packages
         if not self.quiet:
-            click.echo(
-                f"\n📚 Phase 1: Initializing {len(existing_packages)} packages..."
-            )
+            click.echo(f"\n📚 Phase 1: Initializing {len(existing_packages)} packages...")
 
         for package in existing_packages:
             init_success = self.initialize_package_docs(package, force=force)
@@ -667,7 +625,7 @@ class HaiveDocumentationManager:
 
         return results
 
-    def get_operations_summary(self) -> Dict[str, any]:
+    def get_operations_summary(self) -> dict[str, any]:
         """Get a comprehensive summary of all operations performed."""
         total_duration = (datetime.now() - self.start_time).total_seconds()
 
@@ -685,12 +643,10 @@ class HaiveDocumentationManager:
             "operations_by_type": operations_by_type,
             "timeline": self.operations_log,
             "haive_root": str(self.haive_root),
-            "packages_found": len(
-                [p for p in self.packages if (self.packages_dir / p).exists()]
-            ),
+            "packages_found": len([p for p in self.packages if (self.packages_dir / p).exists()]),
         }
 
-    def save_operations_log(self, output_path: Optional[Path] = None) -> Path:
+    def save_operations_log(self, output_path: Path | None = None) -> Path:
         """Save the operations log to a JSON file."""
         if output_path is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

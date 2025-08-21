@@ -31,16 +31,15 @@ Example:
 """
 
 import os
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 def get_haive_config(
     package_name: str,
     package_path: str,
     is_central_hub: bool = False,
-    extra_extensions: Optional[List[str]] = None,
-) -> Dict[str, Any]:
+    extra_extensions: list[str] | None = None,
+) -> dict[str, Any]:
     """Get complete PyDevelop Sphinx configuration for a package.
 
     This function returns a comprehensive Sphinx configuration with 40+ extensions
@@ -89,16 +88,12 @@ def get_haive_config(
 
     config = {
         # Project information
-        "project": (
-            f"Haive {display_name}" if package_name != "haive-docs" else display_name
-        ),
+        "project": (f"Haive {display_name}" if package_name != "haive-docs" else display_name),
         "author": "William R. Astley",
         "copyright": "2025, William R. Astley",
         "release": "0.1.0",
         # Extensions - Complete 40+ extension system with optimal configurations
-        "extensions": _get_complete_extensions(
-            is_central_hub, extra_extensions, package_name
-        ),
+        "extensions": _get_complete_extensions(is_central_hub, extra_extensions, package_name),
         # General configuration
         "templates_path": ["_templates"],
         "html_static_path": ["_static"],
@@ -205,9 +200,7 @@ def get_haive_config(
         "plantuml": "plantuml",
         # Sitemap configuration
         "html_baseurl": (
-            f"https://docs.haive.ai/packages/{package_name}/"
-            if not is_central_hub
-            else "https://docs.haive.ai/"
+            f"https://docs.haive.ai/packages/{package_name}/" if not is_central_hub else "https://docs.haive.ai/"
         ),
         # Code autolink configuration
         "codeautolink_autodoc_inject": True,
@@ -299,7 +292,7 @@ def get_haive_config(
         # Sphinx-notfound-page configuration
         "notfound_context": {
             "title": "Page Not Found",
-            "body": f"""
+            "body": """
 <h1>🚀 Oops! Page Not Found</h1>
 <p>The page you're looking for seems to have wandered off into the documentation cosmos.</p>
 
@@ -340,9 +333,7 @@ def get_haive_config(
         "debuginfo_show_extensions": True,
         # OpenGraph configuration
         "ogp_site_url": (
-            "https://docs.haive.ai/"
-            if is_central_hub
-            else f"https://docs.haive.ai/packages/{package_name}/"
+            "https://docs.haive.ai/" if is_central_hub else f"https://docs.haive.ai/packages/{package_name}/"
         ),
         "ogp_site_name": display_name,
         "ogp_site_description": f"{display_name} - Part of the Haive AI Agent Framework",
@@ -423,7 +414,7 @@ def get_haive_config(
     return config
 
 
-def get_central_hub_config(package_names: List[str] = None) -> Dict[str, Any]:
+def get_central_hub_config(package_names: list[str] = None) -> dict[str, Any]:
     """Get configuration specific to the central documentation hub.
 
     Args:
@@ -438,16 +429,14 @@ def get_central_hub_config(package_names: List[str] = None) -> Dict[str, Any]:
     if package_names is None:
         package_names = []
 
-    return get_haive_config(
-        package_name="haive-docs", package_path="", is_central_hub=True
-    )
+    return get_haive_config(package_name="haive-docs", package_path="", is_central_hub=True)
 
 
 def _get_complete_extensions(
     is_central_hub: bool,
-    extra_extensions: Optional[List[str]] = None,
+    extra_extensions: list[str] | None = None,
     package_name: str = "",
-) -> List[str]:
+) -> list[str]:
     """Get the complete 40+ Sphinx extension system.
 
     This function returns a carefully curated list of Sphinx extensions that work
@@ -539,7 +528,7 @@ def _get_complete_extensions(
     return extensions
 
 
-def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
+def _get_complete_autoapi_config(package_path: str) -> dict[str, Any]:
     """Get complete AutoAPI configuration with hierarchical organization.
 
     ✅ INCLUDES AUTOAPI HIERARCHICAL FIX - Issue #4 Solution
@@ -573,9 +562,7 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
         "autoapi_root": "autoapi",
         "autoapi_toctree_depth": 3,
         # Enable custom templates with hierarchical support
-        "autoapi_template_dir": os.path.join(
-            os.path.dirname(__file__), "templates", "_autoapi_templates"
-        ),
+        "autoapi_template_dir": os.path.join(os.path.dirname(__file__), "templates", "_autoapi_templates"),
         # Skip problematic patterns
         "autoapi_ignore": [
             "**/test_*.py",
@@ -600,7 +587,7 @@ def _get_complete_autoapi_config(package_path: str) -> Dict[str, Any]:
     }
 
 
-def _get_collections_config() -> Dict[str, Any]:
+def _get_collections_config() -> dict[str, Any]:
     """Get sphinx-collections configuration for central hub."""
     return {
         "collections": {
@@ -617,9 +604,7 @@ def _get_collections_config() -> Dict[str, Any]:
     }
 
 
-def _get_complete_theme_options(
-    package_name: str, is_central_hub: bool
-) -> Dict[str, Any]:
+def _get_complete_theme_options(package_name: str, is_central_hub: bool) -> dict[str, Any]:
     """Get complete Furo theme options with intense theming.
 
     ✅ INCLUDES AUTOAPI HIERARCHICAL FIX SUPPORT - Issue #4 Solution
@@ -663,11 +648,7 @@ def _get_complete_theme_options(
         # Repository integration
         "source_repository": "https://github.com/haive-ai/haive/",
         "source_branch": "main",
-        "source_directory": (
-            f"packages/{package_name}/docs/"
-            if not is_central_hub
-            else "tools/pydvlp-docs/docs/"
-        ),
+        "source_directory": (f"packages/{package_name}/docs/" if not is_central_hub else "tools/pydvlp-docs/docs/"),
         # Announcements
         "announcement": (
             "🚀 <strong>Haive AI Agent Framework</strong> - Complete monorepo documentation system!"
@@ -687,7 +668,7 @@ def _get_complete_theme_options(
     }
 
 
-def _get_complete_intersphinx_mapping() -> Dict[str, tuple]:
+def _get_complete_intersphinx_mapping() -> dict[str, tuple]:
     """Get complete intersphinx mapping for cross-references."""
     return {
         "python": ("https://docs.python.org/3", None),
@@ -711,9 +692,7 @@ def autodoc_skip_member(app, what, name, obj, skip, options):
             return True
 
     # Skip objects that have __pydantic_decorators__ missing but are expected to have it
-    if hasattr(obj, "__class__") and "Metaclass" in getattr(
-        obj.__class__, "__name__", ""
-    ):
+    if hasattr(obj, "__class__") and "Metaclass" in getattr(obj.__class__, "__name__", ""):
         app.debug(f"Skipping object with metaclass: {name}")
         return True
 

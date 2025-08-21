@@ -1,14 +1,14 @@
 """Simplified command implementations for pydvlp-docs."""
 
+from pathlib import Path
 import shutil
 import subprocess
-from pathlib import Path
-from typing import Any, Dict, List, Optional
 
 import click
-import tomlkit
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
+import tomlkit
+
 
 console = Console()
 
@@ -22,10 +22,10 @@ class DocsCommand:
 
     def find_packages(
         self,
-        packages_dir: List[str] = None,
+        packages_dir: list[str] = None,
         include_root: bool = False,
-        patterns: List[str] = None,
-    ) -> List[Path]:
+        patterns: list[str] = None,
+    ) -> list[Path]:
         """Find packages to document."""
         packages = []
 
@@ -42,10 +42,7 @@ class DocsCommand:
                     for item in dir_path.iterdir():
                         if item.is_dir() and not item.name.startswith("."):
                             # Check if it's a valid package
-                            if any(
-                                (item / f).exists()
-                                for f in ["pyproject.toml", "setup.py", "__init__.py"]
-                            ):
+                            if any((item / f).exists() for f in ["pyproject.toml", "setup.py", "__init__.py"]):
                                 packages.append(item)
 
         # Include root if requested
@@ -60,9 +57,9 @@ class InitCommand(DocsCommand):
 
     def run(
         self,
-        packages_dir: List[str] = None,
+        packages_dir: list[str] = None,
         include_root: bool = False,
-        packages: List[str] = None,
+        packages: list[str] = None,
         dry_run: bool = False,
         force: bool = False,
     ) -> bool:
@@ -83,9 +80,7 @@ class InitCommand(DocsCommand):
         # Show what will be done
         self.console.print(f"\n[bold]Found {len(found)} package(s) to document:[/bold]")
         for pkg in found:
-            self.console.print(
-                f"  📦 {pkg.relative_to(self.project_path) if pkg != self.project_path else '(root)'}"
-            )
+            self.console.print(f"  📦 {pkg.relative_to(self.project_path) if pkg != self.project_path else '(root)'}")
 
         if dry_run:
             self.console.print("\n[yellow]Dry run - no changes will be made[/yellow]")
@@ -103,7 +98,6 @@ class InitCommand(DocsCommand):
             TextColumn("[progress.description]{task.description}"),
             console=self.console,
         ) as progress:
-
             for pkg in found:
                 task = progress.add_task(f"Initializing {pkg.name}...", total=None)
 
@@ -111,15 +105,11 @@ class InitCommand(DocsCommand):
                     self._init_package(pkg, force)
                     progress.update(task, completed=True)
                 except Exception as e:
-                    self.console.print(
-                        f"[red]Failed to initialize {pkg.name}: {e}[/red]"
-                    )
+                    self.console.print(f"[red]Failed to initialize {pkg.name}: {e}[/red]")
                     success = False
 
         if success:
-            self.console.print(
-                "\n[green]✅ Documentation initialized successfully![/green]"
-            )
+            self.console.print("\n[green]✅ Documentation initialized successfully![/green]")
             self._show_next_steps(found)
 
         return success
@@ -222,7 +212,7 @@ except ImportError:
 
         content = f"""
 {name} Documentation
-{'=' * (len(name) + 14)}
+{"=" * (len(name) + 14)}
 
 .. toctree::
    :maxdepth: 2
@@ -367,7 +357,7 @@ livehtml:
                 data = tomlkit.load(f)
             if "tool" in data and "poetry" in data["tool"]:
                 return data["tool"]["poetry"].get("name", package_path.name)
-            elif "project" in data:
+            if "project" in data:
                 return data["project"].get("name", package_path.name)
 
         return package_path.name
@@ -377,7 +367,7 @@ livehtml:
         name = self._get_package_name(package_path)
         return name.startswith("haive-")
 
-    def _show_changes(self, packages: List[Path]):
+    def _show_changes(self, packages: list[Path]):
         """Show what would be created."""
         self.console.print("\n[yellow]The following would be created:[/yellow]")
 
@@ -391,11 +381,9 @@ livehtml:
             self.console.print("    📄 Makefile")
 
             if (pkg / "pyproject.toml").exists():
-                self.console.print(
-                    "  ✏️  Updated pyproject.toml (add docs dependencies)"
-                )
+                self.console.print("  ✏️  Updated pyproject.toml (add docs dependencies)")
 
-    def _show_next_steps(self, packages: List[Path]):
+    def _show_next_steps(self, packages: list[Path]):
         """Show next steps."""
         self.console.print("\n[bold]Next steps:[/bold]")
         self.console.print("1. Install dependencies:")
@@ -411,9 +399,9 @@ class BuildCommand(DocsCommand):
 
     def run(
         self,
-        packages_dir: List[str] = None,
+        packages_dir: list[str] = None,
         include_root: bool = False,
-        packages: List[str] = None,
+        packages: list[str] = None,
         clean: bool = False,
         parallel: bool = True,
         open_after: bool = False,
@@ -445,7 +433,6 @@ class BuildCommand(DocsCommand):
             TextColumn("[progress.description]{task.description}"),
             console=self.console,
         ) as progress:
-
             for pkg in buildable:
                 task = progress.add_task(f"Building {pkg.name}...", total=None)
 
@@ -458,9 +445,7 @@ class BuildCommand(DocsCommand):
                     success = False
 
         if success:
-            self.console.print(
-                f"\n[green]✅ Successfully built {len(built)} package(s)![/green]"
-            )
+            self.console.print(f"\n[green]✅ Successfully built {len(built)} package(s)![/green]")
 
             if open_after and built:
                 self._open_docs(built[0])
@@ -486,7 +471,7 @@ class BuildCommand(DocsCommand):
         cmd.extend(["source", "build/html"])
 
         # Run build
-        result = subprocess.run(cmd, cwd=docs_path, capture_output=True, text=True)
+        result = subprocess.run(cmd, check=False, cwd=docs_path, capture_output=True, text=True)
 
         return result.returncode == 0
 
@@ -522,6 +507,4 @@ class QuickCommands:
     def build_all(clean: bool = False):
         """Build all documented packages."""
         cmd = BuildCommand()
-        return cmd.run(
-            packages_dir=["packages", "tools", "."], include_root=True, clean=clean
-        )
+        return cmd.run(packages_dir=["packages", "tools", "."], include_root=True, clean=clean)

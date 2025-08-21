@@ -18,7 +18,7 @@ Examples:
 
     >>> from pathlib import Path
     >>> from pydvlp_docs.general_setup import ProjectDetector
-    >>> 
+    >>>
     >>> detector = ProjectDetector(Path("/path/to/project"))
     >>> info = detector.detect_project_type()
     >>> print(f"Project type: {info['type']}")
@@ -27,7 +27,7 @@ Examples:
     Set up documentation for any project:
 
     >>> from pydvlp_docs.general_setup import GeneralDocumentationSetup
-    >>> 
+    >>>
     >>> setup = GeneralDocumentationSetup(Path("/path/to/project"))
     >>> result = setup.setup_documentation(force=True, interactive=False)
     >>> print(f"Documentation created at: {result['target_dir']}")
@@ -35,7 +35,7 @@ Examples:
     Use the convenience function:
 
     >>> from pydvlp_docs.general_setup import setup_project_docs
-    >>> 
+    >>>
     >>> result = setup_project_docs(
     ...     "/path/to/project",
     ...     force=True,
@@ -55,28 +55,25 @@ Note:
     The generated documentation uses the Furo theme with extensive customization.
 """
 
-import json
-import shutil
-import subprocess
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+import shutil
+from typing import Any
 
 import click
 import tomlkit
-import yaml
 
 
 class ProjectDetector:
     """Intelligent Python project structure detection and analysis.
-    
+
     This class analyzes Python projects to determine their type, structure,
     package manager, and other characteristics needed for documentation setup.
-    
+
     Supported Project Types:
         - monorepo: Multiple packages in packages/ directory
         - single_package: Single package with src/ or flat layout
         - simple_project: Basic Python files without formal package structure
-        
+
     Supported Package Managers:
         - Poetry (pyproject.toml with [tool.poetry])
         - setuptools (setup.py or pyproject.toml with setuptools)
@@ -84,32 +81,32 @@ class ProjectDetector:
         - pipenv (Pipfile)
         - conda (environment.yml)
         - hatch, flit (pyproject.toml variants)
-        
+
     Structure Patterns:
         - src layout: src/package_name/
         - flat layout: package_name/ in project root
         - monorepo: packages/package-name/ structure
         - simple: Python files in project root
-        
+
     Attributes:
         project_path (Path): Resolved absolute path to the project directory
-        
+
     Examples:
         Analyze a monorepo project:
-        
+
         >>> detector = ProjectDetector(Path("/path/to/monorepo"))
         >>> info = detector.detect_project_type()
         >>> print(info['type'])  # "monorepo"
         >>> print(len(info['packages']))  # 3
         >>> print(info['package_manager'])  # "poetry"
-        
+
         Analyze a simple single package:
-        
+
         >>> detector = ProjectDetector(Path("/path/to/simple-package"))
         >>> info = detector.detect_project_type()
         >>> print(info['type'])  # "single_package"
         >>> print(info['structure']['pattern'])  # "src_layout"
-        
+
     Note:
         All paths are resolved to absolute paths during initialization.
         The detector handles missing directories and files gracefully.
@@ -117,26 +114,26 @@ class ProjectDetector:
 
     def __init__(self, project_path: Path):
         """Initialize the project detector.
-        
+
         Args:
             project_path: Path to the Python project directory to analyze.
                 Will be resolved to an absolute path.
-                
+
         Raises:
             OSError: If the project_path does not exist or is not accessible.
         """
         self.project_path = project_path.resolve()
 
-    def detect_project_type(self) -> Dict[str, Any]:
+    def detect_project_type(self) -> dict[str, Any]:
         """Detect and analyze the complete project structure.
-        
+
         Performs comprehensive analysis of the project including type detection,
         package discovery, structure pattern recognition, metadata extraction,
         and dependency analysis.
-        
+
         Returns:
             Dict containing complete project analysis with keys:
-            
+
             - type (str): Project type - "monorepo", "single_package", "simple_project", or "unknown"
             - name (str): Project name from directory or metadata
             - package_manager (str): Detected package manager or None
@@ -148,10 +145,10 @@ class ProjectDetector:
             - python_files (int): Total count of .py files
             - dependencies (Dict): Dependency analysis including Sphinx deps
             - metadata (Dict): Extracted project metadata (title, author, version, etc.)
-            
+
         Examples:
             Monorepo analysis result:
-            
+
             >>> result = detector.detect_project_type()
             >>> result['type']
             'monorepo'
@@ -161,9 +158,9 @@ class ProjectDetector:
             'monorepo'
             >>> result['package_manager']
             'poetry'
-            
+
             Single package analysis:
-            
+
             >>> result = detector.detect_project_type()
             >>> result['type']
             'single_package'
@@ -171,7 +168,7 @@ class ProjectDetector:
             True
             >>> result['metadata']['title']
             'my-awesome-package'
-            
+
         Note:
             Package detection uses recursive search with depth limiting to avoid
             infinite recursion. The analysis is cached within the method call.
@@ -202,25 +199,25 @@ class ProjectDetector:
 
         return info
 
-    def _detect_package_manager(self) -> Optional[str]:
+    def _detect_package_manager(self) -> str | None:
         """Detect the package manager used by the project.
-        
+
         Analyzes configuration files to determine which package manager
         is being used. Checks for Poetry, setuptools, pip, pipenv, conda,
         hatch, and flit configurations.
-        
+
         Returns:
             Package manager name as string, or None if none detected.
-            Possible values: "poetry", "setuptools", "pip", "pipenv", 
+            Possible values: "poetry", "setuptools", "pip", "pipenv",
             "conda", "hatch", "flit", "pyproject".
-            
+
         Examples:
             >>> detector._detect_package_manager()
             'poetry'  # if pyproject.toml contains [tool.poetry]
-            
-            >>> detector._detect_package_manager() 
+
+            >>> detector._detect_package_manager()
             'pip'  # if only requirements.txt exists
-            
+
         Note:
             pyproject.toml is checked first, then fallback files.
             Returns "pyproject" for unrecognized pyproject.toml formats.
@@ -230,11 +227,11 @@ class ProjectDetector:
                 pyproject = tomlkit.parse((self.project_path / "pyproject.toml").read_text())
                 if "poetry" in str(pyproject):
                     return "poetry"
-                elif "setuptools" in str(pyproject):
+                if "setuptools" in str(pyproject):
                     return "setuptools"
-                elif "flit" in str(pyproject):
+                if "flit" in str(pyproject):
                     return "flit"
-                elif "hatchling" in str(pyproject):
+                if "hatchling" in str(pyproject):
                     return "hatch"
                 return "pyproject"
             except Exception:
@@ -253,7 +250,7 @@ class ProjectDetector:
 
         return None
 
-    def _detect_structure(self) -> Dict[str, Any]:
+    def _detect_structure(self) -> dict[str, Any]:
         """Detect the project structure pattern."""
         structure = {
             "pattern": "unknown",
@@ -276,8 +273,7 @@ class ProjectDetector:
             structure["pattern"] = "monorepo"
 
         # Check for flat layout
-        python_dirs = [d for d in self.project_path.iterdir() 
-                      if d.is_dir() and (d / "__init__.py").exists()]
+        python_dirs = [d for d in self.project_path.iterdir() if d.is_dir() and (d / "__init__.py").exists()]
         if python_dirs and not structure["src_layout"] and not structure["monorepo"]:
             structure["flat_layout"] = True
             if structure["pattern"] == "unknown":
@@ -285,7 +281,7 @@ class ProjectDetector:
 
         return structure
 
-    def _find_packages(self) -> List[Dict[str, Any]]:
+    def _find_packages(self) -> list[dict[str, Any]]:
         """Find all Python packages in the project."""
         packages = []
 
@@ -307,11 +303,21 @@ class ProjectDetector:
 
                 # Skip common non-package directories
                 if item.name.startswith(".") or item.name in {
-                    "__pycache__", "tests", "test", "docs", "build", "dist",
-                    "venv", ".venv", "node_modules", ".git", ".tox", ".pytest_cache"
+                    "__pycache__",
+                    "tests",
+                    "test",
+                    "docs",
+                    "build",
+                    "dist",
+                    "venv",
+                    ".venv",
+                    "node_modules",
+                    ".git",
+                    ".tox",
+                    ".pytest_cache",
                 }:
                     continue
-                
+
                 # Skip the packages directory itself when we're searching from project root
                 if search_dir == self.project_path and item.name == "packages":
                     continue
@@ -325,53 +331,53 @@ class ProjectDetector:
 
     def _has_python_packages_recursive(self, directory: Path, max_depth: int = 3) -> bool:
         """Recursively check if directory contains Python packages.
-        
+
         Searches through directory structure up to max_depth levels to find
         directories containing __init__.py files, indicating Python packages.
         This handles complex project structures like monorepos where packages
         are nested deeply (e.g., packages/my-package/src/my_package/__init__.py).
-        
+
         Args:
             directory: Directory to search in
             max_depth: Maximum recursion depth (default: 3)
                 Prevents infinite recursion and performance issues.
-                
+
         Returns:
             True if any Python packages found within max_depth, False otherwise.
-            
+
         Examples:
             Check if a monorepo package directory contains Python packages:
-            
+
             >>> detector._has_python_packages_recursive(Path("packages/my-pkg"))
             True  # if packages/my-pkg/src/my_package/__init__.py exists
-            
+
             Check a directory with no Python packages:
-            
+
             >>> detector._has_python_packages_recursive(Path("docs"))
             False  # docs directory typically has no __init__.py files
-            
+
         Note:
             The depth limit prevents issues with symlinks, deeply nested
             structures, or circular directory references.
         """
         if max_depth <= 0:
             return False
-            
+
         for item in directory.iterdir():
             if not item.is_dir():
                 continue
-                
+
             # Check if this directory has __init__.py
             if (item / "__init__.py").exists():
                 return True
-                
+
             # Check recursively
             if self._has_python_packages_recursive(item, max_depth - 1):
                 return True
-                
+
         return False
 
-    def _analyze_package(self, package_path: Path, root_dir: Path) -> Optional[Dict[str, Any]]:
+    def _analyze_package(self, package_path: Path, root_dir: Path) -> dict[str, Any] | None:
         """Analyze a potential package directory."""
         # Check if it has __init__.py
         init_file = package_path / "__init__.py"
@@ -403,7 +409,7 @@ class ProjectDetector:
             "subpackages": self._find_subpackages(package_path),
         }
 
-    def _find_subpackages(self, package_path: Path) -> List[str]:
+    def _find_subpackages(self, package_path: Path) -> list[str]:
         """Find subpackages within a package."""
         subpackages = []
         for item in package_path.iterdir():
@@ -411,13 +417,13 @@ class ProjectDetector:
                 subpackages.append(item.name)
         return subpackages
 
-    def _find_source_dirs(self) -> List[str]:
+    def _find_source_dirs(self) -> list[str]:
         """Find directories containing Python source code."""
         source_dirs = []
-        
+
         # Common source directory names
         common_dirs = ["src", "lib", "code", "source"]
-        
+
         for dirname in common_dirs:
             dir_path = self.project_path / dirname
             if dir_path.exists() and any(dir_path.rglob("*.py")):
@@ -427,17 +433,14 @@ class ProjectDetector:
 
     def _has_tests(self) -> bool:
         """Check if the project has tests."""
-        test_indicators = [
-            "tests", "test", "testing", "pytest", "unittest"
-        ]
-        
+        test_indicators = ["tests", "test", "testing", "pytest", "unittest"]
+
         for indicator in test_indicators:
             if (self.project_path / indicator).exists():
                 return True
-            
+
         # Check for test files
-        test_files = list(self.project_path.rglob("test_*.py")) + \
-                    list(self.project_path.rglob("*_test.py"))
+        test_files = list(self.project_path.rglob("test_*.py")) + list(self.project_path.rglob("*_test.py"))
         return len(test_files) > 0
 
     def _has_docs(self) -> bool:
@@ -448,7 +451,7 @@ class ProjectDetector:
         """Count total Python files in the project."""
         return len(list(self.project_path.rglob("*.py")))
 
-    def _analyze_dependencies(self) -> Dict[str, Any]:
+    def _analyze_dependencies(self) -> dict[str, Any]:
         """Analyze project dependencies."""
         deps = {
             "has_requirements_txt": (self.project_path / "requirements.txt").exists(),
@@ -462,7 +465,7 @@ class ProjectDetector:
         if deps["has_pyproject_toml"]:
             try:
                 pyproject = tomlkit.parse((self.project_path / "pyproject.toml").read_text())
-                
+
                 # Check dependencies
                 for section in ["dependencies", "dev-dependencies", "docs"]:
                     if section in pyproject.get("tool", {}).get("poetry", {}):
@@ -470,8 +473,9 @@ class ProjectDetector:
                         for dep in deps_list:
                             if "sphinx" in dep.lower():
                                 deps["sphinx_deps"].append(dep)
-                            elif any(doc_term in dep.lower() for doc_term in 
-                                   ["doc", "documentation", "readme", "markdown"]):
+                            elif any(
+                                doc_term in dep.lower() for doc_term in ["doc", "documentation", "readme", "markdown"]
+                            ):
                                 deps["doc_deps"].append(dep)
 
             except Exception:
@@ -479,7 +483,7 @@ class ProjectDetector:
 
         return deps
 
-    def _extract_metadata(self) -> Dict[str, Any]:
+    def _extract_metadata(self) -> dict[str, Any]:
         """Extract project metadata."""
         metadata = {
             "title": self.project_path.name,
@@ -494,30 +498,34 @@ class ProjectDetector:
         if (self.project_path / "pyproject.toml").exists():
             try:
                 pyproject = tomlkit.parse((self.project_path / "pyproject.toml").read_text())
-                
+
                 # Poetry metadata
                 if "poetry" in pyproject.get("tool", {}):
                     poetry = pyproject["tool"]["poetry"]
-                    metadata.update({
-                        "title": poetry.get("name", metadata["title"]),
-                        "description": poetry.get("description", ""),
-                        "author": poetry.get("author", ""),
-                        "version": poetry.get("version", ""),
-                        "license": poetry.get("license", ""),
-                        "url": poetry.get("homepage", poetry.get("repository", "")),
-                    })
-                
+                    metadata.update(
+                        {
+                            "title": poetry.get("name", metadata["title"]),
+                            "description": poetry.get("description", ""),
+                            "author": poetry.get("author", ""),
+                            "version": poetry.get("version", ""),
+                            "license": poetry.get("license", ""),
+                            "url": poetry.get("homepage", poetry.get("repository", "")),
+                        }
+                    )
+
                 # Standard project metadata
                 elif "project" in pyproject:
                     project = pyproject["project"]
-                    metadata.update({
-                        "title": project.get("name", metadata["title"]),
-                        "description": project.get("description", ""),
-                        "version": project.get("version", ""),
-                        "license": project.get("license", {}).get("text", ""),
-                    })
-                    
-                    if "authors" in project and project["authors"]:
+                    metadata.update(
+                        {
+                            "title": project.get("name", metadata["title"]),
+                            "description": project.get("description", ""),
+                            "version": project.get("version", ""),
+                            "license": project.get("license", {}).get("text", ""),
+                        }
+                    )
+
+                    if project.get("authors"):
                         metadata["author"] = project["authors"][0].get("name", "")
 
             except Exception:
@@ -529,7 +537,6 @@ class ProjectDetector:
                 setup_content = (self.project_path / "setup.py").read_text()
                 # Basic regex extraction would go here
                 # For now, just use the directory name
-                pass
             except Exception:
                 pass
 
@@ -538,42 +545,42 @@ class ProjectDetector:
 
 class GeneralDocumentationSetup:
     """Complete documentation setup for any Python project.
-    
+
     This class handles the end-to-end process of setting up professional
     documentation for any Python project structure. It uses ProjectDetector
     for analysis and generates a complete Sphinx documentation setup.
-    
+
     Features:
         - Automatic project analysis and configuration generation
         - Complete Sphinx setup with 40+ pre-configured extensions
         - Professional Furo theme with custom styling
-        - AutoAPI with hierarchical organization  
+        - AutoAPI with hierarchical organization
         - Project-specific path configuration
         - Interactive and non-interactive modes
         - Dry-run capability for preview
         - Static assets and template copying
-        
+
     Generated Files:
         - docs/source/conf.py: Complete Sphinx configuration
         - docs/source/index.rst: Professional homepage
         - docs/Makefile: Build automation
         - docs/source/_static/: CSS, JavaScript, and other assets
         - docs/source/_templates/: Custom Jinja2 templates
-        
+
     Attributes:
         project_path (Path): Resolved path to the project directory
         target_dir (Path): Documentation target directory (default: project_path/docs)
         detector (ProjectDetector): Project analysis instance
-        
+
     Examples:
         Basic setup with defaults:
-        
+
         >>> setup = GeneralDocumentationSetup(Path("/path/to/project"))
         >>> result = setup.setup_documentation()
         >>> print(f"Created: {result['status']}")
-        
+
         Non-interactive setup with custom target:
-        
+
         >>> setup = GeneralDocumentationSetup(
         ...     Path("/path/to/project"),
         ...     target_dir=Path("/custom/docs/path")
@@ -582,23 +589,23 @@ class GeneralDocumentationSetup:
         ...     force=True,
         ...     interactive=False
         ... )
-        
+
         Dry run to preview actions:
-        
+
         >>> setup = GeneralDocumentationSetup(Path("/path/to/project"))
         >>> plan = setup.setup_documentation(dry_run=True)
         >>> for action in plan['actions']:
         ...     print(action)
     """
 
-    def __init__(self, project_path: Path, target_dir: Optional[Path] = None):
+    def __init__(self, project_path: Path, target_dir: Path | None = None):
         """Initialize documentation setup for a project.
-        
+
         Args:
             project_path: Path to the Python project directory
             target_dir: Custom documentation directory path.
                 If None, defaults to project_path/docs.
-                
+
         Raises:
             OSError: If project_path does not exist or is not accessible.
         """
@@ -606,16 +613,15 @@ class GeneralDocumentationSetup:
         self.target_dir = target_dir or (project_path / "docs")
         self.detector = ProjectDetector(project_path)
 
-    def setup_documentation(self, 
-                           force: bool = False,
-                           interactive: bool = True,
-                           dry_run: bool = False) -> Dict[str, Any]:
+    def setup_documentation(
+        self, force: bool = False, interactive: bool = True, dry_run: bool = False
+    ) -> dict[str, Any]:
         """Set up complete documentation for the detected project.
-        
+
         Performs end-to-end documentation setup including project analysis,
         directory creation, configuration generation, template copying,
         and static asset installation.
-        
+
         Args:
             force: If True, overwrite existing documentation without prompting.
                 If False, will prompt user if docs directory exists.
@@ -623,51 +629,51 @@ class GeneralDocumentationSetup:
                 If False, proceed without user interaction.
             dry_run: If True, return plan of actions without executing them.
                 Useful for previewing what will be created.
-                
+
         Returns:
             Dictionary with setup results containing:
-            
+
             - status (str): "success", "cancelled", "dry_run", or "error"
             - target_dir (str): Path where documentation was created
             - directories (List[str]): Created directories (if successful)
             - actions (List[str]): Planned actions (if dry_run)
             - project_info (Dict): Project analysis results (if dry_run)
-            
+
         Raises:
             ValueError: If project_path is invalid or inaccessible
             PermissionError: If unable to create documentation directories
             ImportError: If required configuration modules are missing
-            
+
         Examples:
             Interactive setup (default):
-            
+
             >>> result = setup.setup_documentation()
             # Shows project analysis and asks for confirmation
             >>> print(result['status'])  # "success" or "cancelled"
-            
+
             Non-interactive setup:
-            
+
             >>> result = setup.setup_documentation(
             ...     force=True,
             ...     interactive=False
             ... )
             >>> print(f"Created at: {result['target_dir']}")
-            
+
             Preview without executing:
-            
+
             >>> plan = setup.setup_documentation(dry_run=True)
             >>> for action in plan['actions']:
             ...     print(f"Would: {action}")
-            
+
         Note:
             The generated documentation includes 40+ Sphinx extensions,
             professional Furo theme, AutoAPI with hierarchical organization,
             and complete build automation via Makefile.
         """
-        
+
         # Detect project structure
         project_info = self.detector.detect_project_type()
-        
+
         if interactive:
             self._display_project_info(project_info)
             if not click.confirm("Proceed with documentation setup?"):
@@ -678,16 +684,16 @@ class GeneralDocumentationSetup:
 
         # Create documentation structure
         result = self._create_documentation_structure(project_info, force)
-        
+
         # Copy templates and configuration
         self._setup_configuration(project_info)
-        
+
         # Generate initial content
         self._generate_initial_content(project_info)
-        
+
         return result
 
-    def _display_project_info(self, project_info: Dict[str, Any]):
+    def _display_project_info(self, project_info: dict[str, Any]):
         """Display detected project information."""
         click.echo("\n🔍 Project Analysis Results:")
         click.echo(f"  📁 Project: {project_info['name']}")
@@ -697,40 +703,42 @@ class GeneralDocumentationSetup:
         click.echo(f"  🐍 Python Files: {project_info['python_files']}")
         click.echo(f"  📚 Has Docs: {'Yes' if project_info['has_docs'] else 'No'}")
         click.echo(f"  🧪 Has Tests: {'Yes' if project_info['has_tests'] else 'No'}")
-        
-        if project_info['packages']:
+
+        if project_info["packages"]:
             click.echo(f"\n📦 Found {len(project_info['packages'])} package(s):")
-            for pkg in project_info['packages']:
+            for pkg in project_info["packages"]:
                 click.echo(f"  • {pkg['name']} ({pkg['python_files']} files)")
 
-    def _create_dry_run_plan(self, project_info: Dict[str, Any]) -> Dict[str, Any]:
+    def _create_dry_run_plan(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Create a plan of what would be done without executing."""
         plan = {
             "status": "dry_run",
             "project_info": project_info,
             "actions": [],
         }
-        
+
         # Documentation directory
         if not self.target_dir.exists():
             plan["actions"].append(f"📁 Create directory: {self.target_dir}")
-        
+
         # Configuration files
-        plan["actions"].extend([
-            f"📄 Create: {self.target_dir}/source/conf.py",
-            f"📄 Create: {self.target_dir}/source/index.rst",
-            f"📄 Create: {self.target_dir}/Makefile",
-            f"📁 Create: {self.target_dir}/source/_static",
-            f"📁 Create: {self.target_dir}/source/_templates",
-        ])
-        
+        plan["actions"].extend(
+            [
+                f"📄 Create: {self.target_dir}/source/conf.py",
+                f"📄 Create: {self.target_dir}/source/index.rst",
+                f"📄 Create: {self.target_dir}/Makefile",
+                f"📁 Create: {self.target_dir}/source/_static",
+                f"📁 Create: {self.target_dir}/source/_templates",
+            ]
+        )
+
         # Package-specific setup
-        for pkg in project_info['packages']:
+        for pkg in project_info["packages"]:
             plan["actions"].append(f"📦 Configure package: {pkg['name']}")
-        
+
         return plan
 
-    def _create_documentation_structure(self, project_info: Dict[str, Any], force: bool) -> Dict[str, Any]:
+    def _create_documentation_structure(self, project_info: dict[str, Any], force: bool) -> dict[str, Any]:
         """Create the documentation directory structure."""
         if self.target_dir.exists() and not force:
             if not click.confirm(f"Documentation directory {self.target_dir} exists. Continue?"):
@@ -750,63 +758,61 @@ class GeneralDocumentationSetup:
 
         return {"status": "created", "directories": [str(d) for d in directories]}
 
-    def _setup_configuration(self, project_info: Dict[str, Any]):
+    def _setup_configuration(self, project_info: dict[str, Any]):
         """Set up Sphinx configuration based on project type."""
         # Import configuration from our existing system
         from .config import get_haive_config
-        
+
         # Get base configuration
-        config = get_haive_config(
-            package_name=project_info['name'],
-            package_path=str(self.project_path)
-        )
-        
+        config = get_haive_config(package_name=project_info["name"], package_path=str(self.project_path))
+
         # Customize based on project info
-        metadata = project_info['metadata']
-        config.update({
-            'project': metadata['title'],
-            'author': metadata['author'] or 'Documentation Team',
-            'version': metadata['version'] or '0.1.0',
-            'release': metadata['version'] or '0.1.0',
-        })
-        
+        metadata = project_info["metadata"]
+        config.update(
+            {
+                "project": metadata["title"],
+                "author": metadata["author"] or "Documentation Team",
+                "version": metadata["version"] or "0.1.0",
+                "release": metadata["version"] or "0.1.0",
+            }
+        )
+
         # Adjust AutoAPI settings based on structure
-        if project_info['structure']['src_layout']:
-            config['autoapi_dirs'] = ['../src']
-        elif project_info['structure']['monorepo']:
-            config['autoapi_dirs'] = ['../packages']
-        else:
-            # Find the main package directory
-            if project_info['packages']:
-                main_pkg = project_info['packages'][0]
-                config['autoapi_dirs'] = [f"../{main_pkg['relative_path']}"]
+        if project_info["structure"]["src_layout"]:
+            config["autoapi_dirs"] = ["../src"]
+        elif project_info["structure"]["monorepo"]:
+            config["autoapi_dirs"] = ["../packages"]
+        # Find the main package directory
+        elif project_info["packages"]:
+            main_pkg = project_info["packages"][0]
+            config["autoapi_dirs"] = [f"../{main_pkg['relative_path']}"]
 
         # Write configuration file
         conf_py_path = self.target_dir / "source" / "conf.py"
         self._write_conf_py(conf_py_path, config)
 
-    def _write_conf_py(self, conf_py_path: Path, config: Dict[str, Any]):
+    def _write_conf_py(self, conf_py_path: Path, config: dict[str, Any]):
         """Write the conf.py file with the configuration."""
         conf_content = f'''"""
 Configuration file for the Sphinx documentation builder.
 
-Generated by PyDevelop-Docs for {config.get('project', 'Unknown Project')}.
+Generated by PyDevelop-Docs for {config.get("project", "Unknown Project")}.
 """
 
 # -- Project information -----------------------------------------------------
 
-project = "{config.get('project', 'Documentation')}"
-author = "{config.get('author', 'Documentation Team')}"
-version = "{config.get('version', '0.1.0')}"
-release = "{config.get('release', '0.1.0')}"
+project = "{config.get("project", "Documentation")}"
+author = "{config.get("author", "Documentation Team")}"
+version = "{config.get("version", "0.1.0")}"
+release = "{config.get("release", "0.1.0")}"
 
 # -- General configuration ---------------------------------------------------
 
-extensions = {config.get('extensions', [])}
+extensions = {config.get("extensions", [])}
 
 # -- AutoAPI configuration ---------------------------------------------------
 
-autoapi_dirs = {config.get('autoapi_dirs', ['../src'])}
+autoapi_dirs = {config.get("autoapi_dirs", ["../src"])}
 autoapi_type = "python"
 autoapi_template_dir = "_autoapi_templates"
 autoapi_options = [
@@ -820,7 +826,7 @@ autoapi_keep_files = True
 
 # -- HTML output options -----------------------------------------------------
 
-html_theme = "{config.get('html_theme', 'furo')}"
+html_theme = "{config.get("html_theme", "furo")}"
 html_static_path = ["_static"]
 html_css_files = [
     "css/custom.css",
@@ -850,7 +856,7 @@ intersphinx_mapping = {{
 }}
 
 # Copy button settings
-copybutton_prompt_text = r">>> |\\.\\.\\. |\\$ |In \\[\\d*\\]: | {2,5}\\.\\.\\.: | {5,8}: "
+copybutton_prompt_text = r">>> |\\.\\.\\. |\\$ |In \\[\\d*\\]: | {2, 5}\\.\\.\\.: | {5, 8}: "
 copybutton_prompt_is_regexp = True
 
 # -- Custom configuration ---------------------------------------------------
@@ -860,28 +866,28 @@ copybutton_prompt_is_regexp = True
 
         conf_py_path.write_text(conf_content)
 
-    def _generate_initial_content(self, project_info: Dict[str, Any]):
+    def _generate_initial_content(self, project_info: dict[str, Any]):
         """Generate initial documentation content."""
         # Create index.rst
         self._create_index_rst(project_info)
-        
+
         # Create Makefile
         self._create_makefile()
-        
+
         # Copy static files
         self._copy_static_files()
-        
+
         # Create custom CSS
         self._create_custom_css()
 
-    def _create_index_rst(self, project_info: Dict[str, Any]):
+    def _create_index_rst(self, project_info: dict[str, Any]):
         """Create the main index.rst file."""
-        metadata = project_info['metadata']
-        
-        index_content = f'''{metadata['title']}
-{'=' * len(metadata['title'])}
+        metadata = project_info["metadata"]
 
-{metadata['description'] or f"Documentation for {metadata['title']}"}
+        index_content = f"""{metadata["title"]}
+{"=" * len(metadata["title"])}
+
+{metadata["description"] or f"Documentation for {metadata['title']}"}
 
 .. toctree::
    :maxdepth: 2
@@ -894,24 +900,24 @@ copybutton_prompt_is_regexp = True
 Installation
 ============
 
-To install {metadata['title']}:
+To install {metadata["title"]}:
 
 .. code-block:: bash
 
-   pip install {metadata['title'].lower().replace(' ', '-')}
+   pip install {metadata["title"].lower().replace(" ", "-")}
 
 Quick Start
 ===========
 
-Here's how to get started with {metadata['title']}:
+Here's how to get started with {metadata["title"]}:
 
 .. code-block:: python
 
    # Add your quick start example here
-   import {project_info['packages'][0]['name'] if project_info['packages'] else 'your_package'}
+   import {project_info["packages"][0]["name"] if project_info["packages"] else "your_package"}
    
    # Example usage
-   print("Hello from {metadata['title']}!")
+   print("Hello from {metadata["title"]}!")
 
 API Reference
 =============
@@ -927,14 +933,14 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-'''
+"""
 
         index_path = self.target_dir / "source" / "index.rst"
         index_path.write_text(index_content)
 
     def _create_makefile(self):
         """Create Makefile for building documentation."""
-        makefile_content = '''# Minimal makefile for Sphinx documentation
+        makefile_content = """# Minimal makefile for Sphinx documentation
 
 # You can set these variables from the command line.
 SPHINXOPTS    = -W --keep-going
@@ -962,7 +968,7 @@ livehtml:
 
 linkcheck:
 \t$(SPHINXBUILD) -b linkcheck $(SOURCEDIR) $(BUILDDIR)/linkcheck
-'''
+"""
 
         makefile_path = self.target_dir / "Makefile"
         makefile_path.write_text(makefile_content)
@@ -972,7 +978,7 @@ linkcheck:
         # Copy CSS and other static files from our templates
         template_static = Path(__file__).parent / "templates" / "static"
         target_static = self.target_dir / "source" / "_static"
-        
+
         if template_static.exists():
             for item in template_static.rglob("*"):
                 if item.is_file():
@@ -983,7 +989,7 @@ linkcheck:
 
     def _create_custom_css(self):
         """Create custom CSS file."""
-        css_content = '''/* Custom styles for documentation */
+        css_content = """/* Custom styles for documentation */
 
 /* Improve readability */
 .bd-main .bd-content .bd-article-container {
@@ -1008,24 +1014,26 @@ linkcheck:
     --color-background-primary: #1a1a1a;
     --color-background-secondary: #262626;
 }
-'''
+"""
 
         css_path = self.target_dir / "source" / "_static" / "css" / "custom.css"
         css_path.parent.mkdir(parents=True, exist_ok=True)
         css_path.write_text(css_content)
 
 
-def setup_project_docs(project_path: str,
-                      target_dir: Optional[str] = None,
-                      force: bool = False,
-                      interactive: bool = True,
-                      dry_run: bool = False) -> Dict[str, Any]:
+def setup_project_docs(
+    project_path: str,
+    target_dir: str | None = None,
+    force: bool = False,
+    interactive: bool = True,
+    dry_run: bool = False,
+) -> dict[str, Any]:
     """Convenience function to set up documentation for any Python project.
-    
+
     This is the main public API for setting up documentation. It provides
     a simple interface that handles project detection, analysis, and complete
     documentation setup with sensible defaults.
-    
+
     Args:
         project_path: Path to the Python project directory (as string).
             Will be resolved to absolute path.
@@ -1034,56 +1042,56 @@ def setup_project_docs(project_path: str,
         force: If True, overwrite existing documentation without prompting.
         interactive: If True, display analysis and ask for confirmation.
         dry_run: If True, return plan without executing.
-        
+
     Returns:
         Dictionary with setup results. See GeneralDocumentationSetup.setup_documentation
         for detailed return value documentation.
-        
+
     Raises:
         ValueError: If project_path does not exist or is not a directory.
         PermissionError: If unable to create documentation directories.
         ImportError: If required dependencies are missing.
-        
+
     Examples:
         Basic one-line setup:
-        
+
         >>> result = setup_project_docs("/path/to/my/project")
         # Interactive setup with project analysis display
-        
+
         Non-interactive setup:
-        
+
         >>> result = setup_project_docs(
         ...     "/path/to/project",
         ...     force=True,
         ...     interactive=False
         ... )
         >>> print(f"Status: {result['status']}")
-        
+
         Custom documentation directory:
-        
+
         >>> result = setup_project_docs(
         ...     "/path/to/project",
         ...     target_dir="/custom/docs/location"
         ... )
-        
+
         Preview without execution:
-        
+
         >>> plan = setup_project_docs("/path/to/project", dry_run=True)
         >>> print(f"Would create {len(plan['actions'])} items")
-        
+
     Note:
         This function is the recommended entry point for programmatic use.
         For command-line usage, use the CLI commands setup-general or copy-setup.
     """
-    
+
     project_path = Path(project_path).resolve()
     target_dir = Path(target_dir) if target_dir else project_path / "docs"
-    
+
     if not project_path.exists():
         raise ValueError(f"Project path does not exist: {project_path}")
-    
+
     if not project_path.is_dir():
         raise ValueError(f"Project path is not a directory: {project_path}")
-    
+
     setup = GeneralDocumentationSetup(project_path, target_dir)
     return setup.setup_documentation(force=force, interactive=interactive, dry_run=dry_run)
