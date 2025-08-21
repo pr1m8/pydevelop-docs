@@ -16,7 +16,7 @@ from jinja2 import Environment, FileSystemLoader, Template
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-from pydevelop_docs.template_manager import TemplateManager
+from pydvlppy.template_manager import TemplateManager
 
 
 def run_djlint_on_templates() -> Dict[str, Any]:

@@ -50,7 +50,7 @@ jobs:
         
     - name: Run type checking with mypy
       run: |
-        poetry run mypy src/pydvlp_docs/
+        poetry run mypy src/pydvlppy/
       continue-on-error: true
         
     - name: Run linting with ruff
@@ -63,7 +63,7 @@ jobs:
         
     - name: Run tests
       run: |
-        poetry run pytest tests/ -v --cov=pydvlp_docs --cov-report=xml
+        poetry run pytest tests/ -v --cov=pydvlppy --cov-report=xml
       continue-on-error: true
         
     - name: Test CLI functionality

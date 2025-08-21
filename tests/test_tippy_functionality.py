@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Optional, Union
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-from pydevelop_docs.template_manager import TemplateManager
+from pydvlppy.template_manager import TemplateManager
 
 
 def test_tippy_template_integration():

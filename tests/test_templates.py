@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 from jinja2 import Environment, FileSystemLoader
 
-from pydevelop_docs.template_manager import TemplateManager
+from pydvlppy.template_manager import TemplateManager
 
 
 class TestBasicTemplateRendering:

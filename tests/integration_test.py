@@ -6,7 +6,7 @@ from pathlib import Path
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-from pydevelop_docs.template_manager import TemplateManager
+from pydvlppy.template_manager import TemplateManager
 
 
 def enhanced_template_manager_with_filters():
