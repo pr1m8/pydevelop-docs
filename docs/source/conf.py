@@ -12,14 +12,25 @@ from datetime import date
 # -- Path setup --------------------------------------------------------------
 sys.path.insert(0, os.path.abspath("../../src"))
 
+# Also add the parent directory for package imports
+sys.path.insert(0, os.path.abspath("../.."))
+
+# Ensure pydvlp_docs can be imported
+try:
+    import pydvlp_docs
+    print(f"Successfully imported pydvlp_docs version {pydvlp_docs.__version__}")
+except ImportError as e:
+    print(f"Warning: Could not import pydvlp_docs: {e}")
+    print("Make sure to install the package or add it to PYTHONPATH")
+
 # -- Project information -----------------------------------------------------
 project = "pydvlp-docs"
 copyright = f"{date.today().year}, William R. Astley"
 author = "William R. Astley"
-release = "0.1.0"
+release = "0.1.1"
 
 # -- Import shared configuration from pydevelop_docs -------------------------
-from pydevelop_docs.config import get_haive_config
+from pydvlp_docs.config import get_haive_config
 
 # Get the standardized configuration
 _config = get_haive_config(

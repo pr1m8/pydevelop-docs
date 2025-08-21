@@ -1,0 +1,33 @@
+# System dependencies for building pydvlp-docs documentation
+# These are Ubuntu/Debian packages needed for various Sphinx extensions
+
+# Core build tools
+build-essential
+python3-dev
+
+# For graphviz and diagram extensions
+graphviz
+graphviz-dev
+libgraphviz-dev
+pkg-config
+
+# For PlantUML diagrams
+default-jre
+plantuml
+
+# For image processing
+imagemagick
+librsvg2-bin
+
+# For PDF generation (optional)
+texlive-latex-base
+texlive-latex-recommended
+texlive-fonts-recommended
+texlive-latex-extra
+latexmk
+
+# For pandoc (document conversion)
+pandoc
+
+# Git for versioning
+git
