@@ -10,7 +10,7 @@ rich>=14.1.0
 
 # Sphinx core
 sphinx==8.2.3
-sphinx-collections==0.2.0
+# sphinx-collections==0.2.0  # Has metadata mismatch, installed via poetry
 seed-intersphinx-mapping>=1.2.2
 sphinx-toolbox>=3.8.1
 furo>=2024.8.6
